@@ -266,24 +266,35 @@ void loop()
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
           int x;
-          
-          j += sprintf(data+j, "%s", buf);
-          j += sprintf(data+j, "%c", ',');
+
+          for (size_t i = 0; i < sizeof(data) - 1;i++){
+            Serial.print(static_cast<unsigned int>(data[i]), HEX);
+            j += sprintf(data[i]+j, "%s", buf);
+            j += sprintf(data[i]+j, "%c", ',');
+          }
+//          j += sprintf(data+j, "%s", buf);
+//          j += sprintf(data+j, "%c", ',');
           
           dtostrf(AY,5, 2, buf);
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
-          j += sprintf(data+j, "%c", ',');
+          for (size_t i = 0; i < sizeof(data) - 1;i++){
+            Serial.print(static_cast<unsigned int>(data[i]), HEX);
+            j += sprintf(data[i]+j, "%s", buf);
+            j += sprintf(data[i]+j, "%c", ',');
+          }
+//          j += sprintf(data+j, "%s", buf);
+//          j += sprintf(data+j, "%c", ',');
         }
-        for (int i=0;i<strlen(data);i++)  // loop through all chars in string (from 'h' to 'o')
-          {
-             for (int y=7;y>=0;y--) // loop from bit-7 down to bit-0 (high-bit to low-bit)
-                 Serial.print(bitRead(data[i],y)); // from str[i] read the bit-j and print it
-                      
-         }Serial.println();  
+//        for (int i=0;i<strlen(data);i++)  // loop through all chars in string (from 'h' to 'o')
+//          {
+//             for (int y=7;y>=0;y--) // loop from bit-7 down to bit-0 (high-bit to low-bit)
+//                 Serial.print(bitRead(data[i],y)); // from str[i] read the bit-j and print it
+//                      
+//         }Serial.println();  
         // Send a reply data to the Server
+       
         if (!manager.sendtoWait(data, sizeof(data), from)){
           Serial.println("sendtoWait failed");
         }
@@ -321,12 +332,7 @@ void loop()
           j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
-        for (int i=0;i<strlen(data);i++)  // loop through all chars in string (from 'h' to 'o')
-          {
-             for (int y=7;y>=0;y--) // loop from bit-7 down to bit-0 (high-bit to low-bit)
-                 Serial.print(bitRead(data[i],y)); // from str[i] read the bit-j and print it
-                      
-         }Serial.println();  
+        
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)){
           Serial.println("sendtoWait failed");
@@ -363,12 +369,7 @@ void loop()
           j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
-         for (int i=0;i<strlen(data);i++)  // loop through all chars in string (from 'h' to 'o')
-          {
-             for (int y=7;y>=0;y--) // loop from bit-7 down to bit-0 (high-bit to low-bit)
-                 Serial.print(bitRead(data[i],y)); // from str[i] read the bit-j and print it
-                      
-         }Serial.println();  
+         
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)){
           Serial.println("sendtoWait failed");
@@ -405,12 +406,7 @@ void loop()
           j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
-        for (int i=0;i<strlen(data);i++)  // loop through all chars in string (from 'h' to 'o')
-          {
-             for (int y=7;y>=0;y--) // loop from bit-7 down to bit-0 (high-bit to low-bit)
-                 Serial.print(bitRead(data[i],y)); // from str[i] read the bit-j and print it
-                      
-         }Serial.println();  
+        
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)){
           Serial.println("sendtoWait failed");
@@ -471,12 +467,6 @@ void loop()
         tempString.trim();      
         tempString.toCharArray(buf, tempString.length()+1);
         j += sprintf(data+j, "%s", buf);
-        for (int i=0;i<strlen(data);i++)  // loop through all chars in string (from 'h' to 'o')
-          {
-             for (int y=7;y>=0;y--) // loop from bit-7 down to bit-0 (high-bit to low-bit)
-                 Serial.print(bitRead(data[i],y)); // from str[i] read the bit-j and print it
-                      
-         }Serial.println();  
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)){
           Serial.println("sendtoWait failed");
