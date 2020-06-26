@@ -65,6 +65,8 @@ uint8_t data[RH_RF95_MAX_MESSAGE_LEN]; //251 bytes
 // Dont put this on the stack:
 //uint8_t buf[RH_RF95_MAX_MESSAGE_LEN]; //251 bytes
 uint8_t buf[20]; //Promini
+uint8_t bufX[20];
+uint8_t bufY[20];
 
 String Server_Command1 = String("REQ_RTU01_1");
 String Server_Command2 = String("REQ_RTU01_2");
@@ -180,6 +182,9 @@ void setup()
 //  driver.setCADTimeout(10000);
 }
 
+String resultHax = "";
+char chr_arr[20] ;
+int k;
 void loop()
 {
 //  time_t t;
@@ -195,6 +200,7 @@ void loop()
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////      
       if(Server_Command1 == (char*)buf){
         j = 0;
+        k=0;
         /////////////////////////////////// Get RTC Data ///////////////////////////////////////        
 //        t = now();
 
@@ -249,6 +255,7 @@ void loop()
         for(i=0; i<20; i++){
           /////////////////////////////////// Get Accelero Data ///////////////////////////////////////        
           accelgyro.getAcceleration(&ax, &ay, &az);
+          Serial.println(ax);
           AX = ((float)ax-AXoff)/16384.00;
           //if sensor pcb placed on table:
           //AY = ((float)ay-AYoff)/16384.00; //16384 is just 32768/2 to get our 1G value
@@ -261,41 +268,49 @@ void loop()
 //          floatValue.v = AX;
 //          float kirimAX = (floatValue.as_int,BIN);
 //          Serial.println(kirimAX);
+          
           dtostrf(AX,5, 2, buf);
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
-          int x;
-
-          for (size_t i = 0; i < sizeof(data) - 1;i++){
-            Serial.print(static_cast<unsigned int>(data[i]), HEX);
-            j += sprintf(data[i]+j, "%s", buf);
-            j += sprintf(data[i]+j, "%c", ',');
-          }
+          //hexing
+          for (size_t i = 0; i < strlen(buf) - 1;i++){
+            resultHax = String((buf[i]), HEX);
+            int str_leg = resultHax.length() + 1;
+            chr_arr[str_leg];
+            resultHax.toCharArray(chr_arr,str_leg);
+//            Serial.print(chr_arr);
+            j += sprintf(data+j, "%s", chr_arr);
+          } //Serial.println();
 //          j += sprintf(data+j, "%s", buf);
-//          j += sprintf(data+j, "%c", ',');
+          j += sprintf(data+j, "%c", ',');
+//          Serial.println((char*)buf);
+           
           
           dtostrf(AY,5, 2, buf);
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
-          for (size_t i = 0; i < sizeof(data) - 1;i++){
-            Serial.print(static_cast<unsigned int>(data[i]), HEX);
-            j += sprintf(data[i]+j, "%s", buf);
-            j += sprintf(data[i]+j, "%c", ',');
-          }
-//          j += sprintf(data+j, "%s", buf);
-//          j += sprintf(data+j, "%c", ',');
+//          Serial.print((char*)buf);
+          //hexing
+//          for (size_t i = 0; i < strlen(buf) - 1;i++){
+//            resultHax = String((buf[i]), HEX);
+//            int str_leg = resultHax.length() + 1;
+//            chr_arr[str_leg];
+//            resultHax.toCharArray(chr_arr,str_leg);
+////            Serial.print(chr_arr);
+//            j += sprintf(data+j, "%s", chr_arr);
+//          } //Serial.println();
+          j += sprintf(data+j, "%s", buf);
+          j += sprintf(data+j, "%c", ',');
         }
-//        for (int i=0;i<strlen(data);i++)  // loop through all chars in string (from 'h' to 'o')
-//          {
-//             for (int y=7;y>=0;y--) // loop from bit-7 down to bit-0 (high-bit to low-bit)
-//                 Serial.print(bitRead(data[i],y)); // from str[i] read the bit-j and print it
-//                      
-//         }Serial.println();  
-        // Send a reply data to the Server
-       
-        if (!manager.sendtoWait(data, sizeof(data), from)){
+        
+         
+        if (manager.sendtoWait(data, sizeof(data), from)){
+          Serial.print("data sudah dikirim: ");
+          Serial.println((char*)data);
+//          Serial.println("sendtoWait failed");
+        }else{
           Serial.println("sendtoWait failed");
         }
       }
@@ -329,7 +344,16 @@ void loop()
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
+           //hexing
+          for (size_t i = 0; i < strlen(buf) - 1;i++){
+            resultHax = String((buf[i]), HEX);
+            int str_leg = resultHax.length() + 1;
+            chr_arr[str_leg];
+            resultHax.toCharArray(chr_arr,str_leg);
+//            Serial.print(chr_arr);
+            j += sprintf(data+j, "%s", chr_arr);
+          } //Serial.println();
+          //j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
         
@@ -366,7 +390,16 @@ void loop()
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
+           //hexing
+          for (size_t i = 0; i < strlen(buf) - 1;i++){
+            resultHax = String((buf[i]), HEX);
+            int str_leg = resultHax.length() + 1;
+            chr_arr[str_leg];
+            resultHax.toCharArray(chr_arr,str_leg);
+//            Serial.print(chr_arr);
+            j += sprintf(data+j, "%s", chr_arr);
+          } //Serial.println();
+//          j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
          
@@ -403,7 +436,16 @@ void loop()
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
+           //hexing
+          for (size_t i = 0; i < strlen(buf) - 1;i++){
+            resultHax = String((buf[i]), HEX);
+            int str_leg = resultHax.length() + 1;
+            chr_arr[str_leg];
+            resultHax.toCharArray(chr_arr,str_leg);
+//            Serial.print(chr_arr);
+            j += sprintf(data+j, "%s", chr_arr);
+          } //Serial.println();
+//          j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
         
@@ -440,7 +482,16 @@ void loop()
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
+           //hexing
+          for (size_t i = 0; i < strlen(buf) - 1;i++){
+            resultHax = String((buf[i]), HEX);
+            int str_leg = resultHax.length() + 1;
+            chr_arr[str_leg];
+            resultHax.toCharArray(chr_arr,str_leg);
+//            Serial.print(chr_arr);
+            j += sprintf(data+j, "%s", chr_arr);
+          } //Serial.println();
+//          j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
 
@@ -466,7 +517,16 @@ void loop()
         tempString = (char*)buf;
         tempString.trim();      
         tempString.toCharArray(buf, tempString.length()+1);
-        j += sprintf(data+j, "%s", buf);
+         //hexing
+          for (size_t i = 0; i < strlen(buf) - 1;i++){
+            resultHax = String((buf[i]), HEX);
+            int str_leg = resultHax.length() + 1;
+            chr_arr[str_leg];
+            resultHax.toCharArray(chr_arr,str_leg);
+//            Serial.print(chr_arr);
+            j += sprintf(data+j, "%s", chr_arr);
+          } //Serial.println();
+//        j += sprintf(data+j, "%s", buf);
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)){
           Serial.println("sendtoWait failed");

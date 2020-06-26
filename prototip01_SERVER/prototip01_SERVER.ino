@@ -81,7 +81,7 @@ void loop()
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
       for(i=0; i<number_of_reading_data; i++){
-        request_RTU02();
+        request_RTU01();
       }
     }
     stringComplete = false;
@@ -89,11 +89,11 @@ void loop()
   }
 }
 
-void request_RTU02(){
+void request_RTU01(){
     /////////////////////////////////// Request Packet1 ///////////////////////////////////////        
   if (manager.sendtoWait(data1, sizeof(data1), CLIENT_ADDRESS))
   {
-    // Now wait for a reply from the RTU02
+    // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);
     uint8_t from;   
     if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
@@ -104,7 +104,7 @@ void request_RTU02(){
     }
     else
     {
-      Serial.println("RTU02 no reply");
+      Serial.println("RTU01 no reply");
     }
   }
   else{
@@ -125,7 +125,7 @@ void request_RTU02(){
     }
     else
     {
-      Serial.println("RTU02 no reply");
+      Serial.println("RTU01 no reply");
     }
   }
   else{
@@ -146,7 +146,7 @@ void request_RTU02(){
     }
     else
     {
-      Serial.println("RTU02 no reply");
+      Serial.println("RTU01 no reply");
     }
   }
   else{
@@ -167,7 +167,7 @@ void request_RTU02(){
     }
     else
     {
-      Serial.println("RTU02 no reply");
+      Serial.println("RTU01 no reply");
     }
   }
   else{
@@ -188,7 +188,7 @@ void request_RTU02(){
     }
     else
     {
-      Serial.println("RTU02 no reply");
+      Serial.println("RTU01 no reply");
     }
   }
   else{
