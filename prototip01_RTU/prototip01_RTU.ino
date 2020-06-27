@@ -280,9 +280,9 @@ void loop()
             chr_arr[str_leg];
             resultHax.toCharArray(chr_arr,str_leg);
 //            Serial.print(chr_arr);
-            j += sprintf(data+j, "%s", chr_arr);
+//            j += sprintf(data+j, "%s", chr_arr);
           } //Serial.println();
-//          j += sprintf(data+j, "%s", buf);
+          j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
 //          Serial.println((char*)buf);
            
@@ -351,9 +351,9 @@ void loop()
             chr_arr[str_leg];
             resultHax.toCharArray(chr_arr,str_leg);
 //            Serial.print(chr_arr);
-            j += sprintf(data+j, "%s", chr_arr);
+//            j += sprintf(data+j, "%s", chr_arr);
           } //Serial.println();
-          //j += sprintf(data+j, "%s", buf);
+          j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
         
@@ -397,9 +397,9 @@ void loop()
             chr_arr[str_leg];
             resultHax.toCharArray(chr_arr,str_leg);
 //            Serial.print(chr_arr);
-            j += sprintf(data+j, "%s", chr_arr);
+//            j += sprintf(data+j, "%s", chr_arr);
           } //Serial.println();
-//          j += sprintf(data+j, "%s", buf);
+          j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
          
@@ -443,9 +443,9 @@ void loop()
             chr_arr[str_leg];
             resultHax.toCharArray(chr_arr,str_leg);
 //            Serial.print(chr_arr);
-            j += sprintf(data+j, "%s", chr_arr);
+//            j += sprintf(data+j, "%s", chr_arr);
           } //Serial.println();
-//          j += sprintf(data+j, "%s", buf);
+          j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
         
@@ -489,9 +489,9 @@ void loop()
             chr_arr[str_leg];
             resultHax.toCharArray(chr_arr,str_leg);
 //            Serial.print(chr_arr);
-            j += sprintf(data+j, "%s", chr_arr);
+//            j += sprintf(data+j, "%s", chr_arr);
           } //Serial.println();
-//          j += sprintf(data+j, "%s", buf);
+          j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
 
@@ -524,9 +524,9 @@ void loop()
             chr_arr[str_leg];
             resultHax.toCharArray(chr_arr,str_leg);
 //            Serial.print(chr_arr);
-            j += sprintf(data+j, "%s", chr_arr);
+//            j += sprintf(data+j, "%s", chr_arr);
           } //Serial.println();
-//        j += sprintf(data+j, "%s", buf);
+        j += sprintf(data+j, "%s", buf);
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)){
           Serial.println("sendtoWait failed");

@@ -750,9 +750,22 @@ void loop()
  
   // Print the raw acceleration values
  
-  char tritri = 0x33;
-  byte 
-  Serial.print(accel_t_gyro.value.x_accel, HEX);
+  uint16_t tritri = 0x33;
+//  byte 
+  char arr[4];
+  uint16_t xval;
+  xval =  accel_t_gyro.value.x_accel;  
+//  Serial.println(xval,HEX);
+  for(size_t i=0; i<sizeof(xval);i++){
+//    String vakk = String(accel_t_gyro.value.x_accel,HEX);
+    sprintf (arr, "%03i", xval);
+//    Serial.println(xval);
+    Serial.print((uint16_t)arr[0],HEX);
+    Serial.print((uint16_t)arr[1],HEX);
+    Serial.print((uint16_t)arr[2],HEX);
+    Serial.print((uint16_t)arr[3],HEX);
+  }
+  
 //  byte bVal = (accel_t_gyro.value.x_accel, HEX);
 //  Serial.print(bVal); 
 //  Serial.print(F(", "));
