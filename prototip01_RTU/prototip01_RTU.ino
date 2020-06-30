@@ -64,7 +64,7 @@ bool blinkState = false;
 uint8_t data[RH_RF95_MAX_MESSAGE_LEN]; //251 bytes
 // Dont put this on the stack:
 //uint8_t buf[RH_RF95_MAX_MESSAGE_LEN]; //251 bytes
-uint8_t buf[20]; //Promini
+uint8_t buf[50]; //Promini
 uint8_t bufX[20];
 uint8_t bufY[20];
 
@@ -205,41 +205,59 @@ void loop()
     {
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////      
       if(Server_Command1 == (char*)buf){
-
-        //SEND 50 data
-        for(i=0; i<50; i++){
-          /////////////////////////////////// Get Accelero Data ///////////////////////////////////////        
-          accelgyro.getAcceleration(&ax, &ay, &az);
-          Serial.println(ax);
-          //starting to hex conv
-          for(size_t u=0; u<4; i++){
-            sprintf(valAx, "%03i", ax);
-            Serial.print(valAx[u],HEX);
-          }
-          dtostrf(ax,5, 2, buf);
-          tempString = (char*)buf;
-          tempString.trim();      
-          tempString.toCharArray(buf, tempString.length()+1);
-          } //Serial.println();
-          j += sprintf(data+j, "%s", buf);
-          j += sprintf(data+j, "%c", ',');
-//          Serial.println((char*)buf);
-           
-         
-        if (manager.sendtoWait(data, sizeof(data), from)){
-          Serial.print("data sudah dikirim: ");
-          Serial.println((char*)data);
-//          Serial.println("sendtoWait failed");
-        }else{
-          Serial.println("sendtoWait failed");
-        }
-      }
-
-      /////////////////////////////////// Sending Packet2 ///////////////////////////////////////      
-      if(Server_Command2 == (char*)buf){
         j = 0;
-        //SEND 50 data
-        for(i=0; i<50; i++){
+        /////////////////////////////////// Get RTC Data ///////////////////////////////////////        
+//        t = now();
+
+        value = 2020;
+        if (value < 10){
+          j += sprintf(data+j, "%d", 0);
+        }
+        j += sprintf(data+j, "%d", value);
+        j += sprintf(data+j, "%c", '-');
+
+        value = 6;
+        if (value < 10){
+          j += sprintf(data+j, "%d", 0);
+        }
+        j += sprintf(data+j, "%d", value);
+        j += sprintf(data+j, "%c", '-');
+
+        value = 16;
+        if (value < 10){
+          j += sprintf(data+j, "%d", 0);
+        }
+        j += sprintf(data+j, "%d", value);
+
+        j += sprintf(data+j, "%c", ' ');
+
+        value = 12;
+        if (value < 10){
+          j += sprintf(data+j, "%d", 0);
+        }
+        j += sprintf(data+j, "%d", value);
+        j += sprintf(data+j, "%c", ':');
+
+        value = 28;
+        if (value < 10){
+          j += sprintf(data+j, "%d", 0);
+        }
+        j += sprintf(data+j, "%d", value);
+        j += sprintf(data+j, "%c", ':');
+
+        value = 30;
+        if (value < 10){
+          j += sprintf(data+j, "%d", 0);
+        }
+        j += sprintf(data+j, "%d", value);
+
+        j += sprintf(data+j, "%c", ',');
+
+        //Serial.print(j);
+        //Serial.println();
+
+        //SEND 20 data
+        for(i=0; i<25; i++){
           /////////////////////////////////// Get Accelero Data ///////////////////////////////////////        
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax-AXoff)/16384.00;
@@ -252,7 +270,10 @@ void loop()
           AZ = ((float)az-AZoff)/16384.00; //remove 1G before dividing
 
           
-
+//          floatValue.v = AX;
+          
+          
+          
           dtostrf(AX,5, 2, buf);
           tempString = (char*)buf;
           tempString.trim();      
@@ -264,26 +285,50 @@ void loop()
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
-           //hexing
-          for (size_t i = 0; i < strlen(buf) - 1;i++){
-            resultHax = String((buf[i]), HEX);
-            int str_leg = resultHax.length() + 1;
-            chr_arr[str_leg];
-            resultHax.toCharArray(chr_arr,str_leg);
-//            Serial.print(chr_arr);
-//            j += sprintf(data+j, "%s", chr_arr);
-          } //Serial.println();
           j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
         }
-        
+
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)){
-          Serial.println("sendtoWait failed");
+          Serial.println("sendtoWait failed 1");
         }
       }
 
-     
+      /////////////////////////////////// Sending Packet5 ///////////////////////////////////////      
+      if(Server_Command2 == (char*)buf){
+        j = 0;
+        //SEND 20 data
+        for(i=0; i<25; i++){
+          /////////////////////////////////// Get Accelero Data ///////////////////////////////////////        
+          accelgyro.getAcceleration(&ax, &ay, &az);
+          AX = ((float)ax-AXoff)/16384.00;
+          //if sensor pcb placed on table:
+          //AY = ((float)ay-AYoff)/16384.00; //16384 is just 32768/2 to get our 1G value
+          //AZ = ((float)az-(AZoff-16384))/16384.00; //remove 1G before dividing
+  
+          //for RTU01
+          AY = ((float)ay-(AYoff-16384))/16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+          AZ = ((float)az-AZoff)/16384.00; //remove 1G before dividing
+
+          
+          
+          
+          dtostrf(AX,5, 2, buf);
+          tempString = (char*)buf;
+          tempString.trim();      
+          tempString.toCharArray(buf, tempString.length()+1);
+          j += sprintf(data+j, "%s", buf);
+          j += sprintf(data+j, "%c", ',');
+
+          dtostrf(AY,5, 2, buf);
+          tempString = (char*)buf;
+          tempString.trim();      
+          tempString.toCharArray(buf, tempString.length()+1);
+          j += sprintf(data+j, "%s", buf);
+          j += sprintf(data+j, "%c", ',');
+        }
+
         /////////////////////////////////// Get Last row Accelero Data ///////////////////////////////////////        
         accelgyro.getAcceleration(&ax, &ay, &az);
         AX = ((float)ax-AXoff)/16384.00;
@@ -294,7 +339,10 @@ void loop()
         //for RTU01
         AY = ((float)ay-(AYoff-16384))/16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
         AZ = ((float)az-AZoff)/16384.00; //remove 1G before dividing
-  
+
+        
+          
+          
         dtostrf(AX,5, 2, buf);
         tempString = (char*)buf;
         tempString.trim();      
@@ -306,23 +354,16 @@ void loop()
         tempString = (char*)buf;
         tempString.trim();      
         tempString.toCharArray(buf, tempString.length()+1);
-         //hexing
-          for (size_t i = 0; i < strlen(buf) - 1;i++){
-            resultHax = String((buf[i]), HEX);
-            int str_leg = resultHax.length() + 1;
-            chr_arr[str_leg];
-            resultHax.toCharArray(chr_arr,str_leg);
-//            Serial.print(chr_arr);
-//            j += sprintf(data+j, "%s", chr_arr);
-          } //Serial.println();
         j += sprintf(data+j, "%s", buf);
+        
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)){
-          Serial.println("sendtoWait failed");
+          Serial.println("sendtoWait failed ampas");
         }
       }
     }
   }
+}
 
 ///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////
 //print date and time to Serial

@@ -29,7 +29,7 @@ uint8_t data3[] = "REQ_RTU01_3";
 uint8_t data4[] = "REQ_RTU01_4";
 uint8_t data5[] = "REQ_RTU01_5";
 // Dont put this on the stack:
-uint8_t buf[RH_RF95_MAX_MESSAGE_LEN]; //251 bytes
+uint8_t buf[251]; //251 bytes
 
 String command_PC = "";
 int number_of_reading_data = 0;
@@ -112,70 +112,70 @@ void request_RTU01(){
   }
      
   /////////////////////////////////// Request Packet2 ///////////////////////////////////////        
-  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS))
-  {
-    // Now wait for a reply from the RTU01
-    uint8_t len = sizeof(buf);
-    uint8_t from;   
-    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
-    {
-      //Serial.print("RTU01_0x");
-      //Serial.print(from, HEX);
-      Serial.print((char*)buf);
-    }
-    else
-    {
-      Serial.println("RTU01 no reply");
-    }
-  }
-  else{
-    Serial.println("sendtoWait failed");
-  }
+//  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS))
+//  {
+//    // Now wait for a reply from the RTU01
+//    uint8_t len = sizeof(buf);
+//    uint8_t from;   
+//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+//    {
+//      //Serial.print("RTU01_0x");
+//      //Serial.print(from, HEX);
+//      Serial.print((char*)buf);
+//    }
+//    else
+//    {
+//      Serial.println("RTU01 no reply");
+//    }
+//  }
+//  else{
+//    Serial.println("sendtoWait failed 2");
+//  }
   
   /////////////////////////////////// Request Packet3 ///////////////////////////////////////        
-  if (manager.sendtoWait(data3, sizeof(data3), CLIENT_ADDRESS))
-  {
-    // Now wait for a reply from the RTU01
-    uint8_t len = sizeof(buf);
-    uint8_t from;   
-    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
-    {
-      //Serial.print("RTU01_0x");
-      //Serial.print(from, HEX);
-      Serial.print((char*)buf);
-    }
-    else
-    {
-      Serial.println("RTU01 no reply");
-    }
-  }
-  else{
-    Serial.println("sendtoWait failed");
-  }
-
-  /////////////////////////////////// Request Packet4 ///////////////////////////////////////        
-  if (manager.sendtoWait(data4, sizeof(data4), CLIENT_ADDRESS))
-  {
-    // Now wait for a reply from the RTU01
-    uint8_t len = sizeof(buf);
-    uint8_t from;   
-    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
-    {
-      //Serial.print("RTU01_0x");
-      //Serial.print(from, HEX);
-      Serial.print((char*)buf);
-    }
-    else
-    {
-      Serial.println("RTU01 no reply");
-    }
-  }
-  else{
-    Serial.println("sendtoWait failed");
-  }
-
-  /////////////////////////////////// Request Packet5 ///////////////////////////////////////        
-  if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS))
+//  if (manager.sendtoWait(data3, sizeof(data3), CLIENT_ADDRESS))
+//  {
+//    // Now wait for a reply from the RTU01
+//    uint8_t len = sizeof(buf);
+//    uint8_t from;   
+//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+//    {
+//      //Serial.print("RTU01_0x");
+//      //Serial.print(from, HEX);
+//      Serial.print((char*)buf);
+//    }
+//    else
+//    {
+//      Serial.println("RTU01 no reply");
+//    }
+//  }
+//  else{
+//    Serial.println("sendtoWait failed");
+//  }
+//
+//  /////////////////////////////////// Request Packet4 ///////////////////////////////////////        
+//  if (manager.sendtoWait(data4, sizeof(data4), CLIENT_ADDRESS))
+//  {
+//    // Now wait for a reply from the RTU01
+//    uint8_t len = sizeof(buf);
+//    uint8_t from;   
+//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+//    {
+//      //Serial.print("RTU01_0x");
+//      //Serial.print(from, HEX);
+//      Serial.print((char*)buf);
+//    }
+//    else
+//    {
+//      Serial.println("RTU01 no reply");
+//    }
+//  }
+//  else{
+//    Serial.println("sendtoWait failed");
+//  }
+//
+//  /////////////////////////////////// Request Packet5 ///////////////////////////////////////        
+  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS))
   {
     // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);
