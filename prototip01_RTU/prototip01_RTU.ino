@@ -269,19 +269,24 @@ void loop()
           AY = ((float)ay-(AYoff-16384))/16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           AZ = ((float)az-AZoff)/16384.00; //remove 1G before dividing
 
-          
-//          floatValue.v = AX;
-          
-          
-          
-          dtostrf(AX,5, 2, buf);
+          uint16_t lmaox = random(1,3);
+          uint16_t lmaoy = random(4,6);
+          for(size_t i=0, i<2,i++){
+            sprintf(buf, "%#x", lmaox,HEX); 
+          }
+//          dtostrf(lmaox,5, 2, buf);
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
           j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
 
-          dtostrf(AY,5, 2, buf);
+//          dtostrf(lmaoy,5, 2, buf);
+          for(size_t i=0, i<2,i++){
+            sprintf(buf, "%#x", lmaoy,HEX); 
+          }
+          sprintf(buf, "%#x", lmaoy,HEX);
+          
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
@@ -313,15 +318,18 @@ void loop()
 
           
           
-          
-          dtostrf(AX,5, 2, buf);
+          uint16_t lmaox = random(1,3);
+          uint16_t lmaoy = random(4,6); 
+//          dtostrf(lmaox,5, 2, buf);
+          sprintf(buf, "%#x", lmaox,HEX);
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
           j += sprintf(data+j, "%s", buf);
           j += sprintf(data+j, "%c", ',');
 
-          dtostrf(AY,5, 2, buf);
+//          dtostrf(lmaoy,5, 2, buf);
+          sprintf(buf, "%#x", lmaoy,HEX);
           tempString = (char*)buf;
           tempString.trim();      
           tempString.toCharArray(buf, tempString.length()+1);
@@ -342,15 +350,18 @@ void loop()
 
         
           
-          
-        dtostrf(AX,5, 2, buf);
+        uint16_t lmaox = random(1,3);
+        uint16_t lmaoy = random(4,6);   
+//        dtostrf(lmaox,5, 2, buf);
+        sprintf(buf, "%#x", lmaox,HEX);
         tempString = (char*)buf;
         tempString.trim();      
         tempString.toCharArray(buf, tempString.length()+1);
         j += sprintf(data+j, "%s", buf);
         j += sprintf(data+j, "%c", ',');
 
-        dtostrf(AY,5, 2, buf);
+//        dtostrf(lmaoy,5, 2, buf);
+        sprintf(buf, "%#x", lmaoy,HEX);
         tempString = (char*)buf;
         tempString.trim();      
         tempString.toCharArray(buf, tempString.length()+1);

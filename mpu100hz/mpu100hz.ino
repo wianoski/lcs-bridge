@@ -129,16 +129,17 @@ void loop() {
 
     #ifdef OUTPUT_READABLE_ACCELGYRO
         // display tab-separated accel/gyro x/y/z values
-        for(int i=0;i<50;i++){
+//        for(int i=0;i<50;i++){
           Serial.println(ax);
           for(size_t i=0;i<4;i++){
             sprintf(arr, "%03i", ax);
-            Serial.print(arr[i],HEX);
+            String sebentar = String(arr[i],HEX);
+            Serial.print(sebentar);
           }
           Serial.println("");
   //        Serial.print(ay);
-          delay(1);
-        }
+          delay(100);
+//        }
     #endif
 
     #ifdef OUTPUT_BINARY_ACCELGYRO
