@@ -1,5 +1,5 @@
 /// RTU05   : COM3
-// Accelero: +/- 2g 
+// Accelero: +/- 2g
 // Gyro    : +/- 250 degrees/sec
 // 500MHz
 
@@ -18,7 +18,7 @@
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    #include "Wire.h"
+#include "Wire.h"
 #endif
 
 #include <RHReliableDatagram.h>
@@ -80,7 +80,7 @@ String tempString = "-0.12";
 int i = 0; //for loop increment variable
 int j = 0;
 int value;
-char temp[10]; 
+char temp[10];
 
 #define numberOfTests   100
 
@@ -98,28 +98,28 @@ cracked_float_t;
 
 cracked_float_t floatValue;
 
-void setup() 
+void setup()
 {
   // join I2C bus (I2Cdev library doesn't do this automatically)
-  #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-      Wire.begin();
-  #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-      Fastwire::setup(400, true);
-  #endif
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+  Wire.begin();
+#elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+  Fastwire::setup(400, true);
+#endif
 
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
-//  while (!Serial);
+  //  while (!Serial);
   Serial.begin(9600);
   delay(100);
 
   //setSyncProvider() causes the Time library to synchronize with the
   //external RTC by calling RTC.get() every five minutes by default.
-//  setSyncProvider(RTC.get);
-//  Serial << F("RTC Sync");
-//  if (timeStatus() != timeSet) Serial << F("RTC FAIL");
-//  Serial << endl;
+  //  setSyncProvider(RTC.get);
+  //  Serial << F("RTC Sync");
+  //  if (timeStatus() != timeSet) Serial << F("RTC FAIL");
+  //  Serial << endl;
 
   // initialize device
   Serial.println("Initializing ACC");
@@ -128,10 +128,10 @@ void setup()
   // verify connection
   Serial.println("Testing ACC connections...");
   Serial.println(accelgyro.testConnection() ? "ACC connection successful" : "ACC connection failed");
-  
+
   Serial.println("Calibration ACC...");
   ///////////////////////////////////// Calibration Offset MPU6050 ////////////////////////////////////
-  for(i=0; i<numberOfTests; i++){
+  for (i = 0; i < numberOfTests; i++) {
     accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
     AXoff += ax;
     AYoff += ay;
@@ -139,24 +139,24 @@ void setup()
     GXoff += gx;
     GYoff += gy;
     GZoff += gz;
-     
+
     delay(25);
   }
-    
-  AXoff = AXoff/numberOfTests;
-  AYoff = AYoff/numberOfTests;
-  AZoff = AZoff/numberOfTests;
-  GXoff = GXoff/numberOfTests;
-  GYoff = GYoff/numberOfTests;
-  GZoff = GZoff/numberOfTests;
+
+  AXoff = AXoff / numberOfTests;
+  AYoff = AYoff / numberOfTests;
+  AZoff = AZoff / numberOfTests;
+  GXoff = GXoff / numberOfTests;
+  GYoff = GYoff / numberOfTests;
+  GZoff = GZoff / numberOfTests;
   ////////////////////////////////////////////////////////////////////////////////////////
- 
+
   // configure Arduino LED pin for output
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
   Serial.println("RTU01 Ready");
-  
+
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
@@ -168,32 +168,41 @@ void setup()
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
   // The default transmitter power is 13dBm, using PA_BOOST.
-  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
-//  driver.setTxPower(23, false);
+  //  driver.setTxPower(23, false);
   // If you are using Modtronix inAir4 or inAir9,or any other module which uses the
   // transmitter RFO pins and not the PA_BOOST pins
-  // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true. 
+  // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true.
   // Failure to do that will result in extremely low transmit powers.
-//  driver.setTxPower(14, true);
+  //  driver.setTxPower(14, true);
   // You can optionally require this module to wait until Channel Activity
   // Detection shows no activity on the channel before transmitting by setting
   // the CAD timeout to non-zero:
-//  driver.setCADTimeout(10000);
+  //  driver.setCADTimeout(10000);
 }
 
 String resultHax = "";
-char chr_arr[20] ;
+char arr[4] ;
 int k;
+char hexbuffer1[5];
+char hexbuffer2[5];
+char hexbuffer3[5];
+char hexbuffer4[5];
+char hexbuffer5[5];
+char hexbuffer6[5];
 
 //<Gateway_ID> <RTU_ID><Command><Data_Sampling>
 char gtwID[2] = "01";
 char serverCmd1[10] = "REQ_RTU01_1";
 char serverCmd2[10] = "REQ_RTU01_2";
 char valAx[4], valAy[4];
+float lmaox = random(1, 4);
+float lmaoy = random(6, 9);
+//char arr[4];
 void loop()
 {
-//  time_t t;
+  //  time_t t;
 
   if (manager.available())
   {
@@ -201,212 +210,126 @@ void loop()
     uint8_t len = sizeof(buf);
     uint8_t from;
     if (manager.recvfromAck(buf, &len, &from))
-    Serial.println((char*)buf);
+      Serial.println((char*)buf);
     {
-      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////      
-      if(Server_Command1 == (char*)buf){
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Server_Command1 == (char*)buf) {
         j = 0;
-        /////////////////////////////////// Get RTC Data ///////////////////////////////////////        
-//        t = now();
-
-        value = 2020;
-        if (value < 10){
-          j += sprintf(data+j, "%d", 0);
-        }
-        j += sprintf(data+j, "%d", value);
-        j += sprintf(data+j, "%c", '-');
-
-        value = 6;
-        if (value < 10){
-          j += sprintf(data+j, "%d", 0);
-        }
-        j += sprintf(data+j, "%d", value);
-        j += sprintf(data+j, "%c", '-');
-
-        value = 16;
-        if (value < 10){
-          j += sprintf(data+j, "%d", 0);
-        }
-        j += sprintf(data+j, "%d", value);
-
-        j += sprintf(data+j, "%c", ' ');
-
-        value = 12;
-        if (value < 10){
-          j += sprintf(data+j, "%d", 0);
-        }
-        j += sprintf(data+j, "%d", value);
-        j += sprintf(data+j, "%c", ':');
-
-        value = 28;
-        if (value < 10){
-          j += sprintf(data+j, "%d", 0);
-        }
-        j += sprintf(data+j, "%d", value);
-        j += sprintf(data+j, "%c", ':');
-
-        value = 30;
-        if (value < 10){
-          j += sprintf(data+j, "%d", 0);
-        }
-        j += sprintf(data+j, "%d", value);
-
-        j += sprintf(data+j, "%c", ',');
-
-        //Serial.print(j);
-        //Serial.println();
 
         //SEND 20 data
-        for(i=0; i<25; i++){
-          /////////////////////////////////// Get Accelero Data ///////////////////////////////////////        
+        for (i = 0; i < 10; i++) {
+          /////////////////////////////////// Get Accelero Data ///////////////////////////////////////
           accelgyro.getAcceleration(&ax, &ay, &az);
-          AX = ((float)ax-AXoff)/16384.00;
+          AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
           //AY = ((float)ay-AYoff)/16384.00; //16384 is just 32768/2 to get our 1G value
           //AZ = ((float)az-(AZoff-16384))/16384.00; //remove 1G before dividing
-  
+
           //for RTU01
-          AY = ((float)ay-(AYoff-16384))/16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-          AZ = ((float)az-AZoff)/16384.00; //remove 1G before dividing
+          AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+          AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
-          uint16_t lmaox = random(1,3);
-          uint16_t lmaoy = random(4,6);
-          for(size_t i=0, i<2,i++){
-            sprintf(buf, "%#x", lmaox,HEX); 
+          //          dtostrf(lmaox,5, 2, buf);
+          for (size_t i = 0; i < 4; i++) {
+            sprintf(arr, "%03i", ax);
+            String sebentar = String(arr[i], HEX);
+            Serial.print(sebentar);
+            //            j += sprintf(data+j, "%s", sebentar);
           }
-//          dtostrf(lmaox,5, 2, buf);
+          Serial.println("babilah");
+          sprintf(buf, "%d", ax);
           tempString = (char*)buf;
-          tempString.trim();      
-          tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
-          j += sprintf(data+j, "%c", ',');
+          tempString.trim();
+          tempString.toCharArray(buf, tempString.length() + 1);
+          j += sprintf(data + j, "%s", buf);
+          j += sprintf(data + j, "%c", ',');
 
-//          dtostrf(lmaoy,5, 2, buf);
-          for(size_t i=0, i<2,i++){
-            sprintf(buf, "%#x", lmaoy,HEX); 
-          }
-          sprintf(buf, "%#x", lmaoy,HEX);
-          
+          //          dtostrf(lmaoy,5, 2, buf);
+          sprintf(hexbuffer2, "%04.X", ax);
+          sprintf(buf, "%d", ay);
           tempString = (char*)buf;
-          tempString.trim();      
-          tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
-          j += sprintf(data+j, "%c", ',');
+          tempString.trim();
+          tempString.toCharArray(buf, tempString.length() + 1);
+          j += sprintf(data + j, "%s", buf);
+          j += sprintf(data + j, "%c", ',');
+
+
         }
 
         // Send a reply data to the Server
-        if (!manager.sendtoWait(data, sizeof(data), from)){
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
           Serial.println("sendtoWait failed 1");
         }
       }
 
-      /////////////////////////////////// Sending Packet5 ///////////////////////////////////////      
-      if(Server_Command2 == (char*)buf){
+      /////////////////////////////////// Sending Packet5 ///////////////////////////////////////
+      if (Server_Command2 == (char*)buf) {
         j = 0;
         //SEND 20 data
-        for(i=0; i<25; i++){
-          /////////////////////////////////// Get Accelero Data ///////////////////////////////////////        
+        for (i = 0; i < 9; i++) {
+          /////////////////////////////////// Get Accelero Data ///////////////////////////////////////
           accelgyro.getAcceleration(&ax, &ay, &az);
-          AX = ((float)ax-AXoff)/16384.00;
+          AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
           //AY = ((float)ay-AYoff)/16384.00; //16384 is just 32768/2 to get our 1G value
           //AZ = ((float)az-(AZoff-16384))/16384.00; //remove 1G before dividing
-  
+
           //for RTU01
-          AY = ((float)ay-(AYoff-16384))/16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-          AZ = ((float)az-AZoff)/16384.00; //remove 1G before dividing
+          AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+          AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
-          
-          
-          uint16_t lmaox = random(1,3);
-          uint16_t lmaoy = random(4,6); 
-//          dtostrf(lmaox,5, 2, buf);
-          sprintf(buf, "%#x", lmaox,HEX);
+          //          dtostrf(lmaox,5, 2, buf);
+          sprintf(hexbuffer3, "%04.X", ax);
+          sprintf(buf, "%d", ax);
           tempString = (char*)buf;
-          tempString.trim();      
-          tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
-          j += sprintf(data+j, "%c", ',');
+          tempString.trim();
+          tempString.toCharArray(buf, tempString.length() + 1);
+          j += sprintf(data + j, "%s", buf);
+          j += sprintf(data + j, "%c", ',');
 
-//          dtostrf(lmaoy,5, 2, buf);
-          sprintf(buf, "%#x", lmaoy,HEX);
+          //          dtostrf(lmaoy,5, 2, buf);
+          sprintf(hexbuffer4, "%04.X", ay);
+          sprintf(buf, "%d", ay);
           tempString = (char*)buf;
-          tempString.trim();      
-          tempString.toCharArray(buf, tempString.length()+1);
-          j += sprintf(data+j, "%s", buf);
-          j += sprintf(data+j, "%c", ',');
+          tempString.trim();
+          tempString.toCharArray(buf, tempString.length() + 1);
+          j += sprintf(data + j, "%s", buf);
+          j += sprintf(data + j, "%c", ',');
         }
 
-        /////////////////////////////////// Get Last row Accelero Data ///////////////////////////////////////        
+        /////////////////////////////////// Get Last row Accelero Data ///////////////////////////////////////
         accelgyro.getAcceleration(&ax, &ay, &az);
-        AX = ((float)ax-AXoff)/16384.00;
+        AX = ((float)ax - AXoff) / 16384.00;
         //if sensor pcb placed on table:
         //AY = ((float)ay-AYoff)/16384.00; //16384 is just 32768/2 to get our 1G value
         //AZ = ((float)az-(AZoff-16384))/16384.00; //remove 1G before dividing
-  
+
         //for RTU01
-        AY = ((float)ay-(AYoff-16384))/16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-        AZ = ((float)az-AZoff)/16384.00; //remove 1G before dividing
+        AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+        AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
-        
-          
-        uint16_t lmaox = random(1,3);
-        uint16_t lmaoy = random(4,6);   
-//        dtostrf(lmaox,5, 2, buf);
-        sprintf(buf, "%#x", lmaox,HEX);
+        sprintf(hexbuffer5, "%04.X", ax);
+        sprintf(buf, "%d", ax);
         tempString = (char*)buf;
-        tempString.trim();      
-        tempString.toCharArray(buf, tempString.length()+1);
-        j += sprintf(data+j, "%s", buf);
-        j += sprintf(data+j, "%c", ',');
+        tempString.trim();
+        tempString.toCharArray(buf, tempString.length() + 1);
+        j += sprintf(data + j, "%s", buf);
+        j += sprintf(data + j, "%c", ',');
 
-//        dtostrf(lmaoy,5, 2, buf);
-        sprintf(buf, "%#x", lmaoy,HEX);
+        //        dtostrf(lmaoy,5, 2, buf);
+        sprintf(hexbuffer6, "%04.X", ax);
+        sprintf(buf, "%d", ay);
         tempString = (char*)buf;
-        tempString.trim();      
-        tempString.toCharArray(buf, tempString.length()+1);
-        j += sprintf(data+j, "%s", buf);
-        
+        tempString.trim();
+        tempString.toCharArray(buf, tempString.length() + 1);
+        j += sprintf(data + j, "%s", buf);
+        //
         // Send a reply data to the Server
-        if (!manager.sendtoWait(data, sizeof(data), from)){
-          Serial.println("sendtoWait failed ampas");
+
+        if (manager.sendtoWait(data, sizeof(data), from)) {
+          Serial.println((char*)data);
         }
       }
     }
   }
-}
-
-///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////
-//print date and time to Serial
-//void printDateTime(time_t t)
-//{
-//    printDate(t);
-//    Serial << ' ';
-//    printTime(t);
-//}
-//
-////print time to Serial
-//void printTime(time_t t)
-//{
-//    printI00(hour(t), ':');
-//    printI00(minute(t), ':');
-//    printI00(second(t), ' ');
-//}
-//
-////print date to Serial
-//void printDate(time_t t)
-//{
-//    printI00(day(t), 0);
-//    Serial << monthShortStr(month(t)) << _DEC(year(t));
-//}
-
-//Print an integer in "00" format (with leading zero),
-//followed by a delimiter character to Serial.
-//Input value assumed to be between 0 and 99.
-void printI00(int val, char delim)
-{
-    if (val < 10) Serial << '0';
-    Serial << _DEC(val);
-    if (delim > 0) Serial << delim;
-    return;
 }
