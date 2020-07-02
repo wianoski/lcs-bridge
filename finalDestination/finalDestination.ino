@@ -68,7 +68,16 @@ int16_t gx, gy, gz;
 
 #define LED_PIN 13
 bool blinkState = false;
+uint8_t buff[20];
 
+uint16_t bax;
+uint16_t bay;
+
+uint8_t gateway_ID = 0x01;
+uint8_t RTU_ID = 0x01;
+uint8_t Packet_No = 1;
+
+int index = 0;
 void setup() {
   // join I2C bus (I2Cdev library doesn't do this automatically)
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
@@ -93,7 +102,7 @@ void setup() {
   // use the code below to change accel/gyro offset values
   /*
     Serial.println("Updating internal sensor offsets...");
-    // -76  -2359 1688  0 0 0
+    // -76	-2359	1688	0	0	0
     Serial.print(accelgyro.getXAccelOffset()); Serial.print("\t"); // -76
     Serial.print(accelgyro.getYAccelOffset()); Serial.print("\t"); // -2359
     Serial.print(accelgyro.getZAccelOffset()); Serial.print("\t"); // 1688
@@ -114,15 +123,15 @@ void setup() {
   */
 
   // configure Arduino LED pin for output
+  buff[index] = gateway_ID;
+  index++;
+  buff[index] = RTU_ID;
+  index++;
+  buff[index] = Packet_No;
+  index++;
   pinMode(LED_PIN, OUTPUT);
 }
 
-
-char arr[4];
-uint8_t bufff[20];
-
-uint16_t ax;
-uint16_t ay;
 
 void loop() {
   // read raw accel/gyro measurements from device
@@ -134,27 +143,32 @@ void loop() {
 
 #ifdef OUTPUT_READABLE_ACCELGYRO
   // display tab-separated accel/gyro x/y/z values
-  //        for(int i=0;i<50;i++){
+
+
   Serial.println(ax);
-  uint8_t abc = (uint8_t)(ax >> 8) ;
-  uint8_t abb = (uint8_t)(ax & 0xFF);
+  bax = ax; //pastikan 2 bytes
+  buff[index] = highByte(bax); //MSB
+  index++;
+  buff[index] = lowByte(bax); //LSB
+  index++;
+  //  bay = ay; //pastikan 2 bytes
+  //  buff[index] = highByte(bay); //MSB
+  //  index++;
+  //  buff[index] = lowByte(bay); //LSB
+  //  index++;
 
-  uint8_t ag[2] = {abc,abb};
-  uint8_t szo = sizeof(ag);
-  Serial.write(ag, szo);
-  
-  //  Serial.write((uint16_t)(ax & 0xFF));
-  //    for (size_t i = 0; i < 4; i++) {
-  //      sprintf(arr, "%03i", ax);
-  //      String sebentar = String(arr[i], HEX);
-  //      Serial.print(arr[i], HEX);
-  //    }
-  //  String aaaa = decToHex(ax);
+  //  dst.... (bisa dibuat loop)
 
+  //check:
+
+  for (int a = 0; a < 20; a++) {
+    Serial.write(buff[a]);
+  } // liat hasilnya di HEX Doclight
+
+  //    send_Lora(...., buff, .....) //lihat s.c saya
   Serial.println("");
-  //        Serial.print(ay);
-  delay(500);
-  //        }
+  delay(1000);
+
 #endif
 
 #ifdef OUTPUT_BINARY_ACCELGYRO

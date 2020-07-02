@@ -88,15 +88,16 @@ char temp[10];
 #define VBATPIN A0 //(Promini)
 float measuredvbat;
 
+uint8_t buff[20];
+uint16_t bax;
+uint16_t bay;
 
-typedef union
-{
-  float v;
-  uint32_t as_int;
-}
-cracked_float_t;
+uint8_t gateway_ID = 0x01;
+uint8_t RTU_ID = 0x01;
+uint8_t Packet_No = 1;
 
-cracked_float_t floatValue;
+int index = 0;
+
 
 void setup()
 {
@@ -180,26 +181,15 @@ void setup()
   // Detection shows no activity on the channel before transmitting by setting
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
+  buff[index] = gateway_ID;
+  index++;
+  buff[index] = RTU_ID;
+  index++;
+  buff[index] = Packet_No;
+  index++;
 }
 
-String resultHax = "";
-char arr[4] ;
-int k;
-char hexbuffer1[5];
-char hexbuffer2[5];
-char hexbuffer3[5];
-char hexbuffer4[5];
-char hexbuffer5[5];
-char hexbuffer6[5];
 
-//<Gateway_ID> <RTU_ID><Command><Data_Sampling>
-char gtwID[2] = "01";
-char serverCmd1[10] = "REQ_RTU01_1";
-char serverCmd2[10] = "REQ_RTU01_2";
-char valAx[4], valAy[4];
-float lmaox = random(1, 4);
-float lmaoy = random(6, 9);
-//char arr[4];
 void loop()
 {
   //  time_t t;
@@ -209,8 +199,12 @@ void loop()
     // Wait for a message addressed to us from the client
     uint8_t len = sizeof(buf);
     uint8_t from;
+
+    //    uint8_t data[RH_RF95_MAX_MESSAGE_LEN]; //251 bytes
+
+    //    uint8_t buf[50]; //Promini
     if (manager.recvfromAck(buf, &len, &from))
-      Serial.println((char*)buf);
+//      Serial.println((char*)buf);
     {
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Server_Command1 == (char*)buf) {
@@ -230,22 +224,24 @@ void loop()
           AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
           //          dtostrf(lmaox,5, 2, buf);
-          for (size_t i = 0; i < 4; i++) {
-            sprintf(arr, "%03i", ax);
-            String sebentar = String(arr[i], HEX);
-            Serial.print(sebentar);
-            //            j += sprintf(data+j, "%s", sebentar);
-          }
-          Serial.println("babilah");
+
+          uint8_t abc = (uint8_t)(ax >> 8) ;
+          uint8_t abb = (uint8_t)(ax & 0xFF);
+
+          uint8_t ag[2] = {abc, abb};
+          uint8_t szo = sizeof(ag);
+          Serial.write(ag, szo);
+          
           sprintf(buf, "%d", ax);
           tempString = (char*)buf;
           tempString.trim();
           tempString.toCharArray(buf, tempString.length() + 1);
+
           j += sprintf(data + j, "%s", buf);
           j += sprintf(data + j, "%c", ',');
 
           //          dtostrf(lmaoy,5, 2, buf);
-          sprintf(hexbuffer2, "%04.X", ax);
+
           sprintf(buf, "%d", ay);
           tempString = (char*)buf;
           tempString.trim();
@@ -257,8 +253,9 @@ void loop()
         }
 
         // Send a reply data to the Server
-        if (!manager.sendtoWait(data, sizeof(data), from)) {
-          Serial.println("sendtoWait failed 1");
+        if (manager.sendtoWait(data, sizeof(data), from)) {
+          Serial.println("");
+          Serial.println((char*)data);
         }
       }
 
@@ -279,7 +276,7 @@ void loop()
           AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
           //          dtostrf(lmaox,5, 2, buf);
-          sprintf(hexbuffer3, "%04.X", ax);
+
           sprintf(buf, "%d", ax);
           tempString = (char*)buf;
           tempString.trim();
@@ -288,7 +285,7 @@ void loop()
           j += sprintf(data + j, "%c", ',');
 
           //          dtostrf(lmaoy,5, 2, buf);
-          sprintf(hexbuffer4, "%04.X", ay);
+
           sprintf(buf, "%d", ay);
           tempString = (char*)buf;
           tempString.trim();
@@ -308,7 +305,6 @@ void loop()
         AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
         AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
-        sprintf(hexbuffer5, "%04.X", ax);
         sprintf(buf, "%d", ax);
         tempString = (char*)buf;
         tempString.trim();
@@ -317,7 +313,6 @@ void loop()
         j += sprintf(data + j, "%c", ',');
 
         //        dtostrf(lmaoy,5, 2, buf);
-        sprintf(hexbuffer6, "%04.X", ax);
         sprintf(buf, "%d", ay);
         tempString = (char*)buf;
         tempString.trim();
@@ -326,8 +321,8 @@ void loop()
         //
         // Send a reply data to the Server
 
-        if (manager.sendtoWait(data, sizeof(data), from)) {
-          Serial.println((char*)data);
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          Serial.println("sendTowaitfail");
         }
       }
     }
