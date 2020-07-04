@@ -136,8 +136,8 @@ void loop() {
   // display tab-separated accel/gyro x/y/z values
   //        for(int i=0;i<50;i++){
   Serial.println(ax);
-  uint8_t abc = (uint8_t)(ax >> 8) ;
-  uint8_t abb = (uint8_t)(ax & 0xFF);
+  int abc = (uint8_t)(ax >> 8) ;
+  int abb = (uint8_t)(ax & 0xFF);
 
   uint8_t ag[2] = {abc,abb};
   uint8_t szo = sizeof(ag);

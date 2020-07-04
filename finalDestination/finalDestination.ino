@@ -68,7 +68,7 @@ int16_t gx, gy, gz;
 
 #define LED_PIN 13
 bool blinkState = false;
-uint8_t buff[20];
+uint16_t buff[20];
 
 uint16_t bax;
 uint16_t bay;
@@ -161,13 +161,13 @@ void loop() {
 
   //check:
 
-  for (int a = 0; a < 20; a++) {
+  for (int a = 0; a < 64; a++) {
     Serial.write(buff[a]);
   } // liat hasilnya di HEX Doclight
 
   //    send_Lora(...., buff, .....) //lihat s.c saya
   Serial.println("");
-  delay(1000);
+  delay(100);
 
 #endif
 
