@@ -78,7 +78,7 @@ String Server_Command5 = String("REQ_RTU01_5");
 String tempString = "-0.12";
 
 int i = 0; //for loop increment variable
-int j = 0;
+int j,l = 0;
 int value;
 char temp[10];
 
@@ -209,7 +209,7 @@ void loop()
     {
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Server_Command1 == (char*)buf) {
-        j = 0;
+        l,j = 0;
 
         uint8_t header[3] = {gateway_ID, RTU_ID, Packet_No};
         //        memcpy(temps, header, sizeof(header));
@@ -233,7 +233,6 @@ void loop()
 
           uint8_t ag[2] = {abc, abb};
           uint8_t szo = sizeof(ag);
-          //          Serial.write(ag, szo);
 
           sprintf(buf, "%d", ax);
           tempString = (char*)buf;
@@ -249,7 +248,6 @@ void loop()
           uint8_t acb = (uint8_t)(ay & 0xFF);
           uint8_t af[2] = {acc, acb};
           uint8_t szof = sizeof(ag);
-          //          Serial.write(af, szof);
 
           sprintf(buf, "%d", ay);
           tempString = (char*)buf;
@@ -258,8 +256,8 @@ void loop()
           j += sprintf(data + j, "%s", buf);
           j += sprintf(data + j, "%c", ',');
 
-          memcpy(temps, ag, sizeof(ag));
-          memcpy(temps + sizeof(ag), af, sizeof(af));
+          l += memcpy(temps, ag, sizeof(ag));
+          l += memcpy(temps + sizeof(l), af, sizeof(af));
           Serial.write(temps, sizeof(temps));
 
 
