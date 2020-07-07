@@ -98,7 +98,7 @@ uint8_t Packet_No = 1;
 
 int index = 0;
 
-
+uint8_t temps[4];
 void setup()
 {
   // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -181,13 +181,14 @@ void setup()
   // Detection shows no activity on the channel before transmitting by setting
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
-  buff[index] = gateway_ID;
-  index++;
-  buff[index] = RTU_ID;
-  index++;
-  buff[index] = Packet_No;
-  index++;
+  //  temps[index] = gateway_ID;
+  //  index++;
+  //  temps[index] = RTU_ID;
+  //  index++;
+  //  temps[index] = Packet_No;
+  //  index++;
 }
+
 
 
 void loop()
@@ -204,14 +205,16 @@ void loop()
 
     //    uint8_t buf[50]; //Promini
     if (manager.recvfromAck(buf, &len, &from))
-//      Serial.println((char*)buf);
+      //      Serial.println((char*)buf);
     {
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Server_Command1 == (char*)buf) {
         j = 0;
 
+        uint8_t header[3] = {gateway_ID, RTU_ID, Packet_No};
+        //        memcpy(temps, header, sizeof(header));
         //SEND 20 data
-        for (i = 0; i < 10; i++) {
+        for (i = 0; i < 5; i++) {
           /////////////////////////////////// Get Accelero Data ///////////////////////////////////////
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
@@ -230,8 +233,8 @@ void loop()
 
           uint8_t ag[2] = {abc, abb};
           uint8_t szo = sizeof(ag);
-          Serial.write(ag, szo);
-          
+          //          Serial.write(ag, szo);
+
           sprintf(buf, "%d", ax);
           tempString = (char*)buf;
           tempString.trim();
@@ -242,6 +245,12 @@ void loop()
 
           //          dtostrf(lmaoy,5, 2, buf);
 
+          uint8_t acc = (uint8_t)(ay >> 8) ;
+          uint8_t acb = (uint8_t)(ay & 0xFF);
+          uint8_t af[2] = {acc, acb};
+          uint8_t szof = sizeof(ag);
+          //          Serial.write(af, szof);
+
           sprintf(buf, "%d", ay);
           tempString = (char*)buf;
           tempString.trim();
@@ -249,12 +258,18 @@ void loop()
           j += sprintf(data + j, "%s", buf);
           j += sprintf(data + j, "%c", ',');
 
+          memcpy(temps, ag, sizeof(ag));
+          memcpy(temps + sizeof(ag), af, sizeof(af));
+          Serial.write(temps, sizeof(temps));
+
 
         }
 
+
         // Send a reply data to the Server
-        if (manager.sendtoWait(data, sizeof(data), from)) {
+        if (manager.sendtoWait(temps, sizeof(temps), from)) {
           Serial.println("");
+          //          Serial.println((char*)temps);
           Serial.println((char*)data);
         }
       }
@@ -263,7 +278,7 @@ void loop()
       if (Server_Command2 == (char*)buf) {
         j = 0;
         //SEND 20 data
-        for (i = 0; i < 9; i++) {
+        for (i = 0; i < 4; i++) {
           /////////////////////////////////// Get Accelero Data ///////////////////////////////////////
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;

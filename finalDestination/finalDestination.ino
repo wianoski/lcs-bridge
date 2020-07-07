@@ -161,9 +161,9 @@ void loop() {
 
   //check:
 
-  for (int a = 0; a < 64; a++) {
-    Serial.write(buff[a]);
-  } // liat hasilnya di HEX Doclight
+//  for (int a = 0; a < 64; a++) {
+    Serial.write(buff[index]);
+//  } // liat hasilnya di HEX Doclight
 
   //    send_Lora(...., buff, .....) //lihat s.c saya
   Serial.println("");

@@ -35,7 +35,7 @@ String command_PC = "";
 int number_of_reading_data = 0;
 int i;
 
-void setup() 
+void setup()
 {
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
@@ -50,37 +50,37 @@ void setup()
   delay(10);
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
-  
+
   if (!manager.init())
     Serial.println("init failed");
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
   // The default transmitter power is 13dBm, using PA_BOOST.
-  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
-//  driver.setTxPower(23, false);
+  //  driver.setTxPower(23, false);
   // If you are using Modtronix inAir4 or inAir9,or any other module which uses the
   // transmitter RFO pins and not the PA_BOOST pins
-  // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true. 
+  // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true.
   // Failure to do that will result in extremely low transmit powers.
-//  driver.setTxPower(14, true);
+  //  driver.setTxPower(14, true);
   // You can optionally require this module to wait until Channel Activity
   // Detection shows no activity on the channel before transmitting by setting
   // the CAD timeout to non-zero:
-//  driver.setCADTimeout(10000);
+  //  driver.setCADTimeout(10000);
 
   Serial.println("Server01 Ready");
 }
 
 void loop()
 {
-  if(stringComplete){
+  if (stringComplete) {
     inputString = remove_string_CRLF(inputString);
     command_PC = getValue(inputString, ',', 0);
-    if(command_PC == "REQ_RTU01"){
+    if (command_PC == "REQ_RTU01") {
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
-      for(i=0; i<number_of_reading_data; i++){
+      for (i = 0; i < number_of_reading_data; i++) {
         request_RTU01();
       }
     }
@@ -89,97 +89,98 @@ void loop()
   }
 }
 
-void request_RTU01(){
-    /////////////////////////////////// Request Packet1 ///////////////////////////////////////        
+void request_RTU01() {
+  /////////////////////////////////// Request Packet1 ///////////////////////////////////////
   if (manager.sendtoWait(data1, sizeof(data1), CLIENT_ADDRESS))
   {
     // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);
-    uint8_t from;   
+    uint8_t from;
     if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
     {
       //Serial.print("RTU01_0x");
       //Serial.print(from, HEX);
       Serial.print((char*)buf);
+      //      Serial.write(buf,sizeof(buf));
     }
     else
     {
       Serial.println("RTU01 no reply");
     }
   }
-  else{
+  else {
     Serial.println("sendtoWait failed");
   }
-     
-  /////////////////////////////////// Request Packet2 ///////////////////////////////////////        
-//  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS))
-//  {
-//    // Now wait for a reply from the RTU01
-//    uint8_t len = sizeof(buf);
-//    uint8_t from;   
-//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
-//    {
-//      //Serial.print("RTU01_0x");
-//      //Serial.print(from, HEX);
-//      Serial.print((char*)buf);
-//    }
-//    else
-//    {
-//      Serial.println("RTU01 no reply");
-//    }
-//  }
-//  else{
-//    Serial.println("sendtoWait failed 2");
-//  }
-  
-  /////////////////////////////////// Request Packet3 ///////////////////////////////////////        
-//  if (manager.sendtoWait(data3, sizeof(data3), CLIENT_ADDRESS))
-//  {
-//    // Now wait for a reply from the RTU01
-//    uint8_t len = sizeof(buf);
-//    uint8_t from;   
-//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
-//    {
-//      //Serial.print("RTU01_0x");
-//      //Serial.print(from, HEX);
-//      Serial.print((char*)buf);
-//    }
-//    else
-//    {
-//      Serial.println("RTU01 no reply");
-//    }
-//  }
-//  else{
-//    Serial.println("sendtoWait failed");
-//  }
-//
-//  /////////////////////////////////// Request Packet4 ///////////////////////////////////////        
-//  if (manager.sendtoWait(data4, sizeof(data4), CLIENT_ADDRESS))
-//  {
-//    // Now wait for a reply from the RTU01
-//    uint8_t len = sizeof(buf);
-//    uint8_t from;   
-//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
-//    {
-//      //Serial.print("RTU01_0x");
-//      //Serial.print(from, HEX);
-//      Serial.print((char*)buf);
-//    }
-//    else
-//    {
-//      Serial.println("RTU01 no reply");
-//    }
-//  }
-//  else{
-//    Serial.println("sendtoWait failed");
-//  }
-//
-//  /////////////////////////////////// Request Packet5 ///////////////////////////////////////        
+
+  /////////////////////////////////// Request Packet2 ///////////////////////////////////////
+  //  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS))
+  //  {
+  //    // Now wait for a reply from the RTU01
+  //    uint8_t len = sizeof(buf);
+  //    uint8_t from;
+  //    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+  //    {
+  //      //Serial.print("RTU01_0x");
+  //      //Serial.print(from, HEX);
+  //      Serial.print((char*)buf);
+  //    }
+  //    else
+  //    {
+  //      Serial.println("RTU01 no reply");
+  //    }
+  //  }
+  //  else{
+  //    Serial.println("sendtoWait failed 2");
+  //  }
+
+  /////////////////////////////////// Request Packet3 ///////////////////////////////////////
+  //  if (manager.sendtoWait(data3, sizeof(data3), CLIENT_ADDRESS))
+  //  {
+  //    // Now wait for a reply from the RTU01
+  //    uint8_t len = sizeof(buf);
+  //    uint8_t from;
+  //    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+  //    {
+  //      //Serial.print("RTU01_0x");
+  //      //Serial.print(from, HEX);
+  //      Serial.print((char*)buf);
+  //    }
+  //    else
+  //    {
+  //      Serial.println("RTU01 no reply");
+  //    }
+  //  }
+  //  else{
+  //    Serial.println("sendtoWait failed");
+  //  }
+  //
+  //  /////////////////////////////////// Request Packet4 ///////////////////////////////////////
+  //  if (manager.sendtoWait(data4, sizeof(data4), CLIENT_ADDRESS))
+  //  {
+  //    // Now wait for a reply from the RTU01
+  //    uint8_t len = sizeof(buf);
+  //    uint8_t from;
+  //    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+  //    {
+  //      //Serial.print("RTU01_0x");
+  //      //Serial.print(from, HEX);
+  //      Serial.print((char*)buf);
+  //    }
+  //    else
+  //    {
+  //      Serial.println("RTU01 no reply");
+  //    }
+  //  }
+  //  else{
+  //    Serial.println("sendtoWait failed");
+  //  }
+  //
+  //  /////////////////////////////////// Request Packet5 ///////////////////////////////////////
   if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS))
   {
     // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);
-    uint8_t from;   
+    uint8_t from;
     if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
     {
       //Serial.print("RTU01_0x");
@@ -191,7 +192,7 @@ void request_RTU01(){
       Serial.println("RTU01 no reply");
     }
   }
-  else{
+  else {
     Serial.println("sendtoWait failed");
   }
 }
@@ -218,38 +219,38 @@ void serialEvent() {
 }
 
 /*  Function: remove CRLF on string
- *  input  = string with CRLF at the end 
-    return = string without CRLF at the end 
+    input  = string with CRLF at the end
+    return = string without CRLF at the end
 */
 String remove_string_CRLF(String data_string) {
   int data_string_length = 0;
   data_string_length = data_string.length() - 2;  //omitted CRLF
-  data_string = data_string.substring(0,data_string_length); 
+  data_string = data_string.substring(0, data_string_length);
   return data_string;
 }
 
 /*************************************************************************
- * Function  : getValue(String data, char separator, int index)
- * Process   : splitting data by seperator
- * Return    : data at index 
- * Usage     : 
- *             data_temperature   = getValue(inputString, ',', 0);
- *             data_humidity      = getValue(inputString, ',', 1);
- *
+   Function  : getValue(String data, char separator, int index)
+   Process   : splitting data by seperator
+   Return    : data at index
+   Usage     :
+               data_temperature   = getValue(inputString, ',', 0);
+               data_humidity      = getValue(inputString, ',', 1);
+
  ***************************************************************************/
 String getValue(String data, char separator, int index)
 {
   int found = 0;
   int strIndex[] = {0, -1};
-  int maxIndex = data.length()-1;
+  int maxIndex = data.length() - 1;
 
-  for(int i=0; i<=maxIndex && found<=index; i++){
-    if(data.charAt(i)==separator || i==maxIndex){
-        found++;
-        strIndex[0] = strIndex[1]+1;
-        strIndex[1] = (i == maxIndex) ? i+1 : i;
+  for (int i = 0; i <= maxIndex && found <= index; i++) {
+    if (data.charAt(i) == separator || i == maxIndex) {
+      found++;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
     }
-  } 
+  }
 
-  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }

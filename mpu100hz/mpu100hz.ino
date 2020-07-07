@@ -121,9 +121,10 @@ void setup() {
 char arr[4];
 uint8_t bufff[20];
 
-uint16_t ax;
-uint16_t ay;
-
+//uint16_t ax;
+//uint16_t ay;
+uint8_t data[251];
+uint8_t temp[4] ;
 void loop() {
   // read raw accel/gyro measurements from device
   //  accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
@@ -136,24 +137,26 @@ void loop() {
   // display tab-separated accel/gyro x/y/z values
   //        for(int i=0;i<50;i++){
   Serial.println(ax);
-  int abc = (uint8_t)(ax >> 8) ;
-  int abb = (uint8_t)(ax & 0xFF);
-
-  uint8_t ag[2] = {abc,abb};
+  Serial.println(ay);
+  uint8_t abc = (uint8_t)(ax >> 8) ;
+  uint8_t abb = (uint8_t)(ax & 0xFF);
+  uint8_t ag[2] = {abc, abb};
   uint8_t szo = sizeof(ag);
-  Serial.write(ag, szo);
-  
-  //  Serial.write((uint16_t)(ax & 0xFF));
-  //    for (size_t i = 0; i < 4; i++) {
-  //      sprintf(arr, "%03i", ax);
-  //      String sebentar = String(arr[i], HEX);
-  //      Serial.print(arr[i], HEX);
-  //    }
-  //  String aaaa = decToHex(ax);
+  //  Serial.write(ag, szo);
 
+  uint8_t acc = (uint8_t)(ay >> 8) ;
+  uint8_t acb = (uint8_t)(ay & 0xFF);
+  uint8_t af[2] = {acc, acb};
+  uint8_t szof = sizeof(ag);
+  //  Serial.write(af, szof);
+
+  memcpy(temp, ag, sizeof(ag));
+  memcpy(temp+sizeof(ag), af, sizeof(af));
+  Serial.write(temp,sizeof(temp));
+  
   Serial.println("");
   //        Serial.print(ay);
-  delay(500);
+  delay(5000);
   //        }
 #endif
 
