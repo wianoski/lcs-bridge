@@ -117,20 +117,33 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
 }
 
+int index_max = 20; //contoh saja
+uint8_t buff[20];
 
-char arr[4];
-uint8_t bufff[20];
+uint8_t gateway_ID = 0x01;
+uint8_t RTU_ID = 0x01;
+uint8_t Packet_No = 1;
 
-//uint16_t ax;
-//uint16_t ay;
-uint8_t data[251];
-uint8_t temp[4] ;
+int index = 0;
 void loop() {
+
+  accelgyro.getAcceleration(&ax, &ay, &az);
+
+  buff[index] = gateway_ID;
+  index++;
+  buff[index] = RTU_ID;
+  index++;
+  buff[index] = Packet_No;
+  index++;
+
+  //  ax = readMPU_ax; //pastikan 2 bytes
+
+
   // read raw accel/gyro measurements from device
   //  accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 
   // these methods (and a few others) are also available
-  accelgyro.getAcceleration(&ax, &ay, &az);
+
   //accelgyro.getRotation(&gx, &gy, &gz);
 
 #ifdef OUTPUT_READABLE_ACCELGYRO
@@ -138,25 +151,21 @@ void loop() {
   //        for(int i=0;i<50;i++){
   Serial.println(ax);
   Serial.println(ay);
-  uint8_t abc = (uint8_t)(ax >> 8) ;
-  uint8_t abb = (uint8_t)(ax & 0xFF);
-  uint8_t ag[2] = {abc, abb};
-  uint8_t szo = sizeof(ag);
-  //  Serial.write(ag, szo);
+  buff[index] = highByte(ax); //MSB
+  index++;
+  buff[index] = lowByte(ax); //LSB
+  index++;
+  //  ay = readMPU_ay; //pastikan 2 bytes
+  buff[index] = highByte(ay); //MSB
+  index++;
+  buff[index] = lowByte(ay); //LSB
+  index++;
 
-  uint8_t acc = (uint8_t)(ay >> 8) ;
-  uint8_t acb = (uint8_t)(ay & 0xFF);
-  uint8_t af[2] = {acc, acb};
-  uint8_t szof = sizeof(ag);
-  //  Serial.write(af, szof);
-
-  memcpy(temp, ag, sizeof(ag));
-  memcpy(temp+sizeof(ag), af, sizeof(af));
-  Serial.write(temp,sizeof(temp));
-  
-  Serial.println("");
+  for (int a = 0; a < index_max; a++) {
+    Serial.write(buff[a]);
+  } // liat hasilnya di HEX Doclight
   //        Serial.print(ay);
-  delay(5000);
+  delay(500);
   //        }
 #endif
 

@@ -78,7 +78,7 @@ String Server_Command5 = String("REQ_RTU01_5");
 String tempString = "-0.12";
 
 int i = 0; //for loop increment variable
-int j,l = 0;
+int j, l = 0;
 int value;
 char temp[10];
 
@@ -88,15 +88,6 @@ char temp[10];
 #define VBATPIN A0 //(Promini)
 float measuredvbat;
 
-uint8_t buff[20];
-uint16_t bax;
-uint16_t bay;
-
-uint8_t gateway_ID = 0x01;
-uint8_t RTU_ID = 0x01;
-uint8_t Packet_No = 1;
-
-int index = 0;
 
 uint8_t temps[4];
 void setup()
@@ -181,22 +172,31 @@ void setup()
   // Detection shows no activity on the channel before transmitting by setting
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
-  //  temps[index] = gateway_ID;
-  //  index++;
-  //  temps[index] = RTU_ID;
-  //  index++;
-  //  temps[index] = Packet_No;
-  //  index++;
+
+
 }
 
 
+int index_max = 100; //contoh saja
+uint8_t buff[100] ;
 
+uint8_t gateway_ID = 0x01;
+uint8_t RTU_ID = 0x01;
+uint8_t Packet_No = 1;
+
+int akl = 0;
 void loop()
 {
   //  time_t t;
 
   if (manager.available())
   {
+    buff[akl] = 0x01;
+    akl++;
+    buff[akl] = 0x01;
+    akl++;
+    buff[akl] = 1;
+    akl++;
     // Wait for a message addressed to us from the client
     uint8_t len = sizeof(buf);
     uint8_t from;
@@ -207,32 +207,30 @@ void loop()
     if (manager.recvfromAck(buf, &len, &from))
       //      Serial.println((char*)buf);
     {
+
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Server_Command1 == (char*)buf) {
-        l,j = 0;
-
-        uint8_t header[3] = {gateway_ID, RTU_ID, Packet_No};
+        l, j = 0;
         //        memcpy(temps, header, sizeof(header));
         //SEND 20 data
-        for (i = 0; i < 5; i++) {
+
+        for (i = 0; i < 50; i++) {
           /////////////////////////////////// Get Accelero Data ///////////////////////////////////////
           accelgyro.getAcceleration(&ax, &ay, &az);
-          AX = ((float)ax - AXoff) / 16384.00;
-          //if sensor pcb placed on table:
-          //AY = ((float)ay-AYoff)/16384.00; //16384 is just 32768/2 to get our 1G value
-          //AZ = ((float)az-(AZoff-16384))/16384.00; //remove 1G before dividing
+          buff[akl] = highByte(ax); //MSB
+          akl++;
+          buff[akl] = lowByte(ax); //LSB
+          akl++;
 
-          //for RTU01
-          AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-          AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+          buff[akl] = highByte(ay); //MSB
+          akl++;
+          buff[akl] = lowByte(ay); //LSB
+          akl++;
 
-          //          dtostrf(lmaox,5, 2, buf);
+          for (int a = 0; a < index_max; a++) {
+            Serial.write(buff[a]);
+          } // liat hasilnya di HEX Doclight
 
-          uint8_t abc = (uint8_t)(ax >> 8) ;
-          uint8_t abb = (uint8_t)(ax & 0xFF);
-
-          uint8_t ag[2] = {abc, abb};
-          uint8_t szo = sizeof(ag);
 
           sprintf(buf, "%d", ax);
           tempString = (char*)buf;
@@ -244,10 +242,15 @@ void loop()
 
           //          dtostrf(lmaoy,5, 2, buf);
 
-          uint8_t acc = (uint8_t)(ay >> 8) ;
-          uint8_t acb = (uint8_t)(ay & 0xFF);
-          uint8_t af[2] = {acc, acb};
-          uint8_t szof = sizeof(ag);
+          //          uint8_t abc = (uint8_t)(ax >> 8) ;
+          //          uint8_t abb = (uint8_t)(ax & 0xFF);
+          //          uint8_t ag[2] = {abc, abb};
+          //
+          //          uint8_t acc = (uint8_t)(ay >> 8) ;
+          //          uint8_t acb = (uint8_t)(ay & 0xFF);
+          //          uint8_t af[2] = {acc, acb};
+          //          l += memcpy(temps, ag, sizeof(ag));
+          //          l += memcpy(temps + sizeof(l), af, sizeof(af));
 
           sprintf(buf, "%d", ay);
           tempString = (char*)buf;
@@ -256,19 +259,15 @@ void loop()
           j += sprintf(data + j, "%s", buf);
           j += sprintf(data + j, "%c", ',');
 
-          l += memcpy(temps, ag, sizeof(ag));
-          l += memcpy(temps + sizeof(l), af, sizeof(af));
-          Serial.write(temps, sizeof(temps));
 
 
         }
 
 
         // Send a reply data to the Server
-        if (manager.sendtoWait(temps, sizeof(temps), from)) {
-          Serial.println("");
+        if (!manager.sendtoWait(buff, sizeof(buff), from)) {
           //          Serial.println((char*)temps);
-          Serial.println((char*)data);
+          Serial.println("au");
         }
       }
 
@@ -279,16 +278,20 @@ void loop()
         for (i = 0; i < 4; i++) {
           /////////////////////////////////// Get Accelero Data ///////////////////////////////////////
           accelgyro.getAcceleration(&ax, &ay, &az);
-          AX = ((float)ax - AXoff) / 16384.00;
-          //if sensor pcb placed on table:
-          //AY = ((float)ay-AYoff)/16384.00; //16384 is just 32768/2 to get our 1G value
-          //AZ = ((float)az-(AZoff-16384))/16384.00; //remove 1G before dividing
+          buff[akl] = highByte(ax); //MSB
+          akl++;
+          buff[akl] = lowByte(ax); //LSB
+          akl++;
 
-          //for RTU01
-          AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-          AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+          buff[akl] = highByte(ay); //MSB
+          akl++;
+          buff[akl] = lowByte(ay); //LSB
+          akl++;
 
-          //          dtostrf(lmaox,5, 2, buf);
+          //          for (int a = 0; a < index_max; a++) {
+          //            Serial.write(buff[a]);
+          //          } // liat hasilnya di HEX Doclight
+
 
           sprintf(buf, "%d", ax);
           tempString = (char*)buf;
@@ -309,14 +312,6 @@ void loop()
 
         /////////////////////////////////// Get Last row Accelero Data ///////////////////////////////////////
         accelgyro.getAcceleration(&ax, &ay, &az);
-        AX = ((float)ax - AXoff) / 16384.00;
-        //if sensor pcb placed on table:
-        //AY = ((float)ay-AYoff)/16384.00; //16384 is just 32768/2 to get our 1G value
-        //AZ = ((float)az-(AZoff-16384))/16384.00; //remove 1G before dividing
-
-        //for RTU01
-        AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-        AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
         sprintf(buf, "%d", ax);
         tempString = (char*)buf;
