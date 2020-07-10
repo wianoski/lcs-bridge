@@ -67,7 +67,7 @@ void setup()
   // the CAD timeout to non-zero:
 //  driver.setCADTimeout(10000);
 
-  Serial.println("Gateway02 Ready");
+  Serial.println("Gateway04 Ready");
 }
 
 void loop()
@@ -75,7 +75,7 @@ void loop()
   if(stringComplete){
     inputString = remove_string_CRLF(inputString);
     command_PC = getValue(inputString, ',', 0);
-    if(command_PC == "REQ_RTU01"){
+    if(command_PC == "REQ_RTU04"){
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
       for(i=0; i<number_of_reading_data; i++){
@@ -109,7 +109,7 @@ void request_RTU01(){
     }
     else
     {
-      Serial.println("RTU01 no reply");
+      Serial.println("RTU04 no reply");
     }
   }
   else{
