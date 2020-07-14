@@ -11,8 +11,8 @@
 #define RFM95_INT 2
 
 //#define CLIENT_ADDRESS 255      //broadcast
-#define CLIENT_ADDRESS 11
-#define SERVER_ADDRESS 1
+#define CLIENT_ADDRESS 16
+#define SERVER_ADDRESS 6
 
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
@@ -24,7 +24,7 @@ RHReliableDatagram manager(driver, SERVER_ADDRESS);
 String inputString              = "";     // a string to hold incoming data
 boolean stringComplete          = false;  // whether the string is complete
 
-uint8_t data1[] = "REQ_RTU01";
+uint8_t data1[] = "REQ_RTU03";
 
 // Dont put this on the stack:
 uint8_t buf[203];
@@ -67,7 +67,7 @@ void setup()
   // the CAD timeout to non-zero:
 //  driver.setCADTimeout(10000);
 
-  Serial.println("Gateway02 Ready");
+  Serial.println("Gateway03 Ready");
 }
 
 void loop()
@@ -75,7 +75,7 @@ void loop()
   if(stringComplete){
     inputString = remove_string_CRLF(inputString);
     command_PC = getValue(inputString, ',', 0);
-    if(command_PC == "REQ_RTU01"){
+    if(command_PC == "REQ_RTU03"){
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
       for(i=0; i<number_of_reading_data; i++){
@@ -109,7 +109,7 @@ void request_RTU01(){
     }
     else
     {
-      Serial.println("RTU01 no reply");
+      Serial.println("RTU03 no reply");
     }
   }
   else{

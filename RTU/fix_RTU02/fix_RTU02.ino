@@ -72,7 +72,7 @@ bool blinkState = false;
 
 const int MPU_addr = 0x68;
 
-uint8_t data[203]; //203 bytes
+uint8_t data[50]; //203 bytes
 uint8_t buf[20]; //Promini
 
 String Gateway_Command1 = String("REQ_RTU02");
@@ -167,92 +167,89 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 }
-double x;
-double y;
-double z;
+int16_t x;
+int16_t y;
+int16_t z;
 void loop()
 {
-  Wire.beginTransmission(MPU_addr);
-  Wire.write(0x3B);
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU_addr, 14, true);
-  AcX = Wire.read() << 8 | Wire.read();
-  AcY = Wire.read() << 8 | Wire.read();
-  AcZ = Wire.read() << 8 | Wire.read();
-  int xAng = map(AcX, minVal, maxVal, -90, 90);
-  int yAng = map(AcY, minVal, maxVal, -90, 90);
-  int zAng = map(AcZ, minVal, maxVal, -90, 90);
+  //  Wire.beginTransmission(MPU_addr);
+  //  Wire.write(0x3B);
+  //  Wire.endTransmission(false);
+  //  Wire.requestFrom(MPU_addr, 14, true);
+  //  AcX = Wire.read() << 8 | Wire.read();
+  //  AcY = Wire.read() << 8 | Wire.read();
+  //  AcZ = Wire.read() << 8 | Wire.read();
+  //  int xAng = map(AcX, minVal, maxVal, -90, 90);
+  //  int yAng = map(AcY, minVal, maxVal, -90, 90);
+  //  int zAng = map(AcZ, minVal, maxVal, -90, 90);
+  //
+  //  x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
+  //  y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
+  //  z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
+  //
+  //  Serial.println(x);
+  if (manager.available())
+  {
 
-  x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
-  y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
-  z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
 
-  Serial.println(x);
-//  if (manager.available())
-//  {
-//    Wire.beginTransmission(MPU_addr);
-//    Wire.write(0x3B);
-//    Wire.endTransmission(false);
-//    Wire.requestFrom(MPU_addr, 14, true);
-//    AcX = Wire.read() << 8 | Wire.read();
-//    AcY = Wire.read() << 8 | Wire.read();
-//    AcZ = Wire.read() << 8 | Wire.read();
-//    int xAng = map(AcX, minVal, maxVal, -90, 90);
-//    int yAng = map(AcY, minVal, maxVal, -90, 90);
-//    int zAng = map(AcZ, minVal, maxVal, -90, 90);
-//
-//    x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
-//    y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
-//    z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
-//
-//    //    Serial.print("AngleX= ");
-//    Serial.println(x);
-//    // Wait for a message addressed to us from the client
-//    uint8_t len = sizeof(buf);
-//    uint8_t from;
-//    if (manager.recvfromAck(buf, &len, &from))
-//    {
-//      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
-//      if (Gateway_Command1 == (char*)buf) {
-//        j = 0;
-//        /////////////////////////////////// Set Header ///////////////////////////////////////
-//        data[j] = Gateway_ID;
-//        j++;
-//        data[j] = RTU_ID;
-//        j++;
-//        data[j] = Packet_No;
-//        j++;
-//        //Measure 50 ax and 50 ay
-//        for (i = 0; i < 10; i++) {
-//          /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-//          //for RTU01
-//          accelgyro.getAcceleration(&ax, &ay, &az);
-//          data[j] = highByte(ax);
-//          j++;
-//          data[j] = lowByte(ax);
-//          j++;
-//          data[j] = highByte(ay);
-//          j++;
-//          data[j] = lowByte(ay);
-//          j++;
-//        }
-//
-//        //verifiation data[] content
-//        for (i = 0; i < j; i++) {
-//          Serial.write(data[i]);
-//        }
-//
-//        //Serial.println();
-//        //Serial.println(j);
-//        // Send a reply data to the Server
-//        if (!manager.sendtoWait(data, sizeof(data), from)) {
-//          //if (!manager.sendtoWait(data, j, from)){
-//          Serial.println("sendtoWait failed");
-//        }
-//      }
-//    }
-//  }
-delay (500);
+    //    Serial.print("AngleX= ");
+    //    Serial.println(x);
+    // Wait for a message addressed to us from the client
+    uint8_t len = sizeof(buf);
+    uint8_t from;
+    if (manager.recvfromAck(buf, &len, &from))
+    {
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Gateway_Command1 == (char*)buf) {
+        j = 0;
+        /////////////////////////////////// Set Header ///////////////////////////////////////
+        data[j] = Gateway_ID;
+        j++;
+        data[j] = RTU_ID;
+        j++;
+        data[j] = Packet_No;
+        j++;
+        //Measure 50 ax and 50 ay
+        for (i = 0; i < 10; i++) {
+          /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
+          //for RTU01
+          Wire.beginTransmission(MPU_addr);
+          Wire.write(0x3B);
+          Wire.endTransmission(false);
+          Wire.requestFrom(MPU_addr, 14, true);
+          AcX = Wire.read() << 8 | Wire.read();
+          AcY = Wire.read() << 8 | Wire.read();
+          AcZ = Wire.read() << 8 | Wire.read();
+          int xAng = map(AcX, minVal, maxVal, -90, 90);
+          int yAng = map(AcY, minVal, maxVal, -90, 90);
+          int zAng = map(AcZ, minVal, maxVal, -90, 90);
+
+          x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
+          y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
+          z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
+//          Serial.println(x);
+          data[j] = highByte(x);
+          j++;
+          data[j] = lowByte(x);
+          j++;
+        }
+
+        //verifiation data[] content
+        for (i = 0; i < j; i++) {
+          Serial.write(data[i]);
+        }
+
+        //Serial.println();
+        //Serial.println(j);
+        // Send a reply data to the Server
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          //if (!manager.sendtoWait(data, j, from)){
+          Serial.println("sendtoWait failed");
+        }
+      }
+    }
+  }
+  delay (500);
 }
 
 ///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////

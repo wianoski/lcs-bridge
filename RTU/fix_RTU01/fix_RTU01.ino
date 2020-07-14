@@ -185,6 +185,9 @@ void loop()
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////        
           //for RTU01
           accelgyro.getAcceleration(&ax, &ay, &az);
+//          Serial.println(ax);
+//          
+//          Serial.println(ay);
           data[j] = highByte(ax);
           j++;
           data[j] = lowByte(ax);

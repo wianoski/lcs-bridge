@@ -10,20 +10,10 @@
 #include <Streaming.h>        //http://arduiniana.org/libraries/streaming/
 #include <Wire.h>             //http://arduino.cc/en/Reference/Wire
 
-
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
-
-#include "DHT.h"
-#define DHTPIN 5
-#define DHTTYPE DHT22
-DHT dht(DHTPIN, DHTTYPE);
-
-#define disp 7
-uint8_t distance ;
-uint8_t duration;
-
+#include "MPU6050.h"
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
@@ -52,6 +42,27 @@ RH_RF95 driver(RFM95_CS, RFM95_INT);
 // Class to manage message delivery and receipt, using the driver declared above
 RHReliableDatagram manager(driver, CLIENT_ADDRESS);
 
+// class default I2C address is 0x68
+// specific I2C addresses may be passed as a parameter here
+// AD0 low = 0x68 (default for InvenSense evaluation board)
+// AD0 high = 0x69
+MPU6050 accelgyro;
+//MPU6050 accelgyro(0x69); // <-- use for AD0 high (if RTC exist)
+
+int16_t ax, ay, az;
+int16_t gx, gy, gz;
+
+int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
+
+int minVal = 265;
+int maxVal = 402;
+
+float   AXoff, AYoff, AZoff; //accelerometer offset values
+float   GXoff, GYoff, GZoff; //gyroscope offset values
+
+float   AX, AY, AZ; //acceleration floats
+float   GX, GY, GZ; //gyroscope floats
+
 uint8_t Gateway_ID = 1;
 uint8_t RTU_ID = 3;
 uint8_t Packet_No = 1;
@@ -59,7 +70,9 @@ uint8_t Packet_No = 1;
 #define LED_PIN 13
 bool blinkState = false;
 
-uint8_t data[203]; //203 bytes
+const int MPU_addr = 0x68;
+
+uint8_t data[50]; //203 bytes
 uint8_t buf[20]; //Promini
 
 String Gateway_Command1 = String("REQ_RTU03");
@@ -77,6 +90,15 @@ char temp[10];
 #define VBATPIN A0 //(Promini)
 float measuredvbat;
 
+#define DHTPIN 5
+#include "DHT.h"
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+DHT dht(DHTPIN, DHTTYPE);
+
+#define disp 7
+uint8_t distance ;
+uint8_t duration;
+
 void setup()
 {
   // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -86,25 +108,24 @@ void setup()
   Fastwire::setup(400, true);
 #endif
 
-  pinMode(disp, INPUT);
-
-  Serial.println("DHT22 test");
-  dht.begin();
-
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
   //  while (!Serial);
   Serial.begin(9600);
   delay(100);
+  Serial.println(F("DHTxx test!"));
 
+  dht.begin();
+  // initialize device
+  pinMode(disp, INPUT);
   ////////////////////////////////////////////////////////////////////////////////////////
 
   // configure Arduino LED pin for output
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("RTU02 Ready");
+  Serial.println("RTU03 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -130,29 +151,26 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 }
-
 void loop()
 {
+
   if (manager.available())
   {
-    // Wait for a message addressed to us from the client
     uint8_t len = sizeof(buf);
     uint8_t from;
     if (manager.recvfromAck(buf, &len, &from))
     {
+      duration = pulseIn(disp, HIGH);
+      distance = duration;
+      uint8_t h = dht.readHumidity();
+      // Read temperature as Celsius (the default)
+      uint8_t t = dht.readTemperature();
+      if (isnan(h) || isnan(t)) {
+        Serial.println(F("Failed to read from DHT sensor!"));
+        return;
+      }
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
-        duration = pulseIn(disp, HIGH);
-        distance = duration;
-        uint8_t h = dht.readHumidity();
-        // Read temperature as Celsius (the default)
-        uint8_t t = dht.readTemperature();
-
-        if (isnan(h) || isnan(t)) {
-          Serial.println(F("Failed to read from DHT sensor!"));
-          return;
-        }
-     
         j = 0;
         /////////////////////////////////// Set Header ///////////////////////////////////////
         data[j] = Gateway_ID;
@@ -166,6 +184,8 @@ void loop()
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
           //for RTU01
 
+      Serial.println(h);
+      Serial.println(t);
           data[j] = highByte(h);
           j++;
           data[j] = lowByte(h);
@@ -174,16 +194,17 @@ void loop()
           j++;
           data[j] = lowByte(t);
           j++;
-          data[j] = highByte(distance);
-          j++;
-          data[j] = lowByte(distance);
-          j++;
+          //          data[j] = highByte(distance);
+          //          j++;
+          //          data[j] = lowByte(distance);
+          //          j++;
         }
 
         //verifiation data[] content
         for (i = 0; i < j; i++) {
           Serial.write(data[i]);
         }
+
         //Serial.println();
         //Serial.println(j);
         // Send a reply data to the Server
@@ -194,6 +215,7 @@ void loop()
       }
     }
   }
+  delay (500);
 }
 
 ///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////

@@ -69,7 +69,6 @@ float measuredvbat;
 
 #include "HX711.h"
 
-
 // HX711 circuit wiring
 const int LOADCELL_DOUT_PIN = A1;
 const int LOADCELL_SCK_PIN = A2;
@@ -108,8 +107,11 @@ void setup()
   if (!scale.is_ready()) {
     Serial.println("HX711 not found.");
   }
-  if (!manager.init())
-    Serial.println("init failed");
+  if (manager.init()){
+    Serial.println("init good");
+  }else{
+    Serial.println("failed");
+   }
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
   // The default transmitter power is 13dBm, using PA_BOOST.
@@ -129,6 +131,8 @@ void setup()
 
 void loop()
 {
+  uint8_t reading = scale.read();
+//  Serial.println(reading);
   if (manager.available())
   {
     // Wait for a message addressed to us from the client
@@ -136,7 +140,7 @@ void loop()
     uint8_t from;
     if (manager.recvfromAck(buf, &len, &from))
     {
-      uint8_t reading = scale.read();
+      
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
         j = 0;
@@ -152,6 +156,10 @@ void loop()
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
 
+          data[j] = highByte(reading);
+          j++;
+          data[j] = lowByte(reading);
+          j++;
           data[j] = highByte(reading);
           j++;
           data[j] = lowByte(reading);

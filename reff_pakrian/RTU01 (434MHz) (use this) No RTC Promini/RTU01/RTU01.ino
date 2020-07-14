@@ -33,8 +33,8 @@
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 434.0
 
-#define CLIENT_ADDRESS 15
-#define SERVER_ADDRESS 5
+#define CLIENT_ADDRESS 11
+#define SERVER_ADDRESS 1
 
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
