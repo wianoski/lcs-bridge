@@ -104,8 +104,8 @@ void setup()
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
   
-  if (!scale.is_ready()) {
-    Serial.println("HX711 not found.");
+  if (scale.is_ready()) {
+    Serial.print("HX711 reading: ");
   }
   if (manager.init()){
     Serial.println("init good");
@@ -131,7 +131,7 @@ void setup()
 
 void loop()
 {
-  uint8_t reading = scale.read();
+  long reading = scale.read();
 //  Serial.println(reading);
   if (manager.available())
   {
@@ -160,10 +160,10 @@ void loop()
           j++;
           data[j] = lowByte(reading);
           j++;
-          data[j] = highByte(reading);
-          j++;
-          data[j] = lowByte(reading);
-          j++;
+//          data[j] = highByte(reading);
+//          j++;
+//          data[j] = lowByte(reading);
+//          j++;
         }
 
         //verifiation data[] content

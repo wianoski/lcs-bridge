@@ -96,8 +96,8 @@ float measuredvbat;
 DHT dht(DHTPIN, DHTTYPE);
 
 #define disp 7
-uint8_t distance ;
-uint8_t duration;
+long distance ;
+long duration;
 
 void setup()
 {
@@ -162,9 +162,9 @@ void loop()
     {
       duration = pulseIn(disp, HIGH);
       distance = duration;
-      uint8_t h = dht.readHumidity();
+      long h = dht.readHumidity();
       // Read temperature as Celsius (the default)
-      uint8_t t = dht.readTemperature();
+      long t = dht.readTemperature();
       if (isnan(h) || isnan(t)) {
         Serial.println(F("Failed to read from DHT sensor!"));
         return;
@@ -184,20 +184,20 @@ void loop()
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
           //for RTU01
 
-      Serial.println(h);
-      Serial.println(t);
-          data[j] = highByte(h);
-          j++;
-          data[j] = lowByte(h);
-          j++;
+//          Serial.println(h);
+//          Serial.println(t);
           data[j] = highByte(t);
           j++;
           data[j] = lowByte(t);
           j++;
-          //          data[j] = highByte(distance);
-          //          j++;
-          //          data[j] = lowByte(distance);
-          //          j++;
+          data[j] = highByte(h);
+          j++;
+          data[j] = lowByte(h);
+          j++;
+          data[j] = highByte(distance);
+          j++;
+          data[j] = lowByte(distance);
+          j++;
         }
 
         //verifiation data[] content
