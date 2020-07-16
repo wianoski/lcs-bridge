@@ -1,6 +1,6 @@
 // 08/07/2020
 // RTU01   : COM6
-// Accelero: +/- 2g 
+// Accelero: +/- 2g
 // 500MHz
 
 #include <Streaming.h>
@@ -18,7 +18,7 @@
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    #include "Wire.h"
+#include "Wire.h"
 #endif
 
 #include <RHReliableDatagram.h>
@@ -75,7 +75,7 @@ String tempString = "-0.12";
 int i = 0; //for loop increment variable
 int j = 0;
 int value;
-char temp[10]; 
+char temp[10];
 
 #define numberOfTests   100
 
@@ -83,23 +83,23 @@ char temp[10];
 #define VBATPIN A0 //(Promini)
 float measuredvbat;
 
-void setup() 
+void setup()
 {
   // join I2C bus (I2Cdev library doesn't do this automatically)
-  #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-      Wire.begin();
-  #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-      Fastwire::setup(400, true);
-  #endif
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+  Wire.begin();
+#elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+  Fastwire::setup(400, true);
+#endif
 
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
-//  while (!Serial);
+  //  while (!Serial);
   Serial.begin(9600);
   delay(100);
 
-   // initialize device
+  // initialize device
   Serial.println("Initializing ACCELERO");
   accelgyro.initialize();
 
@@ -110,7 +110,7 @@ void setup()
   //Dilakukan di satu kali, parameter offset dihitung di IPC
   Serial.println("Calibration ACCELERO...");
   ///////////////////////////////////// Calibration Offset MPU6050 ////////////////////////////////////
-  for(i=0; i<numberOfTests; i++){
+  for (i = 0; i < numberOfTests; i++) {
     accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
     AXoff += ax;
     AYoff += ay;
@@ -118,24 +118,24 @@ void setup()
     GXoff += gx;
     GYoff += gy;
     GZoff += gz;
-     
+
     delay(25);
   }
-    
-  AXoff = AXoff/numberOfTests;
-  AYoff = AYoff/numberOfTests;
-  AZoff = AZoff/numberOfTests;
-  GXoff = GXoff/numberOfTests;
-  GYoff = GYoff/numberOfTests;
-  GZoff = GZoff/numberOfTests;
+
+  AXoff = AXoff / numberOfTests;
+  AYoff = AYoff / numberOfTests;
+  AZoff = AZoff / numberOfTests;
+  GXoff = GXoff / numberOfTests;
+  GYoff = GYoff / numberOfTests;
+  GZoff = GZoff / numberOfTests;
   ////////////////////////////////////////////////////////////////////////////////////////
- 
+
   // configure Arduino LED pin for output
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
   Serial.println("RTU01 Ready");
-  
+
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
@@ -147,22 +147,26 @@ void setup()
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
   // The default transmitter power is 13dBm, using PA_BOOST.
-  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then 
+  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
-//  driver.setTxPower(23, false);
+  //  driver.setTxPower(23, false);
   // If you are using Modtronix inAir4 or inAir9,or any other module which uses the
   // transmitter RFO pins and not the PA_BOOST pins
-  // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true. 
+  // then you can configure the power transmitter power for -1 to 14 dBm and with useRFO true.
   // Failure to do that will result in extremely low transmit powers.
-//  driver.setTxPower(14, true);
+  //  driver.setTxPower(14, true);
   // You can optionally require this module to wait until Channel Activity
   // Detection shows no activity on the channel before transmitting by setting
   // the CAD timeout to non-zero:
-//  driver.setCADTimeout(10000);
+  //  driver.setCADTimeout(10000);
 }
 
 void loop()
 {
+
+  //  Serial.println(AX);
+  //  Serial.println(AY);
+  //  delay(100);
   if (manager.available())
   {
     // Wait for a message addressed to us from the client
@@ -170,10 +174,10 @@ void loop()
     uint8_t from;
     if (manager.recvfromAck(buf, &len, &from))
     {
-      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////      
-      if(Gateway_Command1 == (char*)buf){
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Gateway_Command1 == (char*)buf) {
         j = 0;
-        /////////////////////////////////// Set Header ///////////////////////////////////////        
+        /////////////////////////////////// Set Header ///////////////////////////////////////
         data[j] = Gateway_ID;
         j++;
         data[j] = RTU_ID;
@@ -181,13 +185,18 @@ void loop()
         data[j] = Packet_No;
         j++;
         //Measure 50 ax and 50 ay
-        for(i=0; i<50; i++){
-          /////////////////////////////////// Get Gyro Data ///////////////////////////////////////        
+        for (i = 0; i < 50; i++) {
+          /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
           //for RTU01
           accelgyro.getAcceleration(&ax, &ay, &az);
-//          Serial.println(ax);
-//          
-//          Serial.println(ay);
+          AX = ((float)ax - AXoff) / 16384.00;
+          //if sensor pcb placed on table:
+          AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+          AZ = ((float)az - (AZoff - 16384)) / 16384.00; //remove 1G before dividing
+
+          //for RTU01
+          //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+          //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
           data[j] = highByte(ax);
           j++;
           data[j] = lowByte(ax);
@@ -199,15 +208,15 @@ void loop()
         }
 
         //verifiation data[] content
-        for(i=0; i<j; i++){
+        for (i = 0; i < j; i++) {
           Serial.write(data[i]);
         }
-        
+
         //Serial.println();
         //Serial.println(j);
         // Send a reply data to the Server
-        if (!manager.sendtoWait(data, sizeof(data), from)){
-        //if (!manager.sendtoWait(data, j, from)){
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          //if (!manager.sendtoWait(data, j, from)){
           Serial.println("sendtoWait failed");
         }
       }
@@ -244,8 +253,8 @@ void loop()
 //Input value assumed to be between 0 and 99.
 void printI00(int val, char delim)
 {
-    if (val < 10) Serial << '0';
-    Serial << _DEC(val);
-    if (delim > 0) Serial << delim;
-    return;
+  if (val < 10) Serial << '0';
+  Serial << _DEC(val);
+  if (delim > 0) Serial << delim;
+  return;
 }

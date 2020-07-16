@@ -1,0 +1,16 @@
+{
+  "name": "concentrator",
+  "version": "1.0.0",
+  "description": "sensor concentrator for JembatanKu server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Langgeng Cipta Solusi",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-admin": "^8.13.0",
+    "scramjet": "^4.33.4",
+    "serialport": "^9.0.0"
+  }
+}
