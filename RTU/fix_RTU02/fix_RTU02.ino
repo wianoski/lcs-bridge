@@ -90,6 +90,8 @@ char temp[10];
 #define VBATPIN A0 //(Promini)
 float measuredvbat;
 
+const int MPU_addr1 = 0x68;
+
 void setup()
 {
   // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -149,6 +151,12 @@ void setup()
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
 
+  Wire.begin();                                      //begin the wire communication
+  Wire.beginTransmission(MPU_addr1);                 //begin, send the slave adress (in this case 68)
+  Wire.write(0x6B);                                  //make the reset (place a 0 into the 6B register)
+  Wire.write(0);
+  Wire.endTransmission(true);                        //end the transmission
+
   if (!manager.init())
     Serial.println("init failed");
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
@@ -167,27 +175,15 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 }
-int16_t x;
-int16_t y;
-int16_t z;
+int16_t xa;
+int16_t ya;
+int16_t za;
+int16_t roll;
+int16_t pitch;
 void loop()
 {
-  //  Wire.beginTransmission(MPU_addr);
-  //  Wire.write(0x3B);
-  //  Wire.endTransmission(false);
-  //  Wire.requestFrom(MPU_addr, 14, true);
-  //  AcX = Wire.read() << 8 | Wire.read();
-  //  AcY = Wire.read() << 8 | Wire.read();
-  //  AcZ = Wire.read() << 8 | Wire.read();
-  //  int xAng = map(AcX, minVal, maxVal, -90, 90);
-  //  int yAng = map(AcY, minVal, maxVal, -90, 90);
-  //  int zAng = map(AcZ, minVal, maxVal, -90, 90);
-  //
-  //  x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
-  //  y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
-  //  z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
-  //
-  //  Serial.println(x);
+
+
   if (manager.available())
   {
 
@@ -214,29 +210,31 @@ void loop()
         measuredvbat *= 2; // we divided by 2, so multiply back
         measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
         measuredvbat /= 1024; // convert to voltage
-        
+
         //Measure 50 ax and 50 ay
         for (i = 0; i < 10; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU01
-          Wire.beginTransmission(MPU_addr);
+          Wire.beginTransmission(MPU_addr1);
           Wire.write(0x3B);
           Wire.endTransmission(false);
-          Wire.requestFrom(MPU_addr, 14, true);
-          AcX = Wire.read() << 8 | Wire.read();
-          AcY = Wire.read() << 8 | Wire.read();
-          AcZ = Wire.read() << 8 | Wire.read();
-          int xAng = map(AcX, minVal, maxVal, -90, 90);
-          int yAng = map(AcY, minVal, maxVal, -90, 90);
-          int zAng = map(AcZ, minVal, maxVal, -90, 90);
+          Wire.requestFrom(MPU_addr1, 6, true); //get six bytes accelerometer data
 
-          x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
-          y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
-          z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
-          //          Serial.println(x);
-          data[j] = highByte(x);
+          xa = Wire.read() << 8 | Wire.read();
+          ya = Wire.read() << 8 | Wire.read();
+          za = Wire.read() << 8 | Wire.read();
+
+          roll = atan2(ya , za) * 180.0 / PI;
+          //  roll = atan2(ya , za) * 180.0 / PI;
+          pitch = atan2(-xa , sqrt(ya * ya + za * za)) * 180.0 / PI;
+
+//          Serial.print("roll = ");
+//          Serial.print(roll);
+          
+          //for RTU01
+
+          data[j] = highByte(roll);
           j++;
-          data[j] = lowByte(x);
+          data[j] = lowByte(roll);
           j++;
         }
 

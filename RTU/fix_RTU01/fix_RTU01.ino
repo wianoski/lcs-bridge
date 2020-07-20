@@ -197,9 +197,9 @@ void loop()
           //for RTU01
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
-          data[j] = highByte(ax);
+          data[j] = highByte(AX);
           j++;
-          data[j] = lowByte(ax);
+          data[j] = lowByte(AX);
           j++;
           data[j] = highByte(ay);
           j++;

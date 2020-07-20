@@ -288,7 +288,6 @@ void loop()
           AY = ((float)ay-(AYoff-16384))/16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           AZ = ((float)az-AZoff)/16384.00; //remove 1G before dividing
 
-          
 
           dtostrf(AX,5, 2, buf);
           tempString = (char*)buf;
