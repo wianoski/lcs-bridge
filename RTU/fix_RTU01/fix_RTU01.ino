@@ -160,6 +160,14 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 }
+union cracked_float_t {
+  float f;
+  uint32_t l;
+  word w[sizeof(float) / sizeof(word)];
+  byte b[sizeof(float)];
+};
+cracked_float_t cx;
+cracked_float_t cy;
 
 void loop()
 {
@@ -192,18 +200,24 @@ void loop()
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
           AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
-          AZ = ((float)az - (AZoff - 16384)) / 16384.00; //remove 1G before dividing
-
+          cx = {AX};
+          cy = {AY};
+          uint16_t loWord = cx.w[0];
+          uint16_t hiWord = cx.w[1];
+          uint16_t loWrd = cy.w[0];
+          uint16_t hiWrd = cy.w[1];
+          
           //for RTU01
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
-          data[j] = highByte(AX);
+          //          Serial.println(AX);
+          data[j] = highByte(hiWord);
           j++;
-          data[j] = lowByte(AX);
+          data[j] = lowByte(loWord);
           j++;
-          data[j] = highByte(ay);
+          data[j] = highByte(hiWrd);
           j++;
-          data[j] = lowByte(ay);
+          data[j] = lowByte(loWrd);
           j++;
         }
 
