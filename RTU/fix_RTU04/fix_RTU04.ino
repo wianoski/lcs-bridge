@@ -103,15 +103,15 @@ void setup()
   delay(10);
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
-  
+
   if (scale.is_ready()) {
     Serial.print("HX711 reading: ");
   }
-  if (manager.init()){
+  if (manager.init()) {
     Serial.println("init good");
-  }else{
+  } else {
     Serial.println("failed");
-   }
+  }
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
   // The default transmitter power is 13dBm, using PA_BOOST.
@@ -132,7 +132,7 @@ void setup()
 void loop()
 {
   long reading = scale.read();
-//  Serial.println(reading);
+  //  Serial.println(reading);
   if (manager.available())
   {
     // Wait for a message addressed to us from the client
@@ -140,7 +140,7 @@ void loop()
     uint8_t from;
     if (manager.recvfromAck(buf, &len, &from))
     {
-      
+
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
         j = 0;
@@ -151,6 +151,11 @@ void loop()
         j++;
         data[j] = Packet_No;
         j++;
+        /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+        measuredvbat = analogRead(VBATPIN);
+        measuredvbat *= 2; // we divided by 2, so multiply back
+        measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
+        measuredvbat /= 1024; // convert to voltage
         //Measure 50 ax and 50 ay
         for (i = 0; i < 50; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
@@ -160,10 +165,10 @@ void loop()
           j++;
           data[j] = lowByte(reading);
           j++;
-//          data[j] = highByte(reading);
-//          j++;
-//          data[j] = lowByte(reading);
-//          j++;
+          //          data[j] = highByte(reading);
+          //          j++;
+          //          data[j] = lowByte(reading);
+          //          j++;
         }
 
         //verifiation data[] content

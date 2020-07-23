@@ -24,7 +24,10 @@ RHReliableDatagram manager(driver, SERVER_ADDRESS);
 String inputString              = "";     // a string to hold incoming data
 boolean stringComplete          = false;  // whether the string is complete
 
-uint8_t data1[] = "REQ_RTU01";
+uint8_t data1[] = "REQ_RTU01_1";
+uint8_t data2[] = "REQ_RTU01_2";
+uint8_t data3[] = "REQ_RTU01_3";
+uint8_t data4[] = "REQ_RTU01_4";
 
 // Dont put this on the stack:
 uint8_t buf[203];
@@ -89,8 +92,7 @@ void loop()
 
 void request_RTU01() {
   /////////////////////////////////// Request Packet1 ///////////////////////////////////////
-  if (manager.sendtoWait(data1, sizeof(data1), CLIENT_ADDRESS))
-  {
+  if (manager.sendtoWait(data1, sizeof(data1), CLIENT_ADDRESS)) {
     // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);
     uint8_t from;
@@ -107,7 +109,37 @@ void request_RTU01() {
         char temps[4];
         sprintf(temps, "%02x ", buf[i]);
         Serial.print(temps);
-        //        Serial.print(buf[i]);
+        //        Serial.write(buf[i]);
+      }
+      //      Serial.println();
+    }
+    else
+    {
+      Serial.println("RTU01 no reply");
+    }
+  }
+  else {
+    Serial.println("sendtoWait failed");
+  }
+  /////////////////////////////////// Request Packet2 ///////////////////////////////////////
+  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS)) {
+    // Now wait for a reply from the RTU01
+    uint8_t len = sizeof(buf);
+    uint8_t from;
+
+    //Serial.println();
+    //Serial.println(len);
+
+    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+    {
+      //Serial.print("RTU01_0x");
+      //Serial.print(from, HEX);
+      //Serial.print((char*)buf);
+      for (i = 0; i < len; i++) {
+        char temps[4];
+        sprintf(temps, "%02x ", buf[i]);
+        Serial.print(temps);
+        //        Serial.write(buf[i]);
       }
       Serial.println();
     }

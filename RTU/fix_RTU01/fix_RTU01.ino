@@ -60,6 +60,7 @@ float   GX, GY, GZ; //gyroscope floats
 
 uint8_t Gateway_ID = 1;
 uint8_t RTU_ID = 1;
+uint8_t Packet_No2 = 2;
 uint8_t Packet_No = 1;
 
 #define LED_PIN 13
@@ -68,7 +69,8 @@ bool blinkState = false;
 uint8_t data[203]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU01");
+String Gateway_Command1 = String("REQ_RTU01_1");
+String Gateway_Command2 = String("REQ_RTU01_2");
 
 String tempString = "-0.12";
 
@@ -180,8 +182,7 @@ void loop()
     // Wait for a message addressed to us from the client
     uint8_t len = sizeof(buf);
     uint8_t from;
-    if (manager.recvfromAck(buf, &len, &from))
-    {
+    if (manager.recvfromAck(buf, &len, &from)) {
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
         j = 0;
@@ -192,6 +193,13 @@ void loop()
         j++;
         data[j] = Packet_No;
         j++;
+
+        /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+        measuredvbat = analogRead(VBATPIN);
+        measuredvbat *= 2; // we divided by 2, so multiply back
+        measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
+        measuredvbat /= 1024; // convert to voltage
+        
         //Measure 50 ax and 50 ay
         for (i = 0; i < 50; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
@@ -206,7 +214,7 @@ void loop()
           uint16_t hiWord = cx.w[1];
           uint16_t loWrd = cy.w[0];
           uint16_t hiWrd = cy.w[1];
-          
+
           //for RTU01
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
@@ -215,7 +223,7 @@ void loop()
           j++;
           data[j] = lowByte(loWord);
           j++;
-          data[j] = highByte(hiWrd);
+          data[j] = highByte(loWrd);
           j++;
           data[j] = lowByte(loWrd);
           j++;
@@ -234,6 +242,59 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Gateway_Command2 == (char*)buf) {
+        j = 0;
+        /////////////////////////////////// Set Header ///////////////////////////////////////
+        data[j] = Gateway_ID;
+        j++;
+        data[j] = RTU_ID;
+        j++;
+        data[j] = Packet_No2;
+        j++;
+        //Measure 50 ax and 50 ay
+        for (i = 0; i < 50; i++) {
+          /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
+          //for RTU01
+          accelgyro.getAcceleration(&ax, &ay, &az);
+          AX = ((float)ax - AXoff) / 16384.00;
+          //if sensor pcb placed on table:
+          AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+          cx = {AX};
+          cy = {AY};
+          uint16_t loWord = cx.w[0];
+          uint16_t hiWord = cx.w[1];
+          uint16_t loWrd = cy.w[0];
+          uint16_t hiWrd = cy.w[1];
+
+          //for RTU01
+          //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+          //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+          //          Serial.println(AX);
+          data[j] = highByte(hiWord);
+          j++;
+          data[j] = lowByte(loWord);
+          j++;
+          data[j] = highByte(loWrd);
+          j++;
+          data[j] = lowByte(loWrd);
+          j++;
+        }
+
+        //verifiation data[] content
+        for (i = 0; i < j; i++) {
+          Serial.write(data[i]);
+        }
+
+        //Serial.println();
+        //Serial.println(j);
+        // Send a reply data to the Server
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          //if (!manager.sendtoWait(data, j, from)){
+          Serial.println("sendtoWait failed");
+        }
+      }
+
     }
   }
 }

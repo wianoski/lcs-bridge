@@ -175,11 +175,14 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 }
-int16_t xa;
-int16_t ya;
-int16_t za;
-int16_t roll;
-int16_t pitch;
+float xa, ya, za, roll, pitch;
+union cracked_float_t {
+  float f;
+  uint32_t l;
+  word w[sizeof(float) / sizeof(word)];
+  byte b[sizeof(float)];
+};
+cracked_float_t result;
 void loop()
 {
 
@@ -231,10 +234,12 @@ void loop()
 //          Serial.print(roll);
           
           //for RTU01
-
-          data[j] = highByte(roll);
+          result = {roll};
+          uint16_t loWord = result.w[0];
+          uint16_t hiWord = result.w[1];
+          data[j] = highByte(hiWord);
           j++;
-          data[j] = lowByte(roll);
+          data[j] = lowByte(loWord);
           j++;
         }
 

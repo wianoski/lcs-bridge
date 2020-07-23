@@ -179,6 +179,11 @@ void loop()
         j++;
         data[j] = Packet_No;
         j++;
+        /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+        measuredvbat = analogRead(VBATPIN);
+        measuredvbat *= 2; // we divided by 2, so multiply back
+        measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
+        measuredvbat /= 1024; // convert to voltage
         //Measure 50 ax and 50 ay
         for (i = 0; i < 10; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
