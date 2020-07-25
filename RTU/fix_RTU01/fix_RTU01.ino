@@ -201,7 +201,7 @@ void loop()
         measuredvbat /= 1024; // convert to voltage
         
         //Measure 50 ax and 50 ay
-        for (i = 0; i < 50; i++) {
+        for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
           //for RTU01
           accelgyro.getAcceleration(&ax, &ay, &az);
@@ -246,14 +246,14 @@ void loop()
       if (Gateway_Command2 == (char*)buf) {
         j = 0;
         /////////////////////////////////// Set Header ///////////////////////////////////////
-        data[j] = Gateway_ID;
-        j++;
-        data[j] = RTU_ID;
-        j++;
-        data[j] = Packet_No2;
-        j++;
+//        data[j] = Gateway_ID;
+//        j++;
+//        data[j] = RTU_ID;
+//        j++;
+//        data[j] = Packet_No2;
+//        j++;
         //Measure 50 ax and 50 ay
-        for (i = 0; i < 50; i++) {
+        for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
           //for RTU01
           accelgyro.getAcceleration(&ax, &ay, &az);
