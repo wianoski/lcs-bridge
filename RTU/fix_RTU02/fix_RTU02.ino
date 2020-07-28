@@ -31,7 +31,7 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 434.0
+#define RF95_FREQ 412.0
 
 #define CLIENT_ADDRESS 12
 #define SERVER_ADDRESS 2
@@ -75,7 +75,7 @@ const int MPU_addr = 0x68;
 uint8_t data[50]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU02");
+String Gateway_Command1 = String("REQ_RTU02_1");
 
 String tempString = "-0.12";
 

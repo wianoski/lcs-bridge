@@ -24,7 +24,7 @@ RHReliableDatagram manager(driver, SERVER_ADDRESS);
 String inputString              = "";     // a string to hold incoming data
 boolean stringComplete          = false;  // whether the string is complete
 
-uint8_t data1[] = "REQ_RTU02";
+uint8_t data1[] = "REQ_RTU02_1";
 
 // Dont put this on the stack:
 uint8_t buf[203];
