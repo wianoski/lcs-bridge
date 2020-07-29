@@ -31,7 +31,7 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 434.0
+#define RF95_FREQ 410.0
 
 #define CLIENT_ADDRESS 14
 #define SERVER_ADDRESS 4
@@ -49,10 +49,11 @@ uint8_t Packet_No = 1;
 #define LED_PIN 13
 bool blinkState = false;
 
-uint8_t data[203]; //203 bytes
+uint8_t data[251]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU04");
+String Gateway_Command1 = String("REQ_RTU04_1");
+String Gateway_Command2 = String("REQ_RTU04_2");
 
 String tempString = "-0.12";
 
@@ -128,7 +129,13 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 }
-
+union cracked_float_t {
+  float f;
+  uint32_t l;
+  word w[sizeof(float) / sizeof(word)];
+  byte b[sizeof(float)];
+};
+cracked_float_t result;
 void loop()
 {
   long reading = scale.read();
@@ -160,10 +167,57 @@ void loop()
         for (i = 0; i < 50; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
-
-          data[j] = highByte(reading);
+          result = {reading};
+          uint16_t loWord = result.w[0];
+          uint16_t hiWord = result.w[1];
+          data[j] = highByte(hiWord);
           j++;
-          data[j] = lowByte(reading);
+          data[j] = lowByte(loWord);
+          j++;
+          //          data[j] = highByte(reading);
+          //          j++;
+          //          data[j] = lowByte(reading);
+          //          j++;
+        }
+
+        //verifiation data[] content
+        for (i = 0; i < j; i++) {
+          Serial.write(data[i]);
+        }
+
+        //Serial.println();
+        //Serial.println(j);
+        // Send a reply data to the Server
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          //if (!manager.sendtoWait(data, j, from)){
+          Serial.println("sendtoWait failed");
+        }
+      }
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Gateway_Command2 == (char*)buf) {
+        j = 0;
+        /////////////////////////////////// Set Header ///////////////////////////////////////
+        data[j] = Gateway_ID;
+        j++;
+        data[j] = RTU_ID;
+        j++;
+        data[j] = Packet_No;
+        j++;
+        /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+        measuredvbat = analogRead(VBATPIN);
+        measuredvbat *= 2; // we divided by 2, so multiply back
+        measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
+        measuredvbat /= 1024; // convert to voltage
+        //Measure 50 ax and 50 ay
+        for (i = 0; i < 50; i++) {
+          /////////////////////////////////// Get  Data ///////////////////////////////////////
+          //for RTU01
+          result = {reading};
+          uint16_t loWord = result.w[0];
+          uint16_t hiWord = result.w[1];
+          data[j] = highByte(hiWord);
+          j++;
+          data[j] = lowByte(loWord);
           j++;
           //          data[j] = highByte(reading);
           //          j++;

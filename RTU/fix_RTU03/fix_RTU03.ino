@@ -31,7 +31,7 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 434.0
+#define RF95_FREQ 413.0
 
 #define CLIENT_ADDRESS 13
 #define SERVER_ADDRESS 3
@@ -72,7 +72,7 @@ bool blinkState = false;
 
 const int MPU_addr = 0x68;
 
-uint8_t data[50]; //203 bytes
+uint8_t data[63]; //203 bytes
 uint8_t buf[20]; //Promini
 
 String Gateway_Command1 = String("REQ_RTU03");
@@ -195,13 +195,13 @@ void loop()
           j++;
           data[j] = lowByte(t);
           j++;
-          data[j] = highByte(h);
-          j++;
-          data[j] = lowByte(h);
-          j++;
           data[j] = highByte(distance);
           j++;
           data[j] = lowByte(distance);
+          j++;
+          data[j] = highByte(h);
+          j++;
+          data[j] = lowByte(h);
           j++;
         }
 
