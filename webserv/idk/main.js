@@ -13,8 +13,7 @@ admin.initializeApp({
 const db = admin.database()
 
 var rtu_data = {
-    'ACC_1': '-',
-    'GYRO_1': '-'
+  
 }
 
 client.on('connect', () => {
@@ -78,23 +77,45 @@ client.on('connect', () => {
                                         rtu_data['GYRO_1'] = realData
                                         break;
                                     case '03':
-                                        console.log('RTU' + RTUId, timestamp, value)
+                                        var WIAN = temp.join('').match(/.{1,4}/g).splice(0, 3)
+                                        // console.log('WIAN: ', WIAN);
+                                        var ANJING = new DataView(new ArrayBuffer(4))
+                                        realData = WIAN.map((hex) => {
+                                            if (hex.length === 4) {
+                                                ANJING.setUint16(0, '0x' + hex)
+                                                const result = Math.round((ANJING.getInt16(0) + Number.EPSILON) * 100) / 100
+                                                if (typeof result !== 'undefined') {
+                                                    return result
+                                                }
+                                            }
+                                        })
+                                        console.log('RTU' + RTUId, timestamp, realData)
+                                        client.publish('RTU/' + RTUId, timestamp + ',' + realData.join(','))
+                                        rtu_data['TEMP'] = realData[0]
+                                        rtu_data['DISPLACEMENT'] = realData[1]
+                                        rtu_data['HUMIDITY'] = realData[2]
                                         break;
                                     case '04':
-                                        console.log('RTU' + RTUId, timestamp, value)
+                                        realData = value.splice(0, 1).map((hex) => {
+                                            buffer.setUint32(0, '0x' + hex)
+                                            return Math.round((buffer.getFloat32(0) + Number.EPSILON) * 100) / 100
+                                        })
+                                        console.log('RTU' + RTUId, timestamp, realData)
+                                        client.publish('RTU/' + RTUId, timestamp + ',' + realData.join(','))
+                                        rtu_data['STRAIN'] = realData
                                         break;
                                     default:
                                         break;
                                 }
                             }
                         }
-                        db.ref('MQTT/' + env.bridgeId + '/concentrator_1/' + timestamp).set(rtu_data, (error) => {
-                            if (error) {
-                                console.log(error)
-                            } else {
-                                console.log('Pushed to databse!')
-                            }
-                        })
+                        // db.ref('MQTT/' + env.bridgeId + '/concentrator_1/' + timestamp).set(rtu_data, (error) => {
+                        //     if (error) {
+                        //         console.log(error)
+                        //     } else {
+                        //         console.log('Pushed to databse!')
+                        //     }
+                        // })
                     })
                     setInterval(() => {
                         RTUId ? handler.write('REQ_RTU' + RTUId + ',1\r\n') : ''
