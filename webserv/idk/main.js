@@ -13,7 +13,7 @@ admin.initializeApp({
 const db = admin.database()
 
 var rtu_data = {
-  
+
 }
 
 client.on('connect', () => {
@@ -52,7 +52,7 @@ client.on('connect', () => {
                                 // console.log(temp);
                                 var value = temp.join('').match(/.{1,8}/g)
                                 console.log('RTU' + RTUId, timestamp, 'length of data: ', value.length)
-                                var realData = undefined
+                                var realData,tempData,kurangG = undefined
                                 switch (RTUId) {
                                     case '01':
                                         if (value.length >= 100) {
@@ -60,6 +60,11 @@ client.on('connect', () => {
                                                 buffer.setUint32(0, '0x' + hex)
                                                 return Math.round((buffer.getFloat32(0) + Number.EPSILON) * 100) / 100
                                             })
+                                            // var odd = Math.max(...realData.filter((e, i) => !(i % 2)));
+                                            // var even = Math.max(...realData.filter((e, i) => (i % 2)));
+                                            // tempData = [odd, even]
+                                            // console.log('RTU' + RTUId, timestamp, realData.join(','))
+                                            var kurangG = realData * 0.1;
                                             console.log('RTU' + RTUId, timestamp, realData.join(','))
                                             client.publish('RTU/' + RTUId, timestamp + ',' + realData.join(','))
                                             rtu_data['ACC_1'] = realData

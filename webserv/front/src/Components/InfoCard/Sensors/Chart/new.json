@@ -1,0 +1,65 @@
+{
+    "users": {
+        "4PuWGvALymcWlho3rHbQEq7u5fh2": {
+            "FCMToken": "fKwSv7Wp-T8J36rCxPegjB:APA91bEUycCRVfaoyYMMc6zdGOouOnb3qbhn1A1eEIST6NztPdFQVA6M7rBI47SV_AporC4tCuH_JQ36qGNKgq7MOi6tIPj9oXyrku3mlcyjF0fDA5tNUFK-2fOJHFW7myzzYmznNCGp",
+            "subscribed": true
+        }
+    },
+    "MQTT": {
+        "iDNEzHH3EN2vWxJ6M7Hk": {
+            "concentrator_1": {},
+            "thresholds": {
+                "concentrator_1": {
+                    "ACC_1": {
+                        "max": 1,
+                        "min": -1,
+                        "low_max": 0.5,
+                        "low_min": -0.5
+                    },
+                    "ACC_2": {
+                        "max": 1,
+                        "min": -1,
+                        "low_max": 0.5,
+                        "low_min": -0.5
+                    },
+                    "GYRO_1": {
+                        "max": 1,
+                        "min": -1,
+                        "low_max": 0.5,
+                        "low_min": -0.5
+                    },
+                    "GYRO_2": {
+                        "max": 1,
+                        "min": -1,
+                        "low_max": 0.5,
+                        "low_min": -0.5
+                    },
+                    "TEMP": {
+                        "max": 1,
+                        "min": -1,
+                        "low_max": 0.5,
+                        "low_min": -0.5
+                    },
+                    "DISPLACEMENT": {
+                        "max": 1,
+                        "min": -1,
+                        "low_max": 0.5,
+                        "low_min": -0.5
+                    },
+                    "HUMIDITY": {
+                        "max": 1,
+                        "min": -1,
+                        "low_max": 0.5,
+                        "low_min": -0.5
+                    },
+                    "STRAIN": {
+                        "max": 1,
+                        "min": -1,
+                        "low_max": 0.5,
+                        "low_min": -0.5
+                    }
+                }
+            }
+        }
+    }
+}
