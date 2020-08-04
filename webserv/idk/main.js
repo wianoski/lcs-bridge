@@ -4,7 +4,7 @@ import { StringStream } from 'scramjet'
 import mqtt from 'mqtt';
 import env from './env.json'
 import admin from 'firebase-admin'
-const client = mqtt.connect('ws://103.146.202.75:8083')
+const client = mqtt.connect('wss://test.mosquitto.org:8081')
 
 admin.initializeApp({
     credential: admin.credential.cert(env.adminService),

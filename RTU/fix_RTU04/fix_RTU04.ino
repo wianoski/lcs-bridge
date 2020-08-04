@@ -71,9 +71,11 @@ float measuredvbat;
 #include "HX711.h"
 
 // HX711 circuit wiring
-const int LOADCELL_DOUT_PIN = A1;
-const int LOADCELL_SCK_PIN = A2;
-HX711 scale;
+#define SCK_OUT A2
+#define DOUT A1
+unsigned long x = 0, y = 0;
+unsigned long dataArray[10];
+
 void setup()
 {
   // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -90,7 +92,8 @@ void setup()
   Serial.begin(9600);
   delay(100);
 
-  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+  pinMode(DOUT, INPUT); //data line  //Yellow cable
+  pinMode(SCK_OUT, OUTPUT);  //SCK line  //Orange cable
   ////////////////////////////////////////////////////////////////////////////////////////
 
   // configure Arduino LED pin for output
@@ -105,9 +108,7 @@ void setup()
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
 
-  if (scale.is_ready()) {
-    Serial.print("HX711 reading: ");
-  }
+  
   if (manager.init()) {
     Serial.println("init good");
   } else {
@@ -136,10 +137,27 @@ union cracked_float_t {
   byte b[sizeof(float)];
 };
 cracked_float_t result;
+float res = 0;
+void clk()
+{
+  digitalWrite(SCK_OUT, HIGH);
+  digitalWrite(SCK_OUT, LOW);
+}
 void loop()
 {
-  long reading = scale.read();
+  digitalWrite(A0, LOW);//SCK is made LL
   //  Serial.println(reading);
+  for (int i = 0; i < 24; i++){  //read 24-bit data from HX711    
+    clk();      //generate CLK pulse to get MSB-it at DOUT-pin
+    bitWrite(x, 0, digitalRead(DOUT));
+    x = x << 1;
+  }
+  clk();  //25th pulse
+  res = x*0.000001;
+//  Serial.println(res);
+  y = x;
+  x = 0;
+  // delay(100);
   if (manager.available())
   {
     // Wait for a message addressed to us from the client
@@ -167,7 +185,7 @@ void loop()
         for (i = 0; i < 50; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
-          result = {reading};
+          result = {res};
           uint16_t loWord = result.w[0];
           uint16_t hiWord = result.w[1];
           data[j] = highByte(hiWord);
@@ -212,7 +230,7 @@ void loop()
         for (i = 0; i < 50; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
-          result = {reading};
+          result = {res};
           uint16_t loWord = result.w[0];
           uint16_t hiWord = result.w[1];
           data[j] = highByte(hiWord);
