@@ -114,13 +114,13 @@ client.on('connect', () => {
                                 }
                             }
                         }
-                        // db.ref('MQTT/' + env.bridgeId + '/concentrator_1/' + timestamp).set(rtu_data, (error) => {
-                        //     if (error) {
-                        //         console.log(error)
-                        //     } else {
-                        //         console.log('Pushed to databse!')
-                        //     }
-                        // })
+                        db.ref('MQTT/' + env.bridgeId + '/concentrator_1/' + timestamp).set(rtu_data, (error) => {
+                            if (error) {
+                                console.log(error)
+                            } else {
+                                console.log('Pushed to databse!')
+                            }
+                        })
                     })
                     setInterval(() => {
                         RTUId ? handler.write('REQ_RTU' + RTUId + ',1\r\n') : ''

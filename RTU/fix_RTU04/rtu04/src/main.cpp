@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include <Wire.h>             //http://arduino.cc/en/Reference/Wire
-#include "HX711.h"
+#include <hx711.h>
 
 #define SCK_OUT A2
 #define DOUT A1
-HX711 scale;
+Hx711  scale(DOUT, SCK_OUT);
 /* This program takes 10 samples from LC + HX711B at
    1-sec interval and then computes the average.*/
 
@@ -18,9 +18,6 @@ void setup()
   Serial.begin(9600);
   // pinMode(DOUT, INPUT); //data line  //Yellow cable
   // pinMode(SCK_OUT, OUTPUT);  //SCK line  //Orange cable
-  scale.begin(DOUT, SCK_OUT);
-  scale.set_scale();
-  scale.tare();
 }
 
 
@@ -52,9 +49,10 @@ void loop(){
     // // }
     // dataArray[j] = y;
   
-  long gf = scale.read();
-    Serial.println(gf*0.000001);
-    delay(100);
+    float value = scale.getGram();
+    Serial.print(value);
+    Serial.println(" mV");
+    // delay(100);
   // Serial.println("===averaging process=========");
   // unsigned long sum = 0;
 
