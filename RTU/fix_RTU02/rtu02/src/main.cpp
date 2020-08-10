@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 // 08/07/2020
 // RTU01   : COM6
 // Accelero: +/- 2g
