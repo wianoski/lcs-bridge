@@ -72,10 +72,13 @@ bool blinkState = false;
 
 const int MPU_addr = 0x68;
 
-uint8_t data[63]; //203 bytes
+//uint8_t data[63]; //203 bytes
+uint8_t data[7]; //203 bytes
 uint8_t buf[20]; //Promini
 
 String Gateway_Command1 = String("REQ_RTU03");
+String Gateway_Command2 = String("REQ_HEALTH_03");
+
 
 String tempString = "-0.12";
 
@@ -88,7 +91,8 @@ char temp[10];
 
 //#define VBATPIN A9
 #define VBATPIN A0 //(Promini)
-float measuredvbat;
+long measuredvbat;
+//float measuredvbat;
 
 #define DHTPIN 5
 #include "DHT.h"
@@ -151,6 +155,13 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 }
+union cracked_float_t {
+  float f;
+  uint32_t l;
+  word w[sizeof(float) / sizeof(word)];
+  byte b[sizeof(float)];
+};
+cracked_float_t result;
 void loop()
 {
 
@@ -189,8 +200,8 @@ void loop()
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
           //for RTU01
 
-//          Serial.println(h);
-//          Serial.println(t);
+          //          Serial.println(h);
+          //          Serial.println(t);
           data[j] = highByte(t);
           j++;
           data[j] = lowByte(t);
@@ -218,9 +229,57 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Gateway_Command2 == (char*)buf) {
+        j = 0;
+        /////////////////////////////////// Set Header ///////////////////////////////////////
+        data[j] = Gateway_ID;
+        j++;
+        data[j] = RTU_ID;
+        j++;
+        data[j] = Packet_No;
+        j++;
+        /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+        measuredvbat = analogRead(VBATPIN);
+        measuredvbat *= 2; // we divided by 2, so multiply back
+        measuredvbat *= 3; // Multiply by 3.3V, our reference voltage
+        measuredvbat /= 1024; // convert to voltage
+
+        long rssiResult = driver.lastRssi();
+        //Measure 50 ax and 50 ay
+        //        result = {measuredvbat};
+        //        uint16_t loWord = result.w[0];
+        //        uint16_t hiWord = result.w[1];
+        //        data[j] = highByte(hiWord);
+        //        j++;
+        //        data[j] = lowByte(loWord);
+        //        j++;
+        data[j] = highByte(measuredvbat);
+        j++;
+        data[j] = lowByte(measuredvbat);
+        j++;
+        data[j] = highByte(rssiResult);
+        j++;
+        data[j] = lowByte(rssiResult);
+        j++;
+
+
+        //verifiation data[] content
+        for (i = 0; i < j; i++) {
+          Serial.write(data[i]);
+        }
+
+        //Serial.println();
+        //Serial.println(j);
+        // Send a reply data to the Server
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          //if (!manager.sendtoWait(data, j, from)){
+          Serial.println("sendtoWait failed");
+        }
+      }
     }
   }
-  delay (500);
+  //  delay (500);
 }
 
 ///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////

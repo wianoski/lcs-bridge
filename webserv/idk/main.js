@@ -4,13 +4,15 @@ import { StringStream } from 'scramjet'
 import mqtt from 'mqtt';
 import env from './env.json'
 import admin from 'firebase-admin'
-const client = mqtt.connect('wss://test.mosquitto.org:8081')
+const client = mqtt.connect('wss://langgengciptasolusi-services.com:8083')
 
 admin.initializeApp({
     credential: admin.credential.cert(env.adminService),
     databaseURL: env.databaseURL,
 })
 const db = admin.database()
+
+const dibelakangKoma = 10000
 
 var rtu_data = {
 
@@ -58,13 +60,12 @@ client.on('connect', () => {
                                         if (value.length >= 100) {
                                             realData = value.splice(0, 100).map((hex) => {
                                                 buffer.setUint32(0, '0x' + hex)
-                                                return Math.round((buffer.getFloat32(0) + Number.EPSILON) * 100) / 100
+                                                return Math.round((buffer.getFloat32(0) + Number.EPSILON) * dibelakangKoma) / dibelakangKoma
                                             })
                                             // var odd = Math.max(...realData.filter((e, i) => !(i % 2)));
                                             // var even = Math.max(...realData.filter((e, i) => (i % 2)));
                                             // tempData = [odd, even]
                                             // console.log('RTU' + RTUId, timestamp, realData.join(','))
-                                            var kurangG = realData * 0.1;
                                             console.log('RTU' + RTUId, timestamp, realData.join(','))
                                             client.publish('RTU/' + RTUId, timestamp + ',' + realData.join(','))
                                             rtu_data['ACC_1'] = realData
@@ -75,7 +76,7 @@ client.on('connect', () => {
                                     case '02':
                                         realData = value.splice(0, 5).map((hex) => {
                                             buffer.setUint32(0, '0x' + hex)
-                                            return Math.round((buffer.getFloat32(0) + Number.EPSILON) * 100) / 100
+                                            return Math.round((buffer.getFloat32(0) + Number.EPSILON) * dibelakangKoma) / dibelakangKoma
                                         })
                                         console.log('RTU' + RTUId, timestamp, realData)
                                         client.publish('RTU/' + RTUId, timestamp + ',' + realData.join(','))
@@ -83,12 +84,11 @@ client.on('connect', () => {
                                         break;
                                     case '03':
                                         var WIAN = temp.join('').match(/.{1,4}/g).splice(0, 3)
-                                        // console.log('WIAN: ', WIAN);
                                         var ANJING = new DataView(new ArrayBuffer(4))
                                         realData = WIAN.map((hex) => {
                                             if (hex.length === 4) {
                                                 ANJING.setUint16(0, '0x' + hex)
-                                                const result = Math.round((ANJING.getInt16(0) + Number.EPSILON) * 100) / 100
+                                                const result = Math.round((ANJING.getInt16(0) + Number.EPSILON) * dibelakangKoma) / dibelakangKoma
                                                 if (typeof result !== 'undefined') {
                                                     return result
                                                 }
@@ -102,8 +102,8 @@ client.on('connect', () => {
                                         break;
                                     case '04':
                                         realData = value.splice(0, 1).map((hex) => {
-                                            buffer.setUint32(0, '0x' + hex)
-                                            return Math.round((buffer.getFloat32(0) + Number.EPSILON) * 100) / 100
+                                            buffer.setUint16(0, '0x' + hex)
+                                            return Math.round((buffer.getInt16(0) + Number.EPSILON) * dibelakangKoma) / dibelakangKoma
                                         })
                                         console.log('RTU' + RTUId, timestamp, realData)
                                         client.publish('RTU/' + RTUId, timestamp + ',' + realData.join(','))
@@ -114,13 +114,6 @@ client.on('connect', () => {
                                 }
                             }
                         }
-                        db.ref('MQTT/' + env.bridgeId + '/concentrator_1/' + timestamp).set(rtu_data, (error) => {
-                            if (error) {
-                                console.log(error)
-                            } else {
-                                console.log('Pushed to databse!')
-                            }
-                        })
                     })
                     setInterval(() => {
                         RTUId ? handler.write('REQ_RTU' + RTUId + ',1\r\n') : ''

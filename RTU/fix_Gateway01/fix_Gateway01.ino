@@ -29,9 +29,12 @@ uint8_t data2[] = "REQ_RTU01_2";
 uint8_t data3[] = "REQ_RTU01_3";
 uint8_t data4[] = "REQ_RTU01_4";
 
+uint8_t data5[] = "REQ_RTU_HEALTH";
+
 // Dont put this on the stack:
 uint8_t buf[203];
 
+String command_health = "";
 String command_PC = "";
 int number_of_reading_data = 0;
 int i;
@@ -85,6 +88,11 @@ void loop()
         request_RTU01();
       }
     }
+    // else if (command_PC == "REQ_RTU_HEALTH,01"){
+    //   /* code */
+    //     request_Health();
+    // }
+    
     stringComplete = false;
     inputString = "";
   }
@@ -142,6 +150,38 @@ void request_RTU01() {
         //        Serial.write(buf[i]);
       }
       Serial.println();
+    }
+    else
+    {
+      Serial.println("RTU01 no reply");
+    }
+  }
+  else {
+    Serial.println("sendtoWait failed");
+  }
+}
+
+void request_Health(){
+if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS)) {
+    // Now wait for a reply from the RTU01
+    uint8_t len = sizeof(buf);
+    uint8_t from;
+
+    //Serial.println();
+    //Serial.println(len);
+
+    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+    {
+      //Serial.print("RTU01_0x");
+      //Serial.print(from, HEX);
+      //Serial.print((char*)buf);
+      for (i = 0; i < len; i++) {
+        char temps[4];
+        sprintf(temps, "%02x ", buf[i]);
+        Serial.print(temps);
+        //        Serial.write(buf[i]);
+      }
+      //      Serial.println();
     }
     else
     {

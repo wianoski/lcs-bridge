@@ -73,6 +73,7 @@ float measuredvbat;
 // HX711 circuit wiring
 #define SCK_OUT A2
 #define DOUT A1
+HX711 scale;
 unsigned long x = 0, y = 0;
 unsigned long dataArray[10];
 
@@ -92,8 +93,7 @@ void setup()
   Serial.begin(9600);
   delay(100);
 
-  pinMode(DOUT, INPUT); //data line  //Yellow cable
-  pinMode(SCK_OUT, OUTPUT);  //SCK line  //Orange cable
+  scale.begin(DOUT, SCK_OUT);
   ////////////////////////////////////////////////////////////////////////////////////////
 
   // configure Arduino LED pin for output
@@ -108,7 +108,7 @@ void setup()
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
 
-  
+
   if (manager.init()) {
     Serial.println("init good");
   } else {
@@ -145,19 +145,20 @@ void clk()
 }
 void loop()
 {
-  digitalWrite(A0, LOW);//SCK is made LL
+  //  digitalWrite(A0, LOW);//SCK is made LL
   //  Serial.println(reading);
-  for (int i = 0; i < 24; i++){  //read 24-bit data from HX711    
-    clk();      //generate CLK pulse to get MSB-it at DOUT-pin
-    bitWrite(x, 0, digitalRead(DOUT));
-    x = x << 1;
-  }
-  clk();  //25th pulse
-  res = x*0.000001;
-//  Serial.println(res);
-  y = x;
-  x = 0;
+  //  for (int i = 0; i < 24; i++){  //read 24-bit data from HX711
+  //    clk();      //generate CLK pulse to get MSB-it at DOUT-pin
+  //    bitWrite(x, 0, digitalRead(DOUT));
+  //    x = x << 1;
+  //  }
+  //  clk();  //25th pulse
+  //  res = x*0.000001;
+  ////  Serial.println(res);
+  //  y = x;
+  //  x = 0;
   // delay(100);
+  long reading = scale.read();
   if (manager.available())
   {
     // Wait for a message addressed to us from the client
@@ -185,17 +186,17 @@ void loop()
         for (i = 0; i < 50; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
-          result = {res};
-          uint16_t loWord = result.w[0];
-          uint16_t hiWord = result.w[1];
-          data[j] = highByte(hiWord);
-          j++;
-          data[j] = lowByte(loWord);
-          j++;
-          //          data[j] = highByte(reading);
+          //          result = {reading};
+          //          uint16_t loWord = result.w[0];
+          //          uint16_t hiWord = result.w[1];
+          //          data[j] = highByte(hiWord);
           //          j++;
-          //          data[j] = lowByte(reading);
+          //          data[j] = lowByte(loWord);
           //          j++;
+          data[j] = highByte(reading);
+          j++;
+          data[j] = lowByte(reading);
+          j++;
         }
 
         //verifiation data[] content

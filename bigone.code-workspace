@@ -10,6 +10,10 @@
 		{
 			"name": "rtu02",
 			"path": "RTU\\fix_RTU02\\rtu02"
+		},
+		{
+			"name": "rtu03",
+			"path": "RTU\\fix_RTU03\\rtu03"
 		}
 	],
 	"settings": {}

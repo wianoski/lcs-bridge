@@ -51,7 +51,7 @@ void loop(){
     // dataArray[j] = y;
   
     long reading = scale.read();
-    Serial.println(reading*0.000001,3);
+    Serial.println(reading);
     // delay(100);
   // Serial.println("===averaging process=========");
   // unsigned long sum = 0;
