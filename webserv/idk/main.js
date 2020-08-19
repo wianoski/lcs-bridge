@@ -12,7 +12,7 @@ admin.initializeApp({
 })
 const db = admin.database()
 
-const dibelakangKoma = 10000
+const dibelakangKoma = 100
 
 var rtu_data = {
 
@@ -60,7 +60,7 @@ client.on('connect', () => {
                                         if (value.length >= 100) {
                                             realData = value.splice(0, 100).map((hex) => {
                                                 buffer.setUint32(0, '0x' + hex)
-                                                return Math.round((buffer.getFloat32(0) + Number.EPSILON) * dibelakangKoma) / dibelakangKoma
+                                                return Math.round((buffer.getFloat32(0) + Number.EPSILON) * 100) / 100
                                             })
                                             // var odd = Math.max(...realData.filter((e, i) => !(i % 2)));
                                             // var even = Math.max(...realData.filter((e, i) => (i % 2)));

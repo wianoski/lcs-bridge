@@ -16,5 +16,9 @@
 			"path": "RTU\\fix_RTU03\\rtu03"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"cmath": "cpp"
+		}
+	}
 }

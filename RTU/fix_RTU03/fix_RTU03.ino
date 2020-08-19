@@ -91,7 +91,7 @@ char temp[10];
 
 //#define VBATPIN A9
 #define VBATPIN A0 //(Promini)
-long measuredvbat;
+int16_t measuredvbat;
 //float measuredvbat;
 
 #define DHTPIN 5
@@ -242,7 +242,7 @@ void loop()
         /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
         measuredvbat = analogRead(VBATPIN);
         measuredvbat *= 2; // we divided by 2, so multiply back
-        measuredvbat *= 3; // Multiply by 3.3V, our reference voltage
+        measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
         measuredvbat /= 1024; // convert to voltage
 
         long rssiResult = driver.lastRssi();
