@@ -29,7 +29,8 @@ uint8_t data2[] = "REQ_RTU01_2";
 uint8_t data3[] = "REQ_RTU01_3";
 uint8_t data4[] = "REQ_RTU01_4";
 
-uint8_t data5[] = "REQ_RTU_HEALTH";
+
+uint8_t data5[] = "REQ_HEALTH_01";
 
 // Dont put this on the stack:
 uint8_t buf[203];
@@ -87,11 +88,14 @@ void loop()
       for (i = 0; i < number_of_reading_data; i++) {
         request_RTU01();
       }
+    }else if (command_PC == "REQ_RTU_HEALTH01") {
+      /* code */
+      command_PC = getValue(inputString, ',', 1);
+      number_of_reading_data = command_PC.toInt();
+      for (i = 0; i < number_of_reading_data; i++) {
+        request_health();
+      }
     }
-    // else if (command_PC == "REQ_RTU_HEALTH,01"){
-    //   /* code */
-    //     request_Health();
-    // }
     
     stringComplete = false;
     inputString = "";
@@ -161,8 +165,11 @@ void request_RTU01() {
   }
 }
 
-void request_Health(){
-if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS)) {
+void request_health() {
+  //  Serial.println("yourein");
+  /////////////////////////////////// Request Packet1 ///////////////////////////////////////
+  if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS))
+  {
     // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);
     uint8_t from;
@@ -181,7 +188,7 @@ if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS)) {
         Serial.print(temps);
         //        Serial.write(buf[i]);
       }
-      //      Serial.println();
+      Serial.println();
     }
     else
     {

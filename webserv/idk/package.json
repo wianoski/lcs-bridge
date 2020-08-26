@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "esm": "^3.2.25",
+    "fast-crc32c": "^2.0.0",
+    "firebase": "^7.19.0",
     "firebase-admin": "^9.0.0",
     "mqtt": "^4.1.0",
     "scramjet": "^4.33.5",

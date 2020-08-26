@@ -1,0 +1,13 @@
+{
+    "type": "service_account",
+    "project_id": "bridge-monitoring-app",
+    "private_key_id": "f151d13e8442bb980015aa6dc23c6731db7f31a8",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCdxN1aNMmRJPPp\n9CdsonUJusfjU4gy4q1bMMHSNLTW/3s63w9G+TTkaBXOve0qaBxCYQuuaKIl4zQM\n8wdfqdIbzCIzmZClrGI2QsI5p2tcyTZQ7AWgDjLZOnr93uC+B/5S/9KzNPCaue6v\nL68th6db9KucVRK7lRdpJ1HZcr3TtHe6p4v8lq0ruA+AyfQyZmb0dye68yKAwA8A\nUdoTrya18H9sZJRzwsS/I5R1QgTGFhx+mmMXnG1hXYMmf+FFv72buocSKU4Jj3te\nvkgAndQjg/80J6nyz6smmadjjhuf+WC2FtsqSfg3Q1oY49YrvqShGAdBufzVmSFm\nKRAyh7wlAgMBAAECggEACFa6VrUmuJHMr5SsocYLbBZ6erDfUxsz4PeYgvuvWZQa\n0g+DT0kcNdICNxFxpTW9VU0rpiNYe1VWhV8HXdPMFmqJcz3pDTdUNecnkg8Kh8Fd\n1NSeGSnZn62C3di80GZ77NdMg8Am/cfujkVgW7EevtJANiIxUYdYO6ys8Ofq5x3T\n75vc21xHvO6D321N86y8XG6oAIhxqoIXSnZnR5Z+IX3kIHdlTT0JiKIOEIcx46MV\nzz/8tvOCEZrSlvhSSv/xvE7aqvhMpBLd5AR/kquu9jIjnxccxXX7RRzzUDyT175Q\n4PxzvsWEKu+3oD3k2vGSub1mb0zmYT5PcO+sNnEG6QKBgQDQevNFiX1anZ5GTcAm\nxVB6beEy1TeZEi0J/qbM/mWsDO8Odp1Y5Eyp/NkTUf63QpV8/sYVRSscrR9zy8WQ\nO8gNOD8bjzJdIph53xViazgmbPSpUq8blSW6T4aHU2uYMtAoq+B19bHp0wFUsjRE\ns9rq7XO5PfCiNJFWNmPVDmjd2QKBgQDButtUivKdHZFyMW4Zpeq3wF8ystc+GhNz\nO0Zf+WLmBshzr8UxWgP0+yRS/Yo7nEAHLnNWXmbeWkvHkjyiZYx/U/YtdonpNP7U\nf8wbEm5odG0YF3pgg839P8gP2HfLK57RJ4jM8FxL3yB+mH1w+XsQUD/DSwMdonnb\ntfLOlC+FLQKBgDOGP3tvGHj9vXE4pAWw/EvVvjN2+K+vC0yOECFXuj8ET0yuygJ/\nIeddIzUgLaiTHyjuOnxlRNtoef5/XQthivahcQ9Zm6Pi+fYcyUcyooT0pp72XWqe\nuN1L7D6jwlKyNDnpCKd+moLkcE7DYCGepbssBk7A3SjpfwXkmVW9ovM5AoGBAIDG\n4Pz10Ag4m3I5AWLzM28p5R4iW4ngc4VppYIumFsnrx+Xe5EusOqr9p1kA/tUBgvA\nCNMktWSgyTbEMqIQtq/88+uMnGf03mALA3YLbnDo04vsL2DwvIDXYPmHfzoCqPOH\nQBxauj+E9miwnNH4RKG3dmsu9cdBNZei/t/rCRuRAoGBANAbsSITMgw82Qx8Qp0C\nQkHw/QSjFQ07+IlbiqFcHBaifzMQb4aPycxgGicNFuLJy90PM/N/IKkWEO8iaY1K\nrHP5mLkl/0WKQQ7wmIuoTiUrdIwSe7sUscRROyAouJsIOLPZVCiUgFqbNbn+9ty1\noERaWWGSy39CMxngF7GCOzYN\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-hekuy@bridge-monitoring-app.iam.gserviceaccount.com",
+    "client_id": "111683645107765895619",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-hekuy%40bridge-monitoring-app.iam.gserviceaccount.com"
+  }
+  

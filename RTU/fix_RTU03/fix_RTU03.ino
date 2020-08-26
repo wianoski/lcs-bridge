@@ -72,8 +72,8 @@ bool blinkState = false;
 
 const int MPU_addr = 0x68;
 
-//uint8_t data[63]; //203 bytes
-uint8_t data[7]; //203 bytes
+uint8_t data[63]; //203 bytes
+//uint8_t data[7]; //203 bytes
 uint8_t buf[20]; //Promini
 
 String Gateway_Command1 = String("REQ_RTU03");
@@ -247,21 +247,22 @@ void loop()
 
         long rssiResult = driver.lastRssi();
         //Measure 50 ax and 50 ay
-        //        result = {measuredvbat};
-        //        uint16_t loWord = result.w[0];
-        //        uint16_t hiWord = result.w[1];
-        //        data[j] = highByte(hiWord);
-        //        j++;
-        //        data[j] = lowByte(loWord);
-        //        j++;
+        result = {rssiResult};
+        uint16_t loWord = result.w[0];
+        uint16_t hiWord = result.w[1];
+        
         data[j] = highByte(measuredvbat);
         j++;
         data[j] = lowByte(measuredvbat);
         j++;
-        data[j] = highByte(rssiResult);
+        data[j] = highByte(hiWord);
         j++;
-        data[j] = lowByte(rssiResult);
+        data[j] = lowByte(loWord);
         j++;
+//        data[j] = highByte(rssiResult);
+//        j++;
+//        data[j] = lowByte(rssiResult);
+//        j++;
 
 
         //verifiation data[] content

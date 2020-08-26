@@ -71,6 +71,7 @@ uint8_t buf[20]; //Promini
 
 String Gateway_Command1 = String("REQ_RTU01_1");
 String Gateway_Command2 = String("REQ_RTU01_2");
+String Gateway_Command3 = String("REQ_HEALTH_01");
 
 String tempString = "-0.12";
 
