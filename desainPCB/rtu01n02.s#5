@@ -1540,34 +1540,9 @@ http://www.buildcircuit.com/how-to-use-micro-usb-5v-1a-lithium-battery-charging-
 </net>
 <net name="5V" class="0">
 <segment>
-<pinref part="12V-5V1" gate="G$1" pin="OUT+"/>
-<wire x1="50.8" y1="76.2" x2="48.26" y2="76.2" width="0.1524" layer="91"/>
-<label x="48.26" y="76.2" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="X1" gate="-1" pin="S"/>
-<wire x1="-40.64" y1="86.36" x2="-48.26" y2="86.36" width="0.1524" layer="91"/>
-<label x="-48.26" y="86.36" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
 <pinref part="GND" gate="A" pin="3"/>
 <wire x1="43.18" y1="106.68" x2="43.18" y2="101.6" width="0.1524" layer="91"/>
 <label x="43.18" y="101.6" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="M1" gate="G$1" pin="A0"/>
-<wire x1="48.26" y1="35.56" x2="43.18" y2="35.56" width="0.1524" layer="91"/>
-<label x="43.18" y="35.56" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<wire x1="-43.18" y1="96.52" x2="-45.72" y2="96.52" width="0.1524" layer="91"/>
-<label x="-45.72" y="96.52" size="1.778" layer="95" rot="R180" xref="yes"/>
-<pinref part="U$2" gate="G$1" pin="BAT+"/>
-</segment>
-<segment>
-<pinref part="MICRO" gate="G$1" pin="1"/>
-<wire x1="-5.08" y1="119.38" x2="2.54" y2="119.38" width="0.1524" layer="91"/>
-<label x="2.54" y="119.38" size="1.778" layer="95" xref="yes"/>
 </segment>
 <segment>
 <pinref part="USB" gate="G$1" pin="1"/>
@@ -1726,6 +1701,35 @@ http://www.buildcircuit.com/how-to-use-micro-usb-5v-1a-lithium-battery-charging-
 <pinref part="M1" gate="G$1" pin="D10"/>
 <wire x1="48.26" y1="45.72" x2="43.18" y2="45.72" width="0.1524" layer="91"/>
 <label x="43.18" y="45.72" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="B+" class="0">
+<segment>
+<wire x1="-43.18" y1="96.52" x2="-45.72" y2="96.52" width="0.1524" layer="91"/>
+<label x="-45.72" y="96.52" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="U$2" gate="G$1" pin="BAT+"/>
+</segment>
+<segment>
+<pinref part="M1" gate="G$1" pin="A0"/>
+<wire x1="48.26" y1="35.56" x2="43.18" y2="35.56" width="0.1524" layer="91"/>
+<label x="43.18" y="35.56" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="X1" gate="-1" pin="S"/>
+<wire x1="-40.64" y1="86.36" x2="-48.26" y2="86.36" width="0.1524" layer="91"/>
+<label x="-48.26" y="86.36" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="A+" class="0">
+<segment>
+<pinref part="12V-5V1" gate="G$1" pin="OUT+"/>
+<wire x1="50.8" y1="76.2" x2="48.26" y2="76.2" width="0.1524" layer="91"/>
+<label x="48.26" y="76.2" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="MICRO" gate="G$1" pin="1"/>
+<wire x1="-5.08" y1="119.38" x2="2.54" y2="119.38" width="0.1524" layer="91"/>
+<label x="2.54" y="119.38" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>

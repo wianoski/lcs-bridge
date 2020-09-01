@@ -32,7 +32,7 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 413.0
+#define RF95_FREQ 415.0
 
 #define CLIENT_ADDRESS 13
 #define SERVER_ADDRESS 3

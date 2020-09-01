@@ -1510,9 +1510,9 @@ controlled avalanche rectifier</description>
 <attribute name="NAME" x="-1.27" y="98.425" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="-1.27" y="109.22" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="D1" gate="1" x="93.98" y="71.12" smashed="yes">
-<attribute name="NAME" x="96.52" y="71.6026" size="1.778" layer="95"/>
-<attribute name="VALUE" x="96.52" y="68.8086" size="1.778" layer="96"/>
+<instance part="D1" gate="1" x="93.98" y="68.58" smashed="yes" rot="R180">
+<attribute name="NAME" x="91.44" y="68.0974" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="91.44" y="70.8914" size="1.778" layer="96" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -1655,14 +1655,6 @@ controlled avalanche rectifier</description>
 <pinref part="12V-5V1" gate="G$1" pin="OUT+"/>
 <wire x1="50.8" y1="76.2" x2="48.26" y2="76.2" width="0.1524" layer="91"/>
 <label x="48.26" y="76.2" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-</net>
-<net name="VCC" class="0">
-<segment>
-<pinref part="12V-5V1" gate="G$1" pin="IN+"/>
-<pinref part="U$1" gate="G$1" pin="P1"/>
-<wire x1="86.36" y1="76.2" x2="99.06" y2="76.2" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="76.2" x2="99.06" y2="78.74" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="4" class="0">
@@ -1815,6 +1807,23 @@ controlled avalanche rectifier</description>
 <pinref part="M1" gate="G$1" pin="A0"/>
 <wire x1="48.26" y1="35.56" x2="43.18" y2="35.56" width="0.1524" layer="91"/>
 <label x="43.18" y="35.56" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="N$1" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="P1"/>
+<wire x1="99.06" y1="78.74" x2="99.06" y2="68.58" width="0.1524" layer="91"/>
+<pinref part="D1" gate="1" pin="A"/>
+<wire x1="99.06" y1="68.58" x2="96.52" y2="68.58" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="D1" gate="1" pin="C"/>
+<wire x1="91.44" y1="68.58" x2="88.9" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="88.9" y1="68.58" x2="88.9" y2="76.2" width="0.1524" layer="91"/>
+<pinref part="12V-5V1" gate="G$1" pin="IN+"/>
+<wire x1="88.9" y1="76.2" x2="86.36" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

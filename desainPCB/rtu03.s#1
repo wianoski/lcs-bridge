@@ -1281,82 +1281,145 @@ http://www.buildcircuit.com/how-to-use-micro-usb-5v-1a-lithium-battery-charging-
 </deviceset>
 </devicesets>
 </library>
-<library name="diode" urn="urn:adsk.eagle:library:210">
-<description>&lt;b&gt;Diodes&lt;/b&gt;&lt;p&gt;
-Based on the following sources:
-&lt;ul&gt;
-&lt;li&gt;Motorola : www.onsemi.com
-&lt;li&gt;Fairchild : www.fairchildsemi.com
-&lt;li&gt;Philips : www.semiconductors.com
-&lt;li&gt;Vishay : www.vishay.de
-&lt;/ul&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
+<library name="Rembrandt Electronics - Terminal Block 3-5mm v1-0">
 <packages>
-<package name="DO15-12" urn="urn:adsk.eagle:footprint:43132/1" library_version="8">
-<description>&lt;B&gt;DIODE&lt;/B&gt;&lt;p&gt;
-diameter 3.5 mm, horizontal, grid 12.7 mm</description>
-<wire x1="-3.81" y1="-1.778" x2="3.81" y2="-1.778" width="0.1524" layer="21"/>
-<wire x1="3.81" y1="1.778" x2="-3.81" y2="1.778" width="0.1524" layer="21"/>
-<wire x1="3.81" y1="-1.778" x2="3.81" y2="1.778" width="0.1524" layer="21"/>
-<wire x1="-3.81" y1="1.778" x2="-3.81" y2="-1.778" width="0.1524" layer="21"/>
-<wire x1="6.35" y1="0" x2="5.334" y2="0" width="0.762" layer="51"/>
-<wire x1="-6.35" y1="0" x2="-5.334" y2="0" width="0.762" layer="51"/>
-<pad name="C" x="-6.35" y="0" drill="1.1176" shape="long"/>
-<pad name="A" x="6.35" y="0" drill="1.1176" shape="long"/>
-<text x="-3.683" y="2.159" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-2.159" y="-1.397" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<rectangle x1="-3.048" y1="-1.778" x2="-2.413" y2="1.778" layer="21"/>
-<rectangle x1="-5.207" y1="-0.381" x2="-3.81" y2="0.381" layer="21"/>
-<rectangle x1="3.81" y1="-0.381" x2="5.207" y2="0.381" layer="21"/>
+<package name="TERMINAL-BLOCK-3-PIN-3.5MM-ROUND-PAD">
+<description>&lt;b&gt;Terminal Block 3.5mm Round pads (Package)&lt;/b&gt;&lt;p&gt;
+Pitch: 3,5 mm&lt;br&gt;
+Number of pins: &lt;b&gt;3&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="-5.5" y1="3.65" x2="5.5" y2="3.65" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="3.65" x2="-5.5" y2="1.9123" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-2.0993" x2="-5.5" y2="-2.0993" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-1.6163" x2="5.5" y2="1.4367" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-2.0993" x2="5.5" y2="-2.911" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-1.6163" x2="5.5" y2="-2.0993" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="1.9123" x2="-5.5" y2="1.4367" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="1.9123" x2="5.5" y2="1.9123" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="1.4367" x2="5.5" y2="1.9123" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-1.6163" x2="-5.5" y2="1.4367" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="3.65" x2="5.5" y2="1.9123" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-1.6163" x2="-5.5" y2="-2.0993" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-2.0993" x2="-5.5" y2="-2.911" width="0.1016" layer="21"/>
+<wire x1="-4.706" y1="-0.811" x2="-2.789" y2="1.106" width="0.1016" layer="51"/>
+<wire x1="-5.5" y1="-3.65" x2="5.5" y2="-3.65" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-3.35" x2="5.5" y2="-3.65" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-3.35" x2="-5.5" y2="-3.65" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-2.911" x2="-5.5" y2="-3.35" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-2.911" x2="5.5" y2="-3.35" width="0.1016" layer="21"/>
+<wire x1="-2.294" y1="0.611" x2="-2.3" y2="0.605" width="0.1016" layer="21"/>
+<wire x1="-2.3" y1="0.605" x2="-4.211" y2="-1.306" width="0.1016" layer="51"/>
+<wire x1="-1.206" y1="-0.811" x2="0.711" y2="1.106" width="0.1016" layer="51"/>
+<wire x1="1.206" y1="0.611" x2="1.2" y2="0.605" width="0.1016" layer="21"/>
+<wire x1="1.2" y1="0.605" x2="-0.711" y2="-1.306" width="0.1016" layer="51"/>
+<wire x1="2.294" y1="-0.811" x2="4.211" y2="1.106" width="0.1016" layer="51"/>
+<wire x1="4.706" y1="0.611" x2="4.7" y2="0.605" width="0.1016" layer="21"/>
+<wire x1="4.7" y1="0.605" x2="2.789" y2="-1.306" width="0.1016" layer="51"/>
+<circle x="-3.5" y="-0.1" radius="1.45" width="0.1016" layer="21"/>
+<circle x="0" y="-0.1" radius="1.45" width="0.1016" layer="21"/>
+<circle x="3.5" y="-0.1" radius="1.45" width="0.1016" layer="21"/>
+<pad name="1" x="-3.5" y="-0.1" drill="1.1" diameter="1.7" rot="R90"/>
+<pad name="2" x="0" y="-0.1" drill="1.1" diameter="1.7" rot="R90"/>
+<pad name="3" x="3.5" y="-0.1" drill="1.1" diameter="1.7" rot="R90"/>
+<text x="-3.95" y="2.2225" size="1.27" layer="21" font="vector">1</text>
+<text x="-0.4575" y="2.2225" size="1.27" layer="21" font="vector">2</text>
+<text x="3.035" y="2.2225" size="1.27" layer="21" font="vector">3</text>
+<text x="-5.855" y="-2.8575" size="1.27" layer="25" rot="R90">&gt;NAME</text>
+<text x="-3.8025" y="4.1275" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="TERMINAL-BLOCK-3-PIN-3.5MM-LONG-PAD">
+<description>&lt;b&gt;Terminal Block 3.5mm Long pads (Package)&lt;/b&gt;&lt;p&gt;
+Pitch: 3,5 mm&lt;br&gt;
+Number of pins: &lt;b&gt;3&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="-5.5" y1="3.65" x2="5.5" y2="3.65" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="3.65" x2="-5.5" y2="1.9123" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-2.0993" x2="-5.5" y2="-2.0993" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-1.6163" x2="5.5" y2="1.4367" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-2.0993" x2="5.5" y2="-2.911" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-1.6163" x2="5.5" y2="-2.0993" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="1.9123" x2="-5.5" y2="1.4367" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="1.9123" x2="5.5" y2="1.9123" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="1.4367" x2="5.5" y2="1.9123" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-1.6163" x2="-5.5" y2="1.4367" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="3.65" x2="5.5" y2="1.9123" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-1.6163" x2="-5.5" y2="-2.0993" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-2.0993" x2="-5.5" y2="-2.911" width="0.1016" layer="21"/>
+<wire x1="-4.706" y1="-0.811" x2="-2.789" y2="1.106" width="0.1016" layer="51"/>
+<wire x1="-5.5" y1="-3.65" x2="5.5" y2="-3.65" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-3.35" x2="5.5" y2="-3.65" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-3.35" x2="-5.5" y2="-3.65" width="0.1016" layer="21"/>
+<wire x1="-5.5" y1="-2.911" x2="-5.5" y2="-3.35" width="0.1016" layer="21"/>
+<wire x1="5.5" y1="-2.911" x2="5.5" y2="-3.35" width="0.1016" layer="21"/>
+<wire x1="-2.294" y1="0.611" x2="-2.3" y2="0.605" width="0.1016" layer="21"/>
+<wire x1="-2.3" y1="0.605" x2="-4.211" y2="-1.306" width="0.1016" layer="51"/>
+<wire x1="-1.206" y1="-0.811" x2="0.711" y2="1.106" width="0.1016" layer="51"/>
+<wire x1="1.206" y1="0.611" x2="1.2" y2="0.605" width="0.1016" layer="21"/>
+<wire x1="1.2" y1="0.605" x2="-0.711" y2="-1.306" width="0.1016" layer="51"/>
+<wire x1="2.294" y1="-0.811" x2="4.211" y2="1.106" width="0.1016" layer="51"/>
+<wire x1="4.706" y1="0.611" x2="4.7" y2="0.605" width="0.1016" layer="21"/>
+<wire x1="4.7" y1="0.605" x2="2.789" y2="-1.306" width="0.1016" layer="51"/>
+<circle x="-3.5" y="-0.1" radius="1.45" width="0.1016" layer="21"/>
+<circle x="0" y="-0.1" radius="1.45" width="0.1016" layer="21"/>
+<circle x="3.5" y="-0.1" radius="1.45" width="0.1016" layer="21"/>
+<pad name="1" x="-3.5" y="-0.1" drill="1.1" diameter="1.7" shape="long" rot="R90"/>
+<pad name="2" x="0" y="-0.1" drill="1.1" diameter="1.7" shape="long" rot="R90"/>
+<pad name="3" x="3.5" y="-0.1" drill="1.1" diameter="1.7" shape="long" rot="R90"/>
+<text x="-3.95" y="2.2225" size="1.27" layer="21" font="vector">1</text>
+<text x="-0.4575" y="2.2225" size="1.27" layer="21" font="vector">2</text>
+<text x="3.035" y="2.2225" size="1.27" layer="21" font="vector">3</text>
+<text x="-5.855" y="-2.8575" size="1.27" layer="25" rot="R90">&gt;NAME</text>
+<text x="-3.8025" y="4.1275" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 </packages>
-<packages3d>
-<package3d name="DO15-12" urn="urn:adsk.eagle:package:43369/2" type="model" library_version="8">
-<description>DIODE
-diameter 3.5 mm, horizontal, grid 12.7 mm</description>
-<packageinstances>
-<packageinstance name="DO15-12"/>
-</packageinstances>
-</package3d>
-</packages3d>
 <symbols>
-<symbol name="D" urn="urn:adsk.eagle:symbol:43091/2" library_version="8">
-<wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="1.27" x2="-1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="0" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="0" x2="-2.54" y2="0" width="0.254" layer="94"/>
-<wire x1="2.54" y1="0" x2="1.27" y2="0" width="0.254" layer="94"/>
-<text x="2.54" y="0.4826" size="1.778" layer="95">&gt;NAME</text>
-<text x="2.54" y="-2.3114" size="1.778" layer="96">&gt;VALUE</text>
-<text x="-2.54" y="0" size="0.4064" layer="99" align="center">SpiceOrder 1</text>
-<text x="2.54" y="0" size="0.4064" layer="99" align="center">SpiceOrder 2</text>
-<pin name="A" x="-2.54" y="0" visible="off" length="point" direction="pas"/>
-<pin name="C" x="2.54" y="0" visible="off" length="point" direction="pas" rot="R180"/>
+<symbol name="TERMINAL-BLOCK-PIN-3.5MM">
+<wire x1="0" y1="-1.27" x2="0" y2="1.27" width="0.254" layer="94"/>
+<wire x1="12.7" y1="-1.27" x2="0" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="12.7" y1="-1.27" x2="12.7" y2="1.27" width="0.254" layer="94"/>
+<wire x1="0" y1="1.27" x2="12.7" y2="1.27" width="0.254" layer="94"/>
+<circle x="11.43" y="0" radius="0.6839" width="0.254" layer="94"/>
+<text x="1.27" y="-0.889" size="1.778" layer="95">&gt;NAME</text>
+<text x="13.97" y="-0.889" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="K" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="1N5060GP" urn="urn:adsk.eagle:component:43574/4" prefix="D" library_version="8">
-<description>&lt;B&gt;DIODE&lt;/B&gt;&lt;p&gt;
-controlled avalanche rectifier</description>
+<deviceset name="TERMINAL-BLOCK-3.5MM-3-PIN" prefix="X">
+<description>&lt;b&gt;Terminal Block 3.5mm&lt;/b&gt;&lt;p&gt;
+Pitch: &lt;b&gt;3,5 mm&lt;/b&gt;&lt;br&gt;
+Number of pins: &lt;b&gt;3&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;</description>
 <gates>
-<gate name="1" symbol="D" x="0" y="0"/>
+<gate name="-1" symbol="TERMINAL-BLOCK-PIN-3.5MM" x="0" y="0" addlevel="always"/>
+<gate name="-2" symbol="TERMINAL-BLOCK-PIN-3.5MM" x="0" y="-7.62" addlevel="always"/>
+<gate name="-3" symbol="TERMINAL-BLOCK-PIN-3.5MM" x="0" y="-15.24" addlevel="always"/>
 </gates>
 <devices>
-<device name="" package="DO15-12">
+<device name="-ROUND-PAD" package="TERMINAL-BLOCK-3-PIN-3.5MM-ROUND-PAD">
 <connects>
-<connect gate="1" pin="A" pad="A"/>
-<connect gate="1" pin="C" pad="C"/>
+<connect gate="-1" pin="K" pad="1"/>
+<connect gate="-2" pin="K" pad="2"/>
+<connect gate="-3" pin="K" pad="3"/>
 </connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:43369/2"/>
-</package3dinstances>
 <technologies>
-<technology name="">
-<attribute name="POPULARITY" value="0" constant="no"/>
-</technology>
+<technology name=""/>
+</technologies>
+</device>
+<device name="-LONG-PAD" package="TERMINAL-BLOCK-3-PIN-3.5MM-LONG-PAD">
+<connects>
+<connect gate="-1" pin="K" pad="1"/>
+<connect gate="-2" pin="K" pad="2"/>
+<connect gate="-3" pin="K" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
 </technologies>
 </device>
 </devices>
@@ -1380,12 +1443,10 @@ controlled avalanche rectifier</description>
 <part name="KANAN" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X8" device="" package3d_urn="urn:adsk.eagle:package:22409/2"/>
 <part name="KIRI" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X8" device="" package3d_urn="urn:adsk.eagle:package:22409/2"/>
 <part name="7111" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X3" device="" package3d_urn="urn:adsk.eagle:package:22458/2"/>
-<part name="DHT22" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X3" device="" package3d_urn="urn:adsk.eagle:package:22458/2"/>
-<part name="DISP" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X3" device="" package3d_urn="urn:adsk.eagle:package:22458/2"/>
 <part name="U$2" library="diy-modules (1)" deviceset="BATTERY-CHARGER-LI-5V" device=""/>
 <part name="MICRO" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X2" device="" package3d_urn="urn:adsk.eagle:package:22435/2"/>
 <part name="USB" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X2" device="" package3d_urn="urn:adsk.eagle:package:22435/2"/>
-<part name="D1" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="1N5060GP" device="" package3d_urn="urn:adsk.eagle:package:43369/2"/>
+<part name="X2" library="Rembrandt Electronics - Terminal Block 3-5mm v1-0" deviceset="TERMINAL-BLOCK-3.5MM-3-PIN" device="-LONG-PAD"/>
 </parts>
 <sheets>
 <sheet>
@@ -1420,14 +1481,6 @@ controlled avalanche rectifier</description>
 <attribute name="NAME" x="75.565" y="95.25" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="88.9" y="95.25" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="DHT22" gate="A" x="50.8" y="33.02" smashed="yes">
-<attribute name="NAME" x="44.45" y="38.735" size="1.778" layer="95"/>
-<attribute name="VALUE" x="44.45" y="25.4" size="1.778" layer="96"/>
-</instance>
-<instance part="DISP" gate="A" x="50.8" y="17.78" smashed="yes">
-<attribute name="NAME" x="44.45" y="23.495" size="1.778" layer="95"/>
-<attribute name="VALUE" x="44.45" y="10.16" size="1.778" layer="96"/>
-</instance>
 <instance part="U$2" gate="G$1" x="38.1" y="71.12" smashed="yes" rot="R180">
 <attribute name="NAME" x="38.1" y="63.5" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="48.26" y="58.42" size="1.778" layer="96" rot="R180"/>
@@ -1440,9 +1493,16 @@ controlled avalanche rectifier</description>
 <attribute name="NAME" x="64.77" y="65.405" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="64.77" y="76.2" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="D1" gate="1" x="134.62" y="66.04" smashed="yes" rot="R180">
-<attribute name="NAME" x="132.08" y="65.5574" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="132.08" y="68.3514" size="1.778" layer="96" rot="R180"/>
+<instance part="X2" gate="-1" x="22.86" y="-7.62" smashed="yes" rot="R180">
+<attribute name="NAME" x="21.59" y="-6.731" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="8.89" y="-6.731" size="1.778" layer="96" rot="R180"/>
+</instance>
+<instance part="X2" gate="-2" x="22.86" y="0" smashed="yes" rot="R180">
+<attribute name="NAME" x="21.59" y="0.889" size="1.778" layer="95" rot="R180"/>
+</instance>
+<instance part="X2" gate="-3" x="22.86" y="7.62" smashed="yes" rot="R180">
+<attribute name="NAME" x="21.59" y="8.509" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="8.89" y="8.509" size="1.778" layer="96" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -1490,16 +1550,6 @@ controlled avalanche rectifier</description>
 <label x="78.74" y="93.98" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="DHT22" gate="A" pin="3"/>
-<wire x1="48.26" y1="30.48" x2="43.18" y2="30.48" width="0.1524" layer="91"/>
-<label x="43.18" y="30.48" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="DISP" gate="A" pin="3"/>
-<wire x1="48.26" y1="15.24" x2="43.18" y2="15.24" width="0.1524" layer="91"/>
-<label x="43.18" y="15.24" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
 <wire x1="20.32" y1="78.74" x2="22.86" y2="78.74" width="0.1524" layer="91"/>
 <label x="20.32" y="78.74" size="1.778" layer="95" rot="R180" xref="yes"/>
 <pinref part="U$2" gate="G$1" pin="BAT-"/>
@@ -1514,6 +1564,11 @@ controlled avalanche rectifier</description>
 <wire x1="60.96" y1="71.12" x2="66.04" y2="71.12" width="0.1524" layer="91"/>
 <label x="66.04" y="71.12" size="1.778" layer="95" xref="yes"/>
 </segment>
+<segment>
+<pinref part="X2" gate="-1" pin="K"/>
+<wire x1="25.4" y1="-7.62" x2="30.48" y2="-7.62" width="0.1524" layer="91"/>
+<label x="27.94" y="-10.16" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="3V" class="0">
 <segment>
@@ -1527,19 +1582,14 @@ controlled avalanche rectifier</description>
 <label x="81.28" y="93.98" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
 <segment>
-<pinref part="DHT22" gate="A" pin="1"/>
-<wire x1="48.26" y1="35.56" x2="43.18" y2="35.56" width="0.1524" layer="91"/>
-<label x="43.18" y="35.56" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="DISP" gate="A" pin="1"/>
-<wire x1="48.26" y1="20.32" x2="43.18" y2="20.32" width="0.1524" layer="91"/>
-<label x="43.18" y="20.32" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
 <pinref part="M1" gate="G$1" pin="VCC"/>
 <wire x1="88.9" y1="17.78" x2="86.36" y2="17.78" width="0.1524" layer="91"/>
 <label x="86.36" y="17.78" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="X2" gate="-3" pin="K"/>
+<wire x1="25.4" y1="7.62" x2="30.48" y2="7.62" width="0.1524" layer="91"/>
+<label x="30.48" y="7.62" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="5V" class="0">
@@ -1591,11 +1641,6 @@ controlled avalanche rectifier</description>
 <pinref part="M1" gate="G$1" pin="D7"/>
 <wire x1="124.46" y1="33.02" x2="129.54" y2="33.02" width="0.1524" layer="91"/>
 <label x="129.54" y="33.02" size="1.778" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="DISP" gate="A" pin="2"/>
-<wire x1="48.26" y1="17.78" x2="43.18" y2="17.78" width="0.1524" layer="91"/>
-<label x="43.18" y="17.78" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 <net name="N$6" class="0">
@@ -1678,14 +1723,14 @@ controlled avalanche rectifier</description>
 </net>
 <net name="5" class="0">
 <segment>
-<pinref part="DHT22" gate="A" pin="2"/>
-<wire x1="48.26" y1="33.02" x2="43.18" y2="33.02" width="0.1524" layer="91"/>
-<label x="43.18" y="33.02" size="1.778" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
 <pinref part="M1" gate="G$1" pin="D5"/>
 <wire x1="124.46" y1="27.94" x2="129.54" y2="27.94" width="0.1524" layer="91"/>
 <label x="129.54" y="27.94" size="1.778" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="X2" gate="-2" pin="K"/>
+<wire x1="25.4" y1="0" x2="30.48" y2="0" width="0.1524" layer="91"/>
+<label x="30.48" y="0" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="9" class="0">
@@ -1706,6 +1751,11 @@ controlled avalanche rectifier</description>
 <wire x1="-7.62" y1="43.18" x2="-12.7" y2="43.18" width="0.1524" layer="91"/>
 <label x="-12.7" y="43.18" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
+<segment>
+<pinref part="M1" gate="G$1" pin="D2"/>
+<wire x1="124.46" y1="20.32" x2="129.54" y2="20.32" width="0.1524" layer="91"/>
+<label x="129.54" y="20.32" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="10" class="0">
 <segment>
@@ -1719,20 +1769,18 @@ controlled avalanche rectifier</description>
 <label x="83.82" y="38.1" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="N$1" class="0">
+<net name="IN+" class="0">
 <segment>
-<pinref part="D1" gate="1" pin="A"/>
-<wire x1="137.16" y1="66.04" x2="139.7" y2="66.04" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="P1"/>
 <wire x1="139.7" y1="66.04" x2="139.7" y2="71.12" width="0.1524" layer="91"/>
+<label x="139.7" y="66.04" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$2" class="0">
+<net name="OUT+" class="0">
 <segment>
 <pinref part="12V-5V1" gate="G$1" pin="IN+"/>
 <wire x1="127" y1="68.58" x2="127" y2="66.04" width="0.1524" layer="91"/>
-<pinref part="D1" gate="1" pin="C"/>
-<wire x1="127" y1="66.04" x2="132.08" y2="66.04" width="0.1524" layer="91"/>
+<label x="127" y="66.04" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>

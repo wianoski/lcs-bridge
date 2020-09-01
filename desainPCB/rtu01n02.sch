@@ -1359,88 +1359,6 @@ http://www.buildcircuit.com/how-to-use-micro-usb-5v-1a-lithium-battery-charging-
 </deviceset>
 </devicesets>
 </library>
-<library name="diode" urn="urn:adsk.eagle:library:210">
-<description>&lt;b&gt;Diodes&lt;/b&gt;&lt;p&gt;
-Based on the following sources:
-&lt;ul&gt;
-&lt;li&gt;Motorola : www.onsemi.com
-&lt;li&gt;Fairchild : www.fairchildsemi.com
-&lt;li&gt;Philips : www.semiconductors.com
-&lt;li&gt;Vishay : www.vishay.de
-&lt;/ul&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="DO15-12" urn="urn:adsk.eagle:footprint:43132/1" library_version="8">
-<description>&lt;B&gt;DIODE&lt;/B&gt;&lt;p&gt;
-diameter 3.5 mm, horizontal, grid 12.7 mm</description>
-<wire x1="-3.81" y1="-1.778" x2="3.81" y2="-1.778" width="0.1524" layer="21"/>
-<wire x1="3.81" y1="1.778" x2="-3.81" y2="1.778" width="0.1524" layer="21"/>
-<wire x1="3.81" y1="-1.778" x2="3.81" y2="1.778" width="0.1524" layer="21"/>
-<wire x1="-3.81" y1="1.778" x2="-3.81" y2="-1.778" width="0.1524" layer="21"/>
-<wire x1="6.35" y1="0" x2="5.334" y2="0" width="0.762" layer="51"/>
-<wire x1="-6.35" y1="0" x2="-5.334" y2="0" width="0.762" layer="51"/>
-<pad name="C" x="-6.35" y="0" drill="1.1176" shape="long"/>
-<pad name="A" x="6.35" y="0" drill="1.1176" shape="long"/>
-<text x="-3.683" y="2.159" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-2.159" y="-1.397" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<rectangle x1="-3.048" y1="-1.778" x2="-2.413" y2="1.778" layer="21"/>
-<rectangle x1="-5.207" y1="-0.381" x2="-3.81" y2="0.381" layer="21"/>
-<rectangle x1="3.81" y1="-0.381" x2="5.207" y2="0.381" layer="21"/>
-</package>
-</packages>
-<packages3d>
-<package3d name="DO15-12" urn="urn:adsk.eagle:package:43369/2" type="model" library_version="8">
-<description>DIODE
-diameter 3.5 mm, horizontal, grid 12.7 mm</description>
-<packageinstances>
-<packageinstance name="DO15-12"/>
-</packageinstances>
-</package3d>
-</packages3d>
-<symbols>
-<symbol name="D" urn="urn:adsk.eagle:symbol:43091/2" library_version="8">
-<wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="1.27" x2="-1.27" y2="0" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="0" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="-1.27" y1="0" x2="-2.54" y2="0" width="0.254" layer="94"/>
-<wire x1="2.54" y1="0" x2="1.27" y2="0" width="0.254" layer="94"/>
-<text x="2.54" y="0.4826" size="1.778" layer="95">&gt;NAME</text>
-<text x="2.54" y="-2.3114" size="1.778" layer="96">&gt;VALUE</text>
-<text x="-2.54" y="0" size="0.4064" layer="99" align="center">SpiceOrder 1</text>
-<text x="2.54" y="0" size="0.4064" layer="99" align="center">SpiceOrder 2</text>
-<pin name="A" x="-2.54" y="0" visible="off" length="point" direction="pas"/>
-<pin name="C" x="2.54" y="0" visible="off" length="point" direction="pas" rot="R180"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="1N5060GP" urn="urn:adsk.eagle:component:43574/4" prefix="D" library_version="8">
-<description>&lt;B&gt;DIODE&lt;/B&gt;&lt;p&gt;
-controlled avalanche rectifier</description>
-<gates>
-<gate name="1" symbol="D" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="DO15-12">
-<connects>
-<connect gate="1" pin="A" pad="A"/>
-<connect gate="1" pin="C" pad="C"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:43369/2"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="POPULARITY" value="0" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 </libraries>
 <attributes>
 </attributes>
@@ -1462,7 +1380,6 @@ controlled avalanche rectifier</description>
 <part name="U$2" library="diy-modules (1)" deviceset="BATTERY-CHARGER-LI-5V" device=""/>
 <part name="MICRO" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X2" device="" package3d_urn="urn:adsk.eagle:package:22435/2"/>
 <part name="USB" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X2" device="" package3d_urn="urn:adsk.eagle:package:22435/2"/>
-<part name="D1" library="diode" library_urn="urn:adsk.eagle:library:210" deviceset="1N5060GP" device="" package3d_urn="urn:adsk.eagle:package:43369/2"/>
 </parts>
 <sheets>
 <sheet>
@@ -1509,10 +1426,6 @@ controlled avalanche rectifier</description>
 <instance part="USB" gate="G$1" x="-7.62" y="104.14" smashed="yes" rot="R180">
 <attribute name="NAME" x="-1.27" y="98.425" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="-1.27" y="109.22" size="1.778" layer="96" rot="R180"/>
-</instance>
-<instance part="D1" gate="1" x="93.98" y="68.58" smashed="yes" rot="R180">
-<attribute name="NAME" x="91.44" y="68.0974" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="91.44" y="70.8914" size="1.778" layer="96" rot="R180"/>
 </instance>
 </instances>
 <busses>
@@ -1807,21 +1720,18 @@ controlled avalanche rectifier</description>
 <label x="43.18" y="45.72" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="N$1" class="0">
+<net name="OUT+" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="P1"/>
-<wire x1="99.06" y1="78.74" x2="99.06" y2="68.58" width="0.1524" layer="91"/>
-<pinref part="D1" gate="1" pin="A"/>
-<wire x1="99.06" y1="68.58" x2="96.52" y2="68.58" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$2" class="0">
-<segment>
-<pinref part="D1" gate="1" pin="C"/>
-<wire x1="91.44" y1="68.58" x2="88.9" y2="68.58" width="0.1524" layer="91"/>
-<wire x1="88.9" y1="68.58" x2="88.9" y2="76.2" width="0.1524" layer="91"/>
 <pinref part="12V-5V1" gate="G$1" pin="IN+"/>
 <wire x1="88.9" y1="76.2" x2="86.36" y2="76.2" width="0.1524" layer="91"/>
+<label x="88.9" y="76.2" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="IN+" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="P1"/>
+<wire x1="99.06" y1="78.74" x2="96.52" y2="78.74" width="0.1524" layer="91"/>
+<label x="96.52" y="78.74" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>

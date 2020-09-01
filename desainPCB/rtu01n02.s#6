@@ -1532,13 +1532,13 @@ http://www.buildcircuit.com/how-to-use-micro-usb-5v-1a-lithium-battery-charging-
 <wire x1="40.64" y1="106.68" x2="40.64" y2="101.6" width="0.1524" layer="91"/>
 <label x="40.64" y="101.6" size="1.778" layer="95" rot="R270" xref="yes"/>
 </segment>
-</net>
-<net name="5V" class="0">
 <segment>
 <pinref part="M1" gate="G$1" pin="VCC"/>
 <wire x1="48.26" y1="25.4" x2="45.72" y2="25.4" width="0.1524" layer="91"/>
 <label x="45.72" y="25.4" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
+</net>
+<net name="5V" class="0">
 <segment>
 <pinref part="12V-5V1" gate="G$1" pin="OUT+"/>
 <wire x1="50.8" y1="76.2" x2="48.26" y2="76.2" width="0.1524" layer="91"/>

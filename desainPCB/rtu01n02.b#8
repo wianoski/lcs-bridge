@@ -160,6 +160,14 @@
 <hole x="71.12" y="3.81" drill="3"/>
 <dimension x1="24.13" y1="0" x2="24.13" y2="21.59" x3="24.13" y3="10.795" textsize="1.778" layer="21"/>
 <dimension x1="26.035" y1="19.685" x2="26.035" y2="3.81" x3="27.94" y3="11.7475" textsize="1.778" layer="21"/>
+<text x="6.35" y="38.1" size="1.778" layer="21">+</text>
+<text x="3.81" y="59.69" size="1.778" layer="21">+</text>
+<text x="13.97" y="62.23" size="1.778" layer="21">+</text>
+<text x="29.21" y="10.16" size="1.778" layer="21">+</text>
+<text x="31.75" y="17.78" size="1.778" layer="21">+</text>
+<text x="33.02" y="5.08" size="1.778" layer="21">+</text>
+<text x="62.23" y="13.97" size="1.778" layer="21">+</text>
+<hole x="71.12" y="67.31" drill="3"/>
 </plain>
 <libraries>
 <library name="gy-521">
@@ -1048,10 +1056,11 @@ design rules under a new name.</description>
 <wire x1="38.1" y1="16.51" x2="40.64" y2="13.97" width="0.508" layer="16"/>
 <wire x1="46.99" y1="13.97" x2="46.99" y2="17.78" width="0.508" layer="16"/>
 <wire x1="46.99" y1="13.97" x2="59.69" y2="13.97" width="0.508" layer="16"/>
+<wire x1="59.69" y1="11.43" x2="59.69" y2="13.97" width="0.508" layer="16"/>
 <wire x1="59.69" y1="13.97" x2="59.69" y2="17.78" width="0.508" layer="16"/>
 <wire x1="69.85" y1="48.26" x2="72.39" y2="48.26" width="0.508" layer="16"/>
 <wire x1="72.39" y1="48.26" x2="72.39" y2="11.43" width="0.508" layer="16"/>
-<wire x1="72.39" y1="13.97" x2="59.69" y2="13.97" width="0.508" layer="16"/>
+<wire x1="72.39" y1="11.43" x2="59.69" y2="11.43" width="0.508" layer="16"/>
 <wire x1="12.7" y1="67.31" x2="12.7" y2="64.77" width="0.508" layer="16"/>
 <wire x1="5.08" y1="33.02" x2="2.54" y2="33.02" width="0.508" layer="16"/>
 <wire x1="7.62" y1="45.72" x2="7.62" y2="64.77" width="0.508" layer="16"/>
