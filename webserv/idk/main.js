@@ -32,29 +32,29 @@ admin.initializeApp({
 })
 const storage = admin.storage()
 
-const thresholdListener = () => {
-    admin.database().ref('MQTT/' + env.bridgeId + '/thresholds/concentrator_1/').on('value', (snapshot) => {
-        var thresholdsData = snapshot.val()
-        Object.keys(thresholdsData).forEach(element => {
-            thresholdValue[element] = {
-                max: parseFloat(thresholdsData[element].max),
-                min: parseFloat(thresholdsData[element].min),
-                max_low: parseFloat(thresholdsData[element].low_max),
-                min_low: parseFloat(thresholdsData[element].low_min),
-            }
-        })
-        console.log(thresholdValue)
-    })
-    admin.firestore().collection("Bridge").doc(env.bridgeId)
-        .onSnapshot((doc) => {
-            bridgeMetaData.usable = doc.data().isUsable
-            bridgeMetaData.status = doc.data().status
-            bridgeMetaData.name = doc.data().name
-            bridgeMetaData.image = doc.data().image
-            bridgeMetaData.sensors = doc.data().thresholds.concentratorOne
-            console.log(bridgeMetaData)
-        })
-}
+// const thresholdListener = () => {
+//     admin.database().ref('MQTT/' + env.bridgeId + '/thresholds/concentrator_1/').on('value', (snapshot) => {
+//         var thresholdsData = snapshot.val()
+//         Object.keys(thresholdsData).forEach(element => {
+//             thresholdValue[element] = {
+//                 max: parseFloat(thresholdsData[element].max),
+//                 min: parseFloat(thresholdsData[element].min),
+//                 max_low: parseFloat(thresholdsData[element].low_max),
+//                 min_low: parseFloat(thresholdsData[element].low_min),
+//             }
+//         })
+//         console.log(thresholdValue)
+//     })
+//     admin.firestore().collection("Bridge").doc(env.bridgeId)
+//         .onSnapshot((doc) => {
+//             bridgeMetaData.usable = doc.data().isUsable
+//             bridgeMetaData.status = doc.data().status
+//             bridgeMetaData.name = doc.data().name
+//             bridgeMetaData.image = doc.data().image
+//             bridgeMetaData.sensors = doc.data().thresholds.concentratorOne
+//             console.log(bridgeMetaData)
+//         })
+// }
 
 const thresholdChecker = (max, min, sensor) => {
     var message = undefined
@@ -113,7 +113,7 @@ const thresholdChecker = (max, min, sensor) => {
     }
 }
 
-thresholdListener()
+// thresholdListener()
 
 const dibelakangKoma = 100
 
@@ -159,7 +159,7 @@ client.on('connect', () => {
                                                 buffer.setUint32(0, '0x' + hex)
                                                 return Math.round((buffer.getFloat32(0) + Number.EPSILON) * 100) / 100
                                             })
-                                            thresholdChecker(Math.max(...realData), Math.min(...realData), 'ACC_1')
+                                            // thresholdChecker(Math.max(...realData), Math.min(...realData), 'ACC_1')
                                             // console.log('RTU' + RTUId, timestamp)
                                             client.publish('RTU/' + RTUId, timestamp + ',' + realData.join(','))
                                         } else {
