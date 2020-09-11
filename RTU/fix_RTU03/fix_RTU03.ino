@@ -100,6 +100,18 @@ int16_t measuredvbat;
 #define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 DHT dht(DHTPIN, DHTTYPE);
 
+
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+// Data wire is plugged into pin 2 on the Arduino
+#define ONE_WIRE_BUS 5
+// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
+OneWire oneWire(ONE_WIRE_BUS);
+// Pass our oneWire reference to Dallas Temperature. 
+DallasTemperature sensors(&oneWire);
+
+
 #define disp 7
 long distance ;
 long duration;
@@ -118,6 +130,9 @@ void setup()
 
   //  while (!Serial);
   Serial.begin(9600);
+
+  
+  sensors.begin();
   delay(100);
   Serial.println(F("DHTxx test!"));
 
@@ -177,10 +192,13 @@ void loop()
       long h = dht.readHumidity();
       // Read temperature as Celsius (the default)
       long t = dht.readTemperature();
-      if (isnan(h) || isnan(t)) {
-        Serial.println(F("Failed to read from DHT sensor!"));
-        return;
-      }
+
+      sensors.requestTemperatures();  
+      long sns = sensors.getTempCByIndex(0);
+//      if (isnan(h) || isnan(t)) {
+//        Serial.println(F("Failed to read from DHT sensor!"));
+//        return;
+//      }
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
         j = 0;
@@ -203,18 +221,18 @@ void loop()
 
           //          Serial.println(h);
           //          Serial.println(t);
-          data[j] = highByte(t);
+          data[j] = highByte(sns);
           j++;
-          data[j] = lowByte(t);
+          data[j] = lowByte(sns);
           j++;
-          data[j] = highByte(distance);
-          j++;
-          data[j] = lowByte(distance);
-          j++;
-          data[j] = highByte(h);
-          j++;
-          data[j] = lowByte(h);
-          j++;
+//          data[j] = highByte(distance);
+//          j++;
+//          data[j] = lowByte(distance);
+//          j++;
+//          data[j] = highByte(h);
+//          j++;
+//          data[j] = lowByte(h);
+//          j++;
         }
 
         //verifiation data[] content

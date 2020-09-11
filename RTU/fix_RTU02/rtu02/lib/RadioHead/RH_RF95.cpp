@@ -121,12 +121,14 @@ bool RH_RF95::init()
     // setFrequency(411.0);
 	
     //rtu02
-    setFrequency(412.0);
+    // setFrequency(412.0);
 	
     //rtu03
     // setFrequency(413.0);
 	
-    //setFrequency(500.0);
+    setFrequency(413.0);
+    setFrequency(414.0);
+    setFrequency(415.0);
 	//setFrequency(570.0);
     // Lowish power
     setTxPower(13);

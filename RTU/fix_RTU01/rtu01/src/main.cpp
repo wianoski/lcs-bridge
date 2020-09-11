@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 // 08/07/2020
-// RTU05   : COM6
+// RTU06   : COM6
 // Accelero: +/- 2g
 // 500MHz
 
@@ -33,10 +33,10 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 415.0
+#define RF95_FREQ 413.0
 
-#define CLIENT_ADDRESS 15
-#define SERVER_ADDRESS 5
+#define CLIENT_ADDRESS 16
+#define SERVER_ADDRESS 6
 
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
@@ -61,7 +61,9 @@ float   AX, AY, AZ; //acceleration floats
 float   GX, GY, GZ; //gyroscope floats
 
 uint8_t Gateway_ID = 1;
-uint8_t RTU_ID = 1;
+
+uint8_t RTU_ID = 6;
+
 uint8_t Packet_No2 = 2;
 uint8_t Packet_No = 1;
 
@@ -71,9 +73,9 @@ bool blinkState = false;
 uint8_t data[203]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU05_1");
-String Gateway_Command2 = String("REQ_RTU05_2");
-String Gateway_Command3 = String("REQ_HEALTH_01");
+String Gateway_Command1 = String("REQ_RTU06_1");
+String Gateway_Command2 = String("REQ_RTU06_2");
+String Gateway_Command3 = String("REQ_HEALTH_06");
 
 String tempString = "-0.12";
 
@@ -139,7 +141,7 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("RTU05 Ready");
+  Serial.println("RTU06 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -206,7 +208,7 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU05
+          //for RTU06
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
@@ -218,7 +220,7 @@ void loop()
           uint16_t loWrd = cy.w[0];
           uint16_t hiWrd = cy.w[1];
 
-          //for RTU05
+          //for RTU06
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
           //          Serial.println(AX);
@@ -226,7 +228,7 @@ void loop()
           j++;
           data[j] = lowByte(loWord);
           j++;
-          data[j] = highByte(loWrd);
+          data[j] = highByte(hiWrd);
           j++;
           data[j] = lowByte(loWrd);
           j++;
@@ -258,7 +260,7 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU05
+          //for RTU06
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
@@ -270,7 +272,7 @@ void loop()
           uint16_t loWrd = cy.w[0];
           uint16_t hiWrd = cy.w[1];
 
-          //for RTU05
+          //for RTU06
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
           //          Serial.println(AX);
@@ -278,7 +280,7 @@ void loop()
           j++;
           data[j] = lowByte(loWord);
           j++;
-          data[j] = highByte(loWrd);
+          data[j] = highByte(hiWrd);
           j++;
           data[j] = lowByte(loWrd);
           j++;
