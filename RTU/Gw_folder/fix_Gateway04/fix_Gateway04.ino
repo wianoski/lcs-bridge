@@ -77,13 +77,13 @@ void loop()
   if (stringComplete) {
     inputString = remove_string_CRLF(inputString);
     command_PC = getValue(inputString, ',', 0);
-    if (command_PC == "REQ_RTU04") {
+    if (command_PC == "REQ_RTU06") {
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
       for (i = 0; i < number_of_reading_data; i++) {
         request_RTU01();
       }
-    }else if (command_PC == "REQ_RTU_HEALTH04") {
+    }else if (command_PC == "REQ_RTU_HEALTH06") {
       /* code */
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
@@ -122,7 +122,7 @@ void request_RTU01() {
     }
     else
     {
-      Serial.println("RTU04 no reply");
+      Serial.println("RTU06 no reply");
     }
   }
   else {
@@ -149,7 +149,7 @@ void request_RTU01() {
     }
     else
     {
-      Serial.println("RTU02 no reply");
+      Serial.println("RTU06 no reply");
     }
   }
   else {
