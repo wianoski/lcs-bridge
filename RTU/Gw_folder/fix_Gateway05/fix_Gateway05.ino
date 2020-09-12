@@ -24,13 +24,13 @@ RHReliableDatagram manager(driver, SERVER_ADDRESS);
 String inputString              = "";     // a string to hold incoming data
 boolean stringComplete          = false;  // whether the string is complete
 
-uint8_t data1[] = "REQ_RTU05_1";
-uint8_t data2[] = "REQ_RTU05_2";
-uint8_t data3[] = "REQ_RTU05_3";
-uint8_t data4[] = "REQ_RTU05_4";
+uint8_t data1[] = "REQ_RTU07_1";
+// uint8_t data2[] = "REQ_RTU05_2";
+// uint8_t data3[] = "REQ_RTU05_3";
+// uint8_t data4[] = "REQ_RTU05_4";
 
 
-uint8_t data5[] = "REQ_HEALTH_05";
+uint8_t data5[] = "REQ_HEALTH_07";
 
 // Dont put this on the stack:
 uint8_t buf[203];
@@ -40,11 +40,11 @@ String command_PC = "";
 int number_of_reading_data = 0;
 int i;
 
-String conId = "con01";
-String freqId = "0415";
-String gwId = "gw05";
-String rtuId = "05";
-String stat = "ready";
+// String conId = "con01";
+// String freqId = "0415";
+// String gwId = "gw05";
+// String rtuId = "05";
+// String stat = "ready";
 
 void setup()
 {
@@ -81,7 +81,7 @@ void setup()
   //  driver.setCADTimeout(10000);
 
 //  Serial.println(conId,freqId,gwId,rtuId,stat);
-  Serial.println("con01,04115,gw05,05,ready");
+  Serial.println("con01,04115,gw05,07,ready");
 }
 
 void loop()
@@ -89,13 +89,13 @@ void loop()
   if (stringComplete) {
     inputString = remove_string_CRLF(inputString);
     command_PC = getValue(inputString, ',', 0);
-    if (command_PC == "REQ_RTU05") {
+    if (command_PC == "REQ_RTU07") {
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
       for (i = 0; i < number_of_reading_data; i++) {
         request_RTU05();
       }
-    }else if (command_PC == "REQ_RTU_HEALTH05") {
+    }else if (command_PC == "REQ_RTU_HEALTH07") {
       /* code */
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
@@ -134,7 +134,7 @@ void request_RTU05() {
     }
     else
     {
-      Serial.println("RTU05 no reply");
+      Serial.println("RTU07 no reply");
     }
   }
   else {
@@ -164,7 +164,7 @@ void request_RTU05() {
     }
     else
     {
-      Serial.println("RTU05 no reply");
+      Serial.println("RTU07 no reply");
     }
   }
   else {
