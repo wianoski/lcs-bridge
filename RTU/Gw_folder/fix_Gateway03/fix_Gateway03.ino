@@ -68,7 +68,7 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 
-  Serial.println("con01,04115,gw03,05,ready");
+  Serial.println("con01,04113,gw03,05,ready");
 }
 
 void loop()
