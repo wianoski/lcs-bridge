@@ -71,7 +71,7 @@ float   GX, GY, GZ; //gyroscope floats
 uint8_t Gateway_ID = 1;
 
 // uint8_t RTU_ID = 2;
-uint8_t RTU_ID = 8;
+uint8_t RTU_ID = 6;
 
 uint8_t Packet_No = 1;
 
