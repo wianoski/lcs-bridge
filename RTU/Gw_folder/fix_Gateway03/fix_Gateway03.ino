@@ -25,7 +25,8 @@ String inputString              = "";     // a string to hold incoming data
 boolean stringComplete          = false;  // whether the string is complete
 
 uint8_t data1[] = "REQ_RTU05_1";
-uint8_t data2[] = "REQ_HEALTH_05";
+uint8_t data2[] = "REQ_RTU05_2";
+uint8_t data3[] = "REQ_HEALTH_05";
 
 // Dont put this on the stack:
 uint8_t buf[203];
@@ -68,7 +69,7 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 
-  Serial.println("con01,04113,gw03,05,ready");
+  Serial.println("con01,04113,gw03,01,RTU_05,ready");
 }
 
 void loop()
@@ -82,7 +83,7 @@ void loop()
       for (i = 0; i < number_of_reading_data; i++) {
         request_RTU01();
       }
-    } else if (command_PC == "REQ_RTU_HEALTH03") {
+    } else if (command_PC == "REQ_RTU_HEALTH05") {
       /* code */
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
@@ -118,11 +119,41 @@ void request_RTU01() {
         Serial.print(temps);
         //        Serial.print(buf[i]);
       }
+//      Serial.println();
+    }
+    else
+    {
+      Serial.println("RTU05 no reply");
+    }
+  }
+  else {
+    Serial.println("sendtoWait failed");
+  }
+  /////////////////////////////////// Request Packet2 ///////////////////////////////////////
+  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS)) {
+    // Now wait for a reply from the RTU01
+    uint8_t len = sizeof(buf);
+    uint8_t from;
+
+    //Serial.println();
+    //Serial.println(len);
+
+    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+    {
+      //Serial.print("RTU01_0x");
+      //Serial.print(from, HEX);
+      //Serial.print((char*)buf);
+      for (i = 0; i < len; i++) {
+        char temps[4];
+        sprintf(temps, "%02x ", buf[i]);
+        Serial.print(temps);
+        //        Serial.write(buf[i]);
+      }
       Serial.println();
     }
     else
     {
-      Serial.println("RTU03 no reply");
+      Serial.println("RTU05 no reply");
     }
   }
   else {
@@ -132,7 +163,7 @@ void request_RTU01() {
 void request_health() {
   //  Serial.println("yourein");
   /////////////////////////////////// Request Packet1 ///////////////////////////////////////
-  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS))
+  if (manager.sendtoWait(data3, sizeof(data2), CLIENT_ADDRESS))
   {
     // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);

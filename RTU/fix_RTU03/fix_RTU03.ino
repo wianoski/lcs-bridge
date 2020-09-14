@@ -32,7 +32,7 @@
 
 // Change to 434.0 or other frequency, must match RX's freq!
 //#define RF95_FREQ 413.0
-#define RF95_FREQ 413.0
+#define RF95_FREQ 412.0
 
 #define CLIENT_ADDRESS 13
 #define SERVER_ADDRESS 3
@@ -77,7 +77,7 @@ uint8_t data[63]; //203 bytes
 //uint8_t data[7]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU03");
+String Gateway_Command1 = String("REQ_RTU03_1");
 String Gateway_Command2 = String("REQ_HEALTH_03");
 
 

@@ -1,5 +1,3 @@
-#include <Arduino.h>
-
 // 08/07/2020
 // RTU01   : COM6
 // Accelero: +/- 2g
@@ -38,9 +36,6 @@
 #define CLIENT_ADDRESS 15
 #define SERVER_ADDRESS 5
 
-// #define CLIENT_ADDRESS 18
-// #define SERVER_ADDRESS 8
-
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
 
@@ -57,11 +52,6 @@ MPU6050 accelgyro;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
-int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
-
-int minVal = 265;
-int maxVal = 402;
-
 float   AXoff, AYoff, AZoff; //accelerometer offset values
 float   GXoff, GYoff, GZoff; //gyroscope offset values
 
@@ -69,23 +59,19 @@ float   AX, AY, AZ; //acceleration floats
 float   GX, GY, GZ; //gyroscope floats
 
 uint8_t Gateway_ID = 1;
-
-// uint8_t RTU_ID = 2;
 uint8_t RTU_ID = 5;
-
+uint8_t Packet_No2 = 2;
 uint8_t Packet_No = 1;
 
 #define LED_PIN 13
 bool blinkState = false;
 
-const int MPU_addr = 0x68;
-
-uint8_t data[50]; //203 bytes
+uint8_t data[203]; //203 bytes
 uint8_t buf[20]; //Promini
 
 String Gateway_Command1 = String("REQ_RTU05_1");
-// 
-// String Gateway_Command1 = String("REQ_RTU08_1");
+String Gateway_Command2 = String("REQ_RTU05_2");
+String Gateway_Command3 = String("REQ_HEALTH_05");
 
 String tempString = "-0.12";
 
@@ -99,8 +85,6 @@ char temp[10];
 //#define VBATPIN A9
 #define VBATPIN A0 //(Promini)
 float measuredvbat;
-
-const int MPU_addr1 = 0x68;
 
 void setup()
 {
@@ -119,12 +103,12 @@ void setup()
   delay(100);
 
   // initialize device
-  Serial.println("Initializing Gyro");
+  Serial.println("Initializing ACCELERO");
   accelgyro.initialize();
 
   // verify connection
-  Serial.println("Testing Gyro connections...");
-  Serial.println(accelgyro.testConnection() ? "Gyro connection successful" : "Gyro connection failed");
+  Serial.println("Testing ACCELERO connections...");
+  Serial.println(accelgyro.testConnection() ? "ACCELERO connection successful" : "ACCELERO connection failed");
 
   //Dilakukan di satu kali, parameter offset dihitung di IPC
   Serial.println("Calibration ACCELERO...");
@@ -153,21 +137,13 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-
-  Serial.println("RTU02 Ready");
-  // Serial.println("RTU08 Ready");
+  Serial.println("RTU05 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
-
-  Wire.begin();                                      //begin the wire communication
-  Wire.beginTransmission(MPU_addr1);                 //begin, send the slave adress (in this case 68)
-  Wire.write(0x6B);                                  //make the reset (place a 0 into the 6B register)
-  Wire.write(0);
-  Wire.endTransmission(true);                        //end the transmission
 
   if (!manager.init())
     Serial.println("init failed");
@@ -187,29 +163,27 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 }
-float xa, ya, za, roll, pitch;
 union cracked_float_t {
   float f;
   uint32_t l;
   word w[sizeof(float) / sizeof(word)];
   byte b[sizeof(float)];
 };
-cracked_float_t result;
+cracked_float_t cx;
+cracked_float_t cy;
+
 void loop()
 {
 
-
+  //  Serial.println(AX);
+  //  Serial.println(AY);
+  //  delay(100);
   if (manager.available())
   {
-
-
-    //    Serial.print("AngleX= ");
-    //    Serial.println(x);
     // Wait for a message addressed to us from the client
     uint8_t len = sizeof(buf);
     uint8_t from;
-    if (manager.recvfromAck(buf, &len, &from))
-    {
+    if (manager.recvfromAck(buf, &len, &from)) {
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
         j = 0;
@@ -220,38 +194,39 @@ void loop()
         j++;
         data[j] = Packet_No;
         j++;
+
         /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
         measuredvbat = analogRead(VBATPIN);
         measuredvbat *= 2; // we divided by 2, so multiply back
         measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
         measuredvbat /= 1024; // convert to voltage
-
+        
         //Measure 50 ax and 50 ay
-        for (i = 0; i < 10; i++) {
+        for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          Wire.beginTransmission(MPU_addr1);
-          Wire.write(0x3B);
-          Wire.endTransmission(false);
-          Wire.requestFrom(MPU_addr1, 6, true); //get six bytes accelerometer data
-
-          xa = (Wire.read() << 8 | Wire.read()) / 131.0; //Gyroscope values in °/s (degree per second)
-          ya = (Wire.read() << 8 | Wire.read()) / 131.0;
-          za = (Wire.read() << 8 | Wire.read()) / 131.0;
-
-          roll = atan2(ya , za) * 180.0 / PI;
-          //  roll = atan2(ya , za) * 180.0 / PI;
-          pitch = atan2(-xa , sqrt(ya * ya + za * za)) * 180.0 / PI;
-
-//          Serial.print("roll = ");
-//          Serial.print(roll);
-          
           //for RTU01
-          result = {roll};
-          uint16_t loWord = result.w[0];
-          uint16_t hiWord = result.w[1];
+          accelgyro.getAcceleration(&ax, &ay, &az);
+          AX = ((float)ax - AXoff) / 16384.00;
+          //if sensor pcb placed on table:
+          AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+          cx = {AX};
+          cy = {AY};
+          uint16_t loWord = cx.w[0];
+          uint16_t hiWord = cx.w[1];
+          uint16_t loWrd = cy.w[0];
+          uint16_t hiWrd = cy.w[1];
+
+          //for RTU01
+          //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+          //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+          //          Serial.println(AX);
           data[j] = highByte(hiWord);
           j++;
           data[j] = lowByte(loWord);
+          j++;
+          data[j] = highByte(loWrd);
+          j++;
+          data[j] = lowByte(loWrd);
           j++;
         }
 
@@ -268,9 +243,61 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Gateway_Command2 == (char*)buf) {
+        j = 0;
+        /////////////////////////////////// Set Header ///////////////////////////////////////
+//        data[j] = Gateway_ID;
+//        j++;
+//        data[j] = RTU_ID;
+//        j++;
+//        data[j] = Packet_No2;
+//        j++;
+        //Measure 50 ax and 50 ay
+        for (i = 0; i < 55; i++) {
+          /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
+          //for RTU01
+          accelgyro.getAcceleration(&ax, &ay, &az);
+          AX = ((float)ax - AXoff) / 16384.00;
+          //if sensor pcb placed on table:
+          AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+          cx = {AX};
+          cy = {AY};
+          uint16_t loWord = cx.w[0];
+          uint16_t hiWord = cx.w[1];
+          uint16_t loWrd = cy.w[0];
+          uint16_t hiWrd = cy.w[1];
+
+          //for RTU01
+          //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+          //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+          //          Serial.println(AX);
+          data[j] = highByte(hiWord);
+          j++;
+          data[j] = lowByte(loWord);
+          j++;
+          data[j] = highByte(loWrd);
+          j++;
+          data[j] = lowByte(loWrd);
+          j++;
+        }
+
+        //verifiation data[] content
+        for (i = 0; i < j; i++) {
+          Serial.write(data[i]);
+        }
+
+        //Serial.println();
+        //Serial.println(j);
+        // Send a reply data to the Server
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          //if (!manager.sendtoWait(data, j, from)){
+          Serial.println("sendtoWait failed");
+        }
+      }
+
     }
   }
-  delay (500);
 }
 
 ///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////

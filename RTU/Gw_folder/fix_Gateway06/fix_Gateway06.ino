@@ -81,7 +81,7 @@ void setup()
   //  driver.setCADTimeout(10000);
 
 //  Serial.println(conId,freqId,gwId,rtuId,stat);
-  Serial.println("con01,04116,gw06,06,ready");
+  Serial.println("con01,04110,gw06,05,RTU_04,ready");
 }
 
 void loop()
@@ -134,7 +134,7 @@ void request_RTU06() {
     }
     else
     {
-      Serial.println("RTU06 no reply");
+      Serial.println("RTU04 no reply");
     }
   }
   else {
@@ -164,7 +164,7 @@ void request_RTU06() {
     }
     else
     {
-      Serial.println("RTU06 no reply");
+      Serial.println("RTU04 no reply");
     }
   }
   else {
@@ -199,7 +199,7 @@ void request_health() {
     }
     else
     {
-      Serial.println("RTU06 no reply");
+      Serial.println("RTU04 no reply");
     }
   }
   else {
