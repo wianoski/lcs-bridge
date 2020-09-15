@@ -22,11 +22,16 @@
 		{
 			"name": "rtu05",
 			"path": "RTU\\fix_RTU05\\rtu05"
+		},
+		{
+			"name": "calib",
+			"path": "RTU\\fix_RTU04\\calib"
 		}
 	],
 	"settings": {
 		"files.associations": {
-			"cmath": "cpp"
+			"cmath": "cpp",
+			"istream": "cpp"
 		}
 	}
 }

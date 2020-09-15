@@ -32,8 +32,10 @@ void clk()
   digitalWrite(SCK_OUT, LOW);
 }
 
-// long value_gain, value_offset = 0;
+long value_gain, value_offset = 0;
 long result = 0;
+
+
 
 void loop(){
 
@@ -54,11 +56,11 @@ void loop(){
     // // }
     // dataArray[j] = y;
   
-  'Firmware yg Wian buat harus bisa dimasukkan parameter oleh penguji (
-  calibration factor: nilai_gain dan nilai_offset, 
-  agar didapat nilai_akhir = (nilai_baca_sensor * nilai_gain) + nilai_offset). 
-  Kita butuhkan calibration factor tadi. 
-  Jadi ada 2 strain gage yg dikirim, 1 utk reference, 1 utk dimasukkan calibration factor.'
+  // 'Firmware yg Wian buat harus bisa dimasukkan parameter oleh penguji (
+  // calibration factor: nilai_gain dan nilai_offset, 
+  // agar didapat nilai_akhir = (nilai_baca_sensor * nilai_gain) + nilai_offset). 
+  // Kita butuhkan calibration factor tadi. 
+  // Jadi ada 2 strain gage yg dikirim, 1 utk reference, 1 utk dimasukkan calibration factor.'
 
     long reading = scale.read();
     // Serial.println(reading);
