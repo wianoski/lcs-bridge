@@ -77,10 +77,9 @@ void loop() {
     parseData();
     // showParsedData();
     result = (reading * floatFromPC1) + floatFromPC2;
-    Serial.println();
-    Serial.println(reading);
+    Serial.print(reading);
+    Serial.print(",");
     Serial.println(result);
-    Serial.println();
     newData = false;
 
     //    value_gain = Serial.read();
