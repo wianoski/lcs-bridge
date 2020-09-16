@@ -13,12 +13,12 @@ unsigned long x = 0, y = 0; //x is gauge factor, is the ratio between the change
 float res = 0;
 unsigned long dataArray[10];
 int j = 0;
-void setup()
-{
+void setup(){
   Serial.begin(9600);
   // pinMode(DOUT, INPUT); //data line  //Yellow cable
   // pinMode(SCK_OUT, OUTPUT);  //SCK line  //Orange cable
   scale.begin(DOUT, SCK_OUT);
+  Serial.println("Calibrator Ready, Press anywhere to start");
 }
 const byte numChars = 32;
 char receivedChars[numChars];
