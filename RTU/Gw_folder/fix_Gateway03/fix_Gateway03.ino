@@ -69,7 +69,7 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 
-  Serial.println("con01,04113,gw03,01,RTU_05,ready");
+  Serial.println("con01,04113,gw03,RTU_05,1000,01,ready");
 }
 
 void loop()
@@ -187,7 +187,7 @@ void request_health() {
     }
     else
     {
-      Serial.println("RTU03 no reply");
+      Serial.println("RTU05 no reply");
     }
   }
   else {

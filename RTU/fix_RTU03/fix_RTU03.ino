@@ -34,8 +34,8 @@
 //#define RF95_FREQ 413.0
 #define RF95_FREQ 412.0
 
-#define CLIENT_ADDRESS 13
-#define SERVER_ADDRESS 3
+#define CLIENT_ADDRESS 12
+#define SERVER_ADDRESS 2
 
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
@@ -116,6 +116,7 @@ DallasTemperature sensors(&oneWire);
 long distance ;
 long duration;
 
+float resultSns;
 void setup()
 {
   // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -178,6 +179,7 @@ union cracked_float_t {
   byte b[sizeof(float)];
 };
 cracked_float_t result;
+cracked_float_t resultx;
 void loop()
 {
 
@@ -194,7 +196,7 @@ void loop()
       long t = dht.readTemperature();
 
       sensors.requestTemperatures();  
-      long sns = sensors.getTempCByIndex(0);
+      float sns = sensors.getTempCByIndex(0);
 //      if (isnan(h) || isnan(t)) {
 //        Serial.println(F("Failed to read from DHT sensor!"));
 //        return;
@@ -221,9 +223,14 @@ void loop()
 
           //          Serial.println(h);
           //          Serial.println(t);
-          data[j] = highByte(sns);
+          resultx = {sns};
+          uint16_t loWord = resultx.w[0];
+          uint16_t hiWord = resultx.w[1];
+
+ 
+          data[j] = highByte(hiWord);
           j++;
-          data[j] = lowByte(sns);
+          data[j] = lowByte(loWord);
           j++;
 //          data[j] = highByte(distance);
 //          j++;
@@ -289,7 +296,7 @@ void loop()
           Serial.write(data[i]);
         }
 
-        //Serial.println();
+        //Ser=ial.println();
         //Serial.println(j);
         // Send a reply data to the Server
         if (!manager.sendtoWait(data, sizeof(data), from)) {
@@ -297,9 +304,9 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
-    }
+    }//delay (500);
   }
-  //  delay (500);
+  
 }
 
 ///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////

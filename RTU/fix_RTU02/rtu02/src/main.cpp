@@ -33,10 +33,10 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 415.0
+#define RF95_FREQ 412.0
 
-#define CLIENT_ADDRESS 17
-#define SERVER_ADDRESS 7
+#define CLIENT_ADDRESS 12
+#define SERVER_ADDRESS 2
 
 // #define CLIENT_ADDRESS 18
 // #define SERVER_ADDRESS 8
@@ -71,7 +71,7 @@ float   GX, GY, GZ; //gyroscope floats
 uint8_t Gateway_ID = 1;
 
 // uint8_t RTU_ID = 2;
-uint8_t RTU_ID = 7;
+uint8_t RTU_ID = 8;
 
 uint8_t Packet_No = 1;
 
@@ -83,7 +83,7 @@ const int MPU_addr = 0x68;
 uint8_t data[50]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU07_1");
+String Gateway_Command1 = String("REQ_RTU08_1");
 // 
 // String Gateway_Command1 = String("REQ_RTU08_1");
 
@@ -154,7 +154,7 @@ void setup()
   digitalWrite(LED_PIN, LOW);
 
 
-  Serial.println("RTU07 Ready");
+  Serial.println("RTU08 Ready");
   // Serial.println("RTU08 Ready");
 
   // manual reset
