@@ -81,7 +81,7 @@ void setup()
   //  driver.setCADTimeout(10000);
 
 //  Serial.println(conId,freqId,gwId,rtuId,stat);
-  Serial.println("con01,04115,gw05,REQ_RTU07,1000,01,ready");
+  Serial.println("con01,04115,gw05,RTU_07,1000,01,ready");
 }
 
 void loop()
