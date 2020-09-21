@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 // 08/07/2020
-// RTU06   : COM6
+// RTU01   : COM6
 // Accelero: +/- 2g
 // 500MHz
 
@@ -33,10 +33,10 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 413.0
+#define RF95_FREQ 411.0
 
-#define CLIENT_ADDRESS 16
-#define SERVER_ADDRESS 6
+#define CLIENT_ADDRESS 11
+#define SERVER_ADDRESS 1
 
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
@@ -73,9 +73,9 @@ bool blinkState = false;
 uint8_t data[203]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU06_1");
-String Gateway_Command2 = String("REQ_RTU06_2");
-String Gateway_Command3 = String("REQ_HEALTH_06");
+String Gateway_Command1 = String("REQ_RTU01_1");
+String Gateway_Command2 = String("REQ_RTU01_2");
+String Gateway_Command3 = String("REQ_HEALTH_01");
 
 String tempString = "-0.12";
 
@@ -89,6 +89,7 @@ char temp[10];
 //#define VBATPIN A9
 #define VBATPIN A0 //(Promini)
 float measuredvbat;
+float rssiResult;
 
 void setup()
 {
@@ -141,7 +142,7 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("RTU06 Ready");
+  Serial.println("RTU01 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -176,6 +177,9 @@ union cracked_float_t {
 cracked_float_t cx;
 cracked_float_t cy;
 
+cracked_float_t batt;
+cracked_float_t resRssi;
+
 void loop()
 {
 
@@ -208,7 +212,7 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU06
+          //for RTU01
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
@@ -220,7 +224,7 @@ void loop()
           uint16_t loWrd = cy.w[0];
           uint16_t hiWrd = cy.w[1];
 
-          //for RTU06
+          //for RTU01
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
           //          Serial.println(AX);
@@ -260,7 +264,7 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU06
+          //for RTU01
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
@@ -272,7 +276,7 @@ void loop()
           uint16_t loWrd = cy.w[0];
           uint16_t hiWrd = cy.w[1];
 
-          //for RTU06
+          //for RTU01
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
           //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
           //          Serial.println(AX);
@@ -284,6 +288,57 @@ void loop()
           j++;
           data[j] = lowByte(loWrd);
           j++;
+        }
+
+        //verifiation data[] content
+        for (i = 0; i < j; i++) {
+          Serial.write(data[i]);
+        }
+
+        //Serial.println();
+        //Serial.println(j);
+        // Send a reply data to the Server
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          //if (!manager.sendtoWait(data, j, from)){
+          Serial.println("sendtoWait failed");
+        }
+      }
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Gateway_Command3 == (char*)buf) {
+        j = 0;
+        /////////////////////////////////// Set Header ///////////////////////////////////////
+//        data[j] = Gateway_ID;
+//        j++;
+//        data[j] = RTU_ID;
+//        j++;
+//        data[j] = Packet_No2;
+//        j++;
+        //Measure 50 ax and 50 ay
+        for (i = 0; i < 2; i++) {
+          /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+        // measuredvbat = analogRead(VBATPIN);
+        int16_t battV = analogRead(VBATPIN);
+        measuredvbat *= 2; // we divided by 2, so multiply back
+        measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
+        measuredvbat /= 1024; // convert to voltage
+        rssiResult = driver.lastRssi();
+        // long rsiRes = driver.lastRssi();
+        
+          // batt = {measuredvbat};
+          // resRssi = {rssiResult};
+          // uint16_t loWord = batt.w[0];
+          // uint16_t hiWord = batt.w[1];
+          // uint16_t loWrd = resRssi.w[0];
+          // uint16_t hiWrd = resRssi.w[1];
+
+          data[j] = highByte(battV);
+          j++;
+          data[j] = lowByte(battV);
+          j++;
+          // data[j] = highByte(hiWrd);
+          // j++;
+          // data[j] = lowByte(loWrd);
+          // j++;
         }
 
         //verifiation data[] content
