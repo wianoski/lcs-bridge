@@ -33,10 +33,16 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-#define RF95_FREQ 411.0
+// #define RF95_FREQ 411.0
 
+//----------Change Me!!----------
+#define RF95_FREQ 411.0
+//----------Change Me!!----------
+
+//----------Change Me!!----------
 #define CLIENT_ADDRESS 11
 #define SERVER_ADDRESS 1
+//----------Change Me!!----------
 
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
@@ -60,12 +66,12 @@ float   GXoff, GYoff, GZoff; //gyroscope offset values
 float   AX, AY, AZ; //acceleration floats
 float   GX, GY, GZ; //gyroscope floats
 
+//----------Change Me!!----------
 uint8_t Gateway_ID = 1;
-
-uint8_t RTU_ID = 6;
-
+uint8_t RTU_ID = 1;
 uint8_t Packet_No2 = 2;
 uint8_t Packet_No = 1;
+//----------Change Me!!----------
 
 #define LED_PIN 13
 bool blinkState = false;
@@ -73,9 +79,11 @@ bool blinkState = false;
 uint8_t data[203]; //203 bytes
 uint8_t buf[20]; //Promini
 
+//----------Change Me!!----------
 String Gateway_Command1 = String("REQ_RTU01_1");
 String Gateway_Command2 = String("REQ_RTU01_2");
 String Gateway_Command3 = String("REQ_HEALTH_01");
+//----------Change Me!!----------
 
 String tempString = "-0.12";
 
@@ -274,7 +282,7 @@ void loop()
 
           //if sensor pcb placed on table:
           AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
-          
+
           //if sensor pcb placed on enclosure
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
            AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
