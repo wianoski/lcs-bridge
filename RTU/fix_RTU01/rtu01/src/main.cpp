@@ -176,6 +176,7 @@ union cracked_float_t {
 };
 cracked_float_t cx;
 cracked_float_t cy;
+cracked_float_t cz;
 
 cracked_float_t batt;
 cracked_float_t resRssi;
@@ -216,17 +217,20 @@ void loop()
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
-          AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+          // AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+          //for RTU01
+           AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+           AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+
           cx = {AX};
           cy = {AY};
-          uint16_t loWord = cx.w[0];
-          uint16_t hiWord = cx.w[1];
-          uint16_t loWrd = cy.w[0];
-          uint16_t hiWrd = cy.w[1];
+          cz = {AZ};
+          uint16_t loWord = cy.w[0];
+          uint16_t hiWord = cy.w[1];
+          uint16_t loWrd = cz.w[0];
+          uint16_t hiWrd = cz.w[1];
 
-          //for RTU01
-          //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-          //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+          
           //          Serial.println(AX);
           data[j] = highByte(hiWord);
           j++;
@@ -267,18 +271,23 @@ void loop()
           //for RTU01
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
+
           //if sensor pcb placed on table:
           AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+          
+          //if sensor pcb placed on enclosure
+          //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+           AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+
           cx = {AX};
           cy = {AY};
-          uint16_t loWord = cx.w[0];
-          uint16_t hiWord = cx.w[1];
-          uint16_t loWrd = cy.w[0];
-          uint16_t hiWrd = cy.w[1];
+          cz = {AZ};
+          uint16_t loWord = cy.w[0];
+          uint16_t hiWord = cy.w[1];
+          uint16_t loWrd = cz.w[0];
+          uint16_t hiWrd = cz.w[1];
 
-          //for RTU01
-          //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-          //  AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
+          
           //          Serial.println(AX);
           data[j] = highByte(hiWord);
           j++;
