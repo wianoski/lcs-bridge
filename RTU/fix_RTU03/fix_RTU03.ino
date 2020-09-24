@@ -196,7 +196,7 @@ void loop()
       long t = dht.readTemperature();
 
       sensors.requestTemperatures();  
-      float sns = sensors.getTempCByIndex(0);
+      long sns = sensors.getTempCByIndex(0);
 //      if (isnan(h) || isnan(t)) {
 //        Serial.println(F("Failed to read from DHT sensor!"));
 //        return;
@@ -228,9 +228,9 @@ void loop()
           uint16_t hiWord = resultx.w[1];
 
  
-          data[j] = highByte(hiWord);
+          data[j] = highByte(sns);
           j++;
-          data[j] = lowByte(loWord);
+          data[j] = lowByte(sns);
           j++;
 //          data[j] = highByte(distance);
 //          j++;
@@ -254,7 +254,7 @@ void loop()
           //if (!manager.sendtoWait(data, j, from)){
           Serial.println("sendtoWait failed");
         }
-      }
+      }delay(100);
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command2 == (char*)buf) {
         j = 0;

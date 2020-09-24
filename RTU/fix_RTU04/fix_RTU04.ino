@@ -183,20 +183,20 @@ void loop()
         measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
         measuredvbat /= 1024; // convert to voltage
         //Measure 50 ax and 50 ay
-        for (i = 0; i < 50; i++) {
+        for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
-          //          result = {reading};
-          //          uint16_t loWord = result.w[0];
-          //          uint16_t hiWord = result.w[1];
-          //          data[j] = highByte(hiWord);
-          //          j++;
-          //          data[j] = lowByte(loWord);
-          //          j++;
+          result = {reading};
+          uint16_t loWord = result.w[0];
+          uint16_t hiWord = result.w[1];
           data[j] = highByte(reading);
           j++;
           data[j] = lowByte(reading);
           j++;
+          //          data[j] = highByte(reading);
+          //          j++;
+          //          data[j] = lowByte(reading);
+          //          j++;
         }
 
         //verifiation data[] content
@@ -212,31 +212,24 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
-      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      /////////////////////////////////// Sending Packet2 ///////////////////////////////////////
       if (Gateway_Command2 == (char*)buf) {
         j = 0;
-        /////////////////////////////////// Set Header ///////////////////////////////////////
-        data[j] = Gateway_ID;
-        j++;
-        data[j] = RTU_ID;
-        j++;
-        data[j] = Packet_No;
-        j++;
         /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
         measuredvbat = analogRead(VBATPIN);
         measuredvbat *= 2; // we divided by 2, so multiply back
         measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
         measuredvbat /= 1024; // convert to voltage
         //Measure 50 ax and 50 ay
-        for (i = 0; i < 50; i++) {
+        for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
-          result = {res};
+          result = {reading};
           uint16_t loWord = result.w[0];
           uint16_t hiWord = result.w[1];
-          data[j] = highByte(hiWord);
+          data[j] = highByte(reading);
           j++;
-          data[j] = lowByte(loWord);
+          data[j] = lowByte(reading);
           j++;
           //          data[j] = highByte(reading);
           //          j++;

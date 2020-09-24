@@ -1,0 +1,25 @@
+{
+  "name": "jembatanku-ipc",
+  "version": "1.0.0",
+  "description": "IPC progoram for JembatanKu",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azharizkita/jembatanku-ipc.git"
+  },
+  "author": "Langgeng Cipta Solusi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/azharizkita/jembatanku-ipc/issues"
+  },
+  "homepage": "https://github.com/azharizkita/jembatanku-ipc#readme",
+  "dependencies": {
+    "firebase-admin": "^9.1.1",
+    "mqtt": "^4.2.1",
+    "scramjet": "^4.34.4",
+    "serialport": "^9.0.1"
+  }
+}
