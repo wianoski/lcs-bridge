@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-// 08/01/2020
-// RTU01   : COM6
+// 08/07/2020
+// RTU07   : COM6
 // Accelero: +/- 2g
 // 500MHz
 
@@ -36,19 +36,19 @@
 // #define RF95_FREQ 411.0
 
 //----------Change Me!!----------
-#define RF95_FREQ 411.0
+#define RF95_FREQ 415 .0
 
-#define CLIENT_ADDRESS 11
-#define SERVER_ADDRESS 1
+#define CLIENT_ADDRESS 17
+#define SERVER_ADDRESS 7
 
 uint8_t Gateway_ID = 1;
-uint8_t RTU_ID = 1;
+uint8_t RTU_ID = 7;
 uint8_t Packet_No2 = 2;
 uint8_t Packet_No = 1;
 
-String Gateway_Command1 = String("REQ_RTU01_1");
-String Gateway_Command2 = String("REQ_RTU01_2");
-String Gateway_Command3 = String("REQ_HEALTH_01");
+String Gateway_Command1 = String("REQ_RTU07_1");
+String Gateway_Command2 = String("REQ_RTU07_2");
+String Gateway_Command3 = String("REQ_HEALTH_07");
 //----------Change Me!!----------
 
 
@@ -147,7 +147,7 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("RTU01 Ready");
+  Serial.println("RTU07 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -218,12 +218,12 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU01
+          //for RTU07
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
           // AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
-          //for RTU01
+          //for RTU07
            AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
            AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
@@ -234,6 +234,8 @@ void loop()
           uint16_t hiWord = cx.w[1];
           uint16_t loWrd = cy.w[0];
           uint16_t hiWrd = cy.w[1];
+          uint16_t liRd = cz.w[0];
+          uint16_t hiRd = cz.w[1];
 
           
           //          Serial.println(AX);
@@ -241,9 +243,9 @@ void loop()
           j++;
           data[j] = lowByte(loWord);
           j++;
-          data[j] = highByte(hiWrd);
+          data[j] = highByte(hiRd);
           j++;
-          data[j] = lowByte(loWrd);
+          data[j] = lowByte(liRd);
           j++;
         }
 
@@ -273,7 +275,7 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU01
+          //for RTU07
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
 
@@ -291,6 +293,8 @@ void loop()
           uint16_t hiWord = cx.w[1];
           uint16_t loWrd = cy.w[0];
           uint16_t hiWrd = cy.w[1];
+          uint16_t liRd = cz.w[0];
+          uint16_t hiRd = cz.w[1];
 
           
           //          Serial.println(AX);
@@ -298,9 +302,9 @@ void loop()
           j++;
           data[j] = lowByte(loWord);
           j++;
-          data[j] = highByte(hiWrd);
+          data[j] = highByte(hiRd);
           j++;
-          data[j] = lowByte(loWrd);
+          data[j] = lowByte(liRd);
           j++;
         }
 

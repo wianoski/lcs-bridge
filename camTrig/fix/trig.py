@@ -5,6 +5,7 @@ import datetime
 import paho.mqtt.client as mqtt
 import sys
 import os
+from PIL import Image
 
 from google.cloud import storage
 import requests

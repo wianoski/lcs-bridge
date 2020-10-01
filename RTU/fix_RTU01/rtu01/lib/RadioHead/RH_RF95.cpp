@@ -118,7 +118,7 @@ bool RH_RF95::init()
     // setFrequency(410.0);
 
 	//rtu01
-    setFrequency(411.0);
+    setFrequency(415.0);
 	
     //rtu02
     // setFrequency(412.0);
