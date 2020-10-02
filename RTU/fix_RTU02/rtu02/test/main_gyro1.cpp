@@ -71,7 +71,7 @@ float   GX, GY, GZ; //gyroscope floats
 uint8_t Gateway_ID = 1;
 
 // uint8_t RTU_ID = 2;
-uint8_t RTU_ID = 8;
+uint8_t RTU_ID = 2;
 
 uint8_t Packet_No = 1;
 
@@ -83,9 +83,9 @@ const int MPU_addr = 0x68;
 uint8_t data[50]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU08_1");
-//
-// String Gateway_Command1 = String("REQ_RTU08_1");
+String Gateway_Command1 = String("REQ_RTU02_1");
+// 
+// String Gateway_Command1 = String("REQ_RTU02_1");
 
 String tempString = "-0.12";
 
@@ -154,8 +154,8 @@ void setup()
   digitalWrite(LED_PIN, LOW);
 
 
-  Serial.println("RTU08 Ready");
-  // Serial.println("RTU08 Ready");
+  Serial.println("RTU02 Ready");
+  // Serial.println("RTU02 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -197,18 +197,6 @@ union cracked_float_t {
 cracked_float_t result;
 void loop()
 {
-  Wire.beginTransmission(MPU_addr1);
-  Wire.write(0x3B);
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU_addr1, 6, true); //get six bytes accelerometer data
-
-  xa = (Wire.read() << 8 | Wire.read()) / 131.0; //Gyroscope values in °/s (degree per second)
-  ya = (Wire.read() << 8 | Wire.read()) / 131.0;
-  za = (Wire.read() << 8 | Wire.read()) / 131.0;
-
-  roll = atan2(ya , za) * 180.0 / PI;
-  //  roll = atan2(ya , za) * 180.0 / PI;
-  pitch = atan2(-xa , sqrt(ya * ya + za * za)) * 180.0 / PI;
 
 
   if (manager.available())
@@ -222,7 +210,6 @@ void loop()
     uint8_t from;
     if (manager.recvfromAck(buf, &len, &from))
     {
-      Serial.println((char*)buf);
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
         j = 0;
@@ -242,10 +229,22 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 10; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
+          Wire.beginTransmission(MPU_addr1);
+          Wire.write(0x3B);
+          Wire.endTransmission(false);
+          Wire.requestFrom(MPU_addr1, 6, true); //get six bytes accelerometer data
 
-          //          Serial.print("roll = ");
-          //          Serial.print(roll);
+          xa = (Wire.read() << 8 | Wire.read()) / 131.0; //Gyroscope values in °/s (degree per second)
+          ya = (Wire.read() << 8 | Wire.read()) / 131.0;
+          za = (Wire.read() << 8 | Wire.read()) / 131.0;
 
+          roll = atan2(ya , za) * 180.0 / PI;
+          //  roll = atan2(ya , za) * 180.0 / PI;
+          pitch = atan2(-xa , sqrt(ya * ya + za * za)) * 180.0 / PI;
+
+//          Serial.print("roll = ");
+//          Serial.print(roll);
+          
           //for RTU01
           result = {roll};
           uint16_t loWord = result.w[0];
@@ -269,9 +268,9 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
-    } delay (500); //delay (2000);
+    }delay (100); //delay (2000);
   }
-
+  
 }
 
 ///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////

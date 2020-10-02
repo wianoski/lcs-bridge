@@ -14,8 +14,7 @@ def compress_images(directory=False, quality=50):
     for image in images:
         print(image)
         img = Image.open(image)
-        img.save("Compressed_and_resized_with_function_"+image, optimize=True, quality=quality)
-
+        img.save("Compressed_and_resized_"+image, optimize=True, quality=quality)
 
 
 def main():
