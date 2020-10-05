@@ -35,7 +35,12 @@ void clk()
 long value_gain, value_offset = 0;
 long result = 0;
 
+float a_ref = 0, b_ref = 0, res_y1 = 0, res_y2 = 0;
+float x1, y1, x2,y2;
 
+void calc_calib_idle(float a, float b){
+  return b
+}
 
 void loop(){
 
