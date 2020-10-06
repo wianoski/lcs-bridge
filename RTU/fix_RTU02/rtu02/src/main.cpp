@@ -71,7 +71,7 @@ float   GX, GY, GZ; //gyroscope floats
 uint8_t Gateway_ID = 1;
 
 // uint8_t RTU_ID = 2;
-uint8_t RTU_ID = 8;
+uint8_t RTU_ID = 2;
 
 uint8_t Packet_No = 1;
 
@@ -83,9 +83,9 @@ const int MPU_addr = 0x68;
 uint8_t data[50]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU08_1");
+String Gateway_Command1 = String("REQ_RTU02_1");
 //
-// String Gateway_Command1 = String("REQ_RTU08_1");
+// String Gateway_Command1 = String("REQ_RTU02_1");
 
 String tempString = "-0.12";
 
@@ -154,8 +154,8 @@ void setup()
   digitalWrite(LED_PIN, LOW);
 
 
-  Serial.println("RTU08 Ready");
-  // Serial.println("RTU08 Ready");
+  Serial.println("RTU02 Ready");
+  // Serial.println("RTU02 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -202,13 +202,24 @@ void loop()
   Wire.endTransmission(false);
   Wire.requestFrom(MPU_addr1, 6, true); //get six bytes accelerometer data
 
-  xa = (Wire.read() << 8 | Wire.read()) / 131.0; //Gyroscope values in °/s (degree per second)
-  ya = (Wire.read() << 8 | Wire.read()) / 131.0;
-  za = (Wire.read() << 8 | Wire.read()) / 131.0;
+  AcX = (Wire.read() << 8 | Wire.read())/131.0; 
+  AcY = Wire.read() << 8 | Wire.read(); 
+  AcZ = Wire.read() << 8 | Wire.read(); 
+  int xAng = map(AcX, minVal, maxVal, -90, 90); 
+  int yAng = map(AcY, minVal, maxVal, -90, 90); 
+  int zAng = map(AcZ, minVal, maxVal, -90, 90);
 
-  roll = atan2(ya , za) * 180.0 / PI;
-  //  roll = atan2(ya , za) * 180.0 / PI;
-  pitch = atan2(-xa , sqrt(ya * ya + za * za)) * 180.0 / PI;
+  long xax = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI); 
+  ya = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI); 
+  za = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
+
+  // xa = (Wire.read() << 8 | Wire.read()) / 131.0; //Gyroscope values in °/s (degree per second)
+  // ya = (Wire.read() << 8 | Wire.read()) / 131.0;
+  // za = (Wire.read() << 8 | Wire.read()) / 131.0;
+
+  // roll = atan2(ya , za) * 180.0 / PI;
+  // //  roll = atan2(ya , za) * 180.0 / PI;
+  // pitch = atan2(-xa , sqrt(ya * ya + za * za)) * 180.0 / PI;
 
 
   if (manager.available())
@@ -247,12 +258,12 @@ void loop()
           //          Serial.print(roll);
 
           //for RTU01
-          result = {roll};
+          result = {xa};
           uint16_t loWord = result.w[0];
           uint16_t hiWord = result.w[1];
-          data[j] = highByte(hiWord);
+          data[j] = highByte(xax);
           j++;
-          data[j] = lowByte(loWord);
+          data[j] = lowByte(xax);
           j++;
         }
 
