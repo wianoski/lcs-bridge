@@ -86,9 +86,12 @@ void setup() {
 }
 
 void loop() {
+//   Serial.print("Reading: ");
+//   Serial.println(reading_Start);
+
 
   if (scale.is_ready()) {
-      
+          
     current_Reading = scale.read();// * 0.00167;
     float mass = float(current_Reading) * 0.00167;/// 100000;
     mass = mass - 1700;
@@ -101,7 +104,7 @@ void loop() {
     Serial.println("HX711 not found.");
   }
   
-  current_Reading = scale.read();
+  // current_Reading = scale.read();
   
   delay(100);
   
