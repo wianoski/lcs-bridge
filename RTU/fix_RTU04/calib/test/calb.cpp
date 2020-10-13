@@ -70,7 +70,7 @@ void parseData() {      // split the data into its parts
 
 }
 
-
+float temp = 0;
 void setup() {
   Serial.begin(9600);
   scale.begin(DOUT, SCK_OUT);
@@ -80,8 +80,17 @@ void setup() {
 //   reading_Start = scale.read();
 //   Serial.print("Value: ");
 //   Serial.println(reading_Start);
-
 //   Serial.println("Initialize done, starting to read mass");
+//    if (newData == true) {
+//         strcpy(tempChars, receivedChars);
+//             // this temporary copy is necessary to protect the original data
+//             //   because strtok() used in parseData() replaces the commas with \0
+//         parseData();
+//         // showParsedData();
+//         temp = (reading_Start - scale.read()) / a;
+//         Serial.println(temp);
+//         newData = false;
+//     }
 //   delay(1000);
 }
 
