@@ -71,7 +71,7 @@ float   GX, GY, GZ; //gyroscope floats
 uint8_t Gateway_ID = 1;
 
 // uint8_t RTU_ID = 2;
-uint8_t RTU_ID = 2;
+uint8_t RTU_ID = 8;
 
 uint8_t Packet_No = 1;
 
@@ -83,9 +83,9 @@ const int MPU_addr = 0x68;
 uint8_t data[50]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU02_1");
+String Gateway_Command1 = String("REQ_RTU08_1");
 //
-// String Gateway_Command1 = String("REQ_RTU02_1");
+// String Gateway_Command1 = String("REQ_RTU08_1");
 
 String tempString = "-0.12";
 
@@ -154,8 +154,8 @@ void setup()
   digitalWrite(LED_PIN, LOW);
 
 
-  Serial.println("RTU02 Ready");
-  // Serial.println("RTU02 Ready");
+  Serial.println("RTU08 Ready");
+  // Serial.println("RTU08 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);

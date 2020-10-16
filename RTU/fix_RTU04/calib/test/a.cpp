@@ -4,7 +4,7 @@
 #define SCK_OUT A2
 #define DOUT A1
 
-float y1 = 50.0; // calibrated mass to be added
+float y1 = 100.0; // calibrated mass to be added
 long x1 = 0L;
 long x0 = 0L;
 float avg_size = 10.0; // amount of averages for each mass measurement

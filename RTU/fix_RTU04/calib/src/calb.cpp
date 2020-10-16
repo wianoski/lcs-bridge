@@ -75,6 +75,8 @@ void setup() {
   Serial.begin(9600);
   scale.begin(DOUT, SCK_OUT);
 
+  // scale.set_scale(107.f);
+  // scale.set_offset(58956);
 //   Serial.println("HX711 starting to read idle value");
 //   delay(1000);
 //   reading_Start = scale.read();
@@ -101,14 +103,15 @@ void loop() {
 
   if (scale.is_ready()) {
           
-    current_Reading = scale.read();// * 0.00167;
-    float mass = float(current_Reading) * 0.00167;/// 100000;
-    mass = mass - 1700;
+    current_Reading = scale.read()*0.001; // set to reduce error
+    // float mass = float(current_Reading) * 0.00167;/// 100000;
+    // mass = mass - 1700;
     Serial.print("actual reading: ");
-    Serial.print(current_Reading);
-    Serial.print("    |   ");
-    Serial.print("mass reading: ");
-    Serial.println(mass);
+    Serial.println(current_Reading);
+
+    // Serial.print("    |   ");
+    // Serial.print("mass reading: ");
+    // Serial.println(mass);
   } else {
     Serial.println("HX711 not found.");
   }

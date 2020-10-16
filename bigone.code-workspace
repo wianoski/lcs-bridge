@@ -26,6 +26,10 @@
 		{
 			"name": "calib",
 			"path": "RTU\\fix_RTU04\\calib"
+		},
+		{
+			"name": "calib acc",
+			"path": "RTU\\fix_RTU01\\calib acc"
 		}
 	],
 	"settings": {
