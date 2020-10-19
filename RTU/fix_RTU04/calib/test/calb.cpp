@@ -17,6 +17,7 @@ float x0 = 0,
       res = 0;
 
 long reading_Start = 0,
+     readiong = 0,
      current_Reading = 0;
 
 const byte numChars = 32;
@@ -74,6 +75,8 @@ float temp = 0;
 void setup() {
   Serial.begin(9600);
   scale.begin(DOUT, SCK_OUT);
+  scale.tare();
+  scale.set_scale(); 
 
   // scale.set_scale(107.f);
   // scale.set_offset(58956);
@@ -104,6 +107,7 @@ void loop() {
   if (scale.is_ready()) {
           
     current_Reading = scale.read()*0.001; // set to reduce error
+    readiong = readiong - current_Reading;
     // float mass = float(current_Reading) * 0.00167;/// 100000;
     // mass = mass - 1700;
     Serial.print("actual reading: ");

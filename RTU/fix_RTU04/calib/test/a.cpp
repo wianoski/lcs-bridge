@@ -4,7 +4,7 @@
 #define SCK_OUT A2
 #define DOUT A1
 
-float y1 = 100.0; // calibrated mass to be added
+float y1 = 0.0; // calibrated mass to be added
 long x1 = 0L;
 long x0 = 0L;
 float avg_size = 10.0; // amount of averages for each mass measurement
@@ -26,7 +26,7 @@ void setup() {
   // calibration procedure (mass should be added equal to y1)
   int ii = 1;
   while(true){
-    if (hx711.read()<x0+10000){
+    if (hx711.read()<x0 + 100){
     } else {
       ii++;
       delay(2000);
