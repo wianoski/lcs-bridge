@@ -28,6 +28,8 @@ void setup() {
 }
 long  temp1 = 0,
       temp2 = 0,
+      a_diff = 0,
+      b_diff = 0,
       difference = 0;
 void loop() {
   // averaging reading
@@ -41,6 +43,15 @@ void loop() {
   temp1 = reading;
   
   difference = (temp2 - reading) * -1;
+
+  if(reading == temp2){
+    Serial.println("true");
+    a_diff = b_diff;
+    b_diff = difference;
+    Serial.println(a_diff);
+  }else{
+    Serial.println("false");
+  }
 
   Serial.print("First: ");
   Serial.print(reading);
