@@ -77,8 +77,8 @@ uint8_t data[63]; //203 bytes
 //uint8_t data[7]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU03_1");
-String Gateway_Command2 = String("REQ_HEALTH_03");
+String Gateway_Command1 = String("REQ_RTU02_1");
+String Gateway_Command2 = String("REQ_HEALTH_02");
 
 
 String tempString = "-0.12";
@@ -189,6 +189,7 @@ void loop()
     uint8_t from;
     if (manager.recvfromAck(buf, &len, &from))
     {
+      Serial.println((char*)buf);
       duration = pulseIn(disp, HIGH);
       distance = duration;
       long h = dht.readHumidity();
