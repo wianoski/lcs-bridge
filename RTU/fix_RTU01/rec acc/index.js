@@ -2,20 +2,19 @@ const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
 const port = new SerialPort('COM14');
 const parser = new Readline();
-const now = new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
 const  fs = require('fs');
 
 port.pipe(parser)
 
 parser.on('data', function (data) {
  
-    const combine = now+","+data
+    const combine = new Date().toISOString()+","+data
     console.log(combine)
     logger.write(combine)
 });
 
 
-var logger = fs.createWriteStream('save-LOG.csv', {
+var logger = fs.createWriteStream('save-LOG_1.csv', {
 	flags: 'a'
 });
 
