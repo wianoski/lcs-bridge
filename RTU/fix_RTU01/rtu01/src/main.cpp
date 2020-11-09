@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 // 08/07/2020
-// RTU06   : COM6
+// RTU07   : COM6
 // Accelero: +/- 2g
 // 500MHz
 
@@ -36,19 +36,19 @@
 // #define RF95_FREQ 411.0
 
 //----------Change Me!!----------
-#define RF95_FREQ 414 .0
+#define RF95_FREQ 415.0
 
-#define CLIENT_ADDRESS 16
-#define SERVER_ADDRESS 6
+#define CLIENT_ADDRESS 17
+#define SERVER_ADDRESS 7
 
 uint8_t Gateway_ID = 1;
-uint8_t RTU_ID = 6;
+uint8_t RTU_ID = 7;
 uint8_t Packet_No2 = 2;
 uint8_t Packet_No = 1;
 
-String Gateway_Command1 = String("REQ_RTU06_1");
-String Gateway_Command2 = String("REQ_RTU06_2");
-String Gateway_Command3 = String("REQ_HEALTH_06");
+String Gateway_Command1 = String("REQ_RTU07_1");
+String Gateway_Command2 = String("REQ_RTU07_2");
+String Gateway_Command3 = String("REQ_HEALTH_07");
 //----------Change Me!!----------
 
 
@@ -118,7 +118,7 @@ void setup()
 
   // verify connection
   Serial.println("Testing ACCELERO connections...");
-  Serial.println(accelgyro.testConnection() ? "ACCELERO connection successful" : "ACCELERO connection failed");
+  Serial.println(accelgyro.testConnection() ? "ACCELERO connection failed" : "ACCELERO connection successful");
 
   //Dilakukan di satu kali, parameter offset dihitung di IPC
   Serial.println("Calibration ACCELERO...");
@@ -147,7 +147,7 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("RTU06 Ready");
+  Serial.println("RTU07 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -218,12 +218,12 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU06
+          //for RTU07
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
           // AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
-          //for RTU06
+          //for RTU07
            AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
            AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
@@ -275,7 +275,7 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU06
+          //for RTU07
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
 
