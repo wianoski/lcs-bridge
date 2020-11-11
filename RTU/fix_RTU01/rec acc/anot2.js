@@ -21,4 +21,4 @@ parser.on('data', (data) => {
     
 });
 
-var logger = fs.createWriteStream('E:\\Werk\\gitProj\\bigone\\RTU\\fix_RTU01\\rec acc\\type_1\\' + log_type_1)
+var logger1 = fs.createWriteStream('E:\\Werk\\gitProj\\bigone\\jembatanku-ipc\\type_1\\'+ currentDate.getDate() + '_' + log_type_1)

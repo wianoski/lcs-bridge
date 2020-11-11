@@ -121,8 +121,6 @@ void parseData() {      // split the data into its parts
 
 void setup() {
     Serial.begin(9600);
-    Serial.println("This demo expects 3 pieces of data - text, an integer and a floating point value");
-    Serial.println("Enter data in this style <HelloWorld, 12, 24.7>  ");
     Serial.println();
 }
 
@@ -131,7 +129,7 @@ void setup() {
 void loop() {
 
   
-    reading = scale.read();
+    reading = scale.read()*0.001;
     recvWithStartEndMarkers();
     if (newData == true) {
         strcpy(tempChars, receivedChars);
