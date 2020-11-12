@@ -1,9 +1,22 @@
+#include <Arduino.h>
 #include <Wire.h>
 
 const int MPU=0x68; //I2C address of the MPU-6050
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ; //16-bit integers
 int AcXcal,AcYcal,AcZcal,GyXcal,GyYcal,GyZcal,tcal; //calibration variables
 float t,tx,tf,pitch,roll;
+
+
+//function to convert accelerometer values into pitch and roll
+void getAngle(int Ax,int Ay,int Az) 
+{
+    double x = Ax;
+    double y = Ay;
+    double z = Az;    pitch = atan(x/sqrt((y*y) + (z*z))); //pitch calculation
+    roll = atan(y/sqrt((x*x) + (z*z))); //roll calculation</p><p>    //converting radians into degrees
+    pitch = pitch * (180.0/3.14);
+    roll = roll * (180.0/3.14) ;
+}
 
 void setup()
 {
@@ -61,15 +74,4 @@ void loop()
     Serial.print(" Z = "); Serial.println(GyZ + GyZcal);
     Serial.println("===============================================");
     delay(500);
-}
-
-//function to convert accelerometer values into pitch and roll
-void getAngle(int Ax,int Ay,int Az) 
-{
-    double x = Ax;
-    double y = Ay;
-    double z = Az;    pitch = atan(x/sqrt((y*y) + (z*z))); //pitch calculation
-    roll = atan(y/sqrt((x*x) + (z*z))); //roll calculation</p><p>    //converting radians into degrees
-    pitch = pitch * (180.0/3.14);
-    roll = roll * (180.0/3.14) ;
 }
