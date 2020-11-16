@@ -3,7 +3,7 @@ import PIL
 import os
 import glob
 
-def compress_images(directory=False, quality=50):
+def compress_images(directory=False, quality=40):
     if directory:
         os.chdir(directory)
 
