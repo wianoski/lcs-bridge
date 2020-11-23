@@ -272,16 +272,16 @@ void loop()
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
 
           //          Serial.print("roll = ");
-          //          Serial.print(roll);
+           Serial.println(roll);
 
           //for RTU01
-          result = {xa};
+          result = {roll};
           uint16_t loWord = result.w[0];
           uint16_t hiWord = result.w[1];
 
-          data[j] = highByte(xax);
+          data[j] = highByte(hiWord);
           j++;
-          data[j] = lowByte(xax);
+          data[j] = lowByte(loWord);
           j++;
         }
 

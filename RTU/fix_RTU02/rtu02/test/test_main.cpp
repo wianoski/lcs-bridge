@@ -239,66 +239,59 @@ void loop()
   getAngle(AcX, AcY, AcZ);
 
 
-  if (manager.available())
-  {
+  //   if (manager.available())
+  //   {
 
 
-    //    Serial.print("AngleX= ");
-    //    Serial.println(x);
-    // Wait for a message addressed to us from the client
-    uint8_t len = sizeof(buf);
-    uint8_t from;
-    if (manager.recvfromAck(buf, &len, &from))
-    {
-      Serial.println((char*)buf);
-      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
-      if (Gateway_Command1 == (char*)buf) {
-        j = 0;
-        /////////////////////////////////// Set Header ///////////////////////////////////////
-        data[j] = Gateway_ID;
-        j++;
-        data[j] = RTU_ID;
-        j++;
-        data[j] = Packet_No;
-        j++;
-        /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
-        measuredvbat = analogRead(VBATPIN);
-        measuredvbat *= 2; // we divided by 2, so multiply back
-        measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
-        measuredvbat /= 1024; // convert to voltage
+  //    Serial.print("AngleX= ");
+  //    Serial.println(x);
+  // Wait for a message addressed to us from the client
+  uint8_t len = sizeof(buf);
+  uint8_t from;
+  // if (manager.recvfromAck(buf, &len, &from))
+  // {
+  Serial.println((char*)buf);
+  /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+  // if (Gateway_Command1 == (char*)buf) {
+  j = 0;
+  /////////////////////////////////// Set Header ///////////////////////////////////////
+  // data[j] = Gateway_ID;
+  // j++;
+  // data[j] = RTU_ID;
+  // j++;
+  // data[j] = Packet_No;
+  // j++;
+  /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+  measuredvbat = analogRead(VBATPIN);
+  measuredvbat *= 2; // we divided by 2, so multiply back
+  measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
+  measuredvbat /= 1024; // convert to voltage
 
-        //Measure 50 ax and 50 ay
-        for (i = 0; i < 10; i++) {
-          /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
+  //Measure 50 ax and 50 ay
+  for (i = 0; i < 3; i++) {
+    /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
 
-          //          Serial.print("roll = ");
-          //          Serial.print(roll);
+    //          Serial.print("roll = ");
+    Serial.println(roll);
 
-          //for RTU01
-          result = {xa};
-          uint16_t loWord = result.w[0];
-          uint16_t hiWord = result.w[1];
+    //for RTU01
 
-          data[j] = highByte(xax);
-          j++;
-          data[j] = lowByte(xax);
-          j++;
-        }
+    result = {roll};
+    uint16_t loWord = result.w[0];
+    uint16_t hiWord = result.w[1];
 
-        //verifiation data[] content
-        for (i = 0; i < j; i++) {
-          Serial.write(data[i]);
-        }
-
-        //Serial.println();
-        //Serial.println(j);
-        // Send a reply data to the Server
-        if (!manager.sendtoWait(data, sizeof(data), from)) {
-          //if (!manager.sendtoWait(data, j, from)){
-          Serial.println("sendtoWait failed");
-        }
-      }
-    } delay (100); //delay (2000);
+    data[j] = highByte(hiWord);
+    j++;
+    data[j] = lowByte(loWord);
+    j++;
+    
+    delay (500);
   }
 
+  //verifiation data[] content
+  for (i = 0; i < j; i++) {
+    Serial.print(data[i]);
+    
+    delay (500);
+  }
 }

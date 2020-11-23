@@ -1,10 +1,9 @@
 #include <Arduino.h>
 
-// 02/07/2020
+// 08/07/2020
 // RTU01   : COM6
 // Accelero: +/- 2g
 // 500MHz
-
 #include <Streaming.h>
 //#include <Time.h>
 //#include <TimeLib.h>
@@ -38,9 +37,6 @@
 #define CLIENT_ADDRESS 12
 #define SERVER_ADDRESS 2
 
-// #define CLIENT_ADDRESS 18
-// #define SERVER_ADDRESS 8
-
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
 
@@ -57,9 +53,7 @@ MPU6050 accelgyro;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
-int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ; //16-bit integers
-int AcXcal, AcYcal, AcZcal, GyXcal, GyYcal, GyZcal, tcal; //calibration variables
-float t, tx, tf, pitch, roll;
+int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
 
 int minVal = 265;
 int maxVal = 402;
@@ -71,10 +65,7 @@ float   AX, AY, AZ; //acceleration floats
 float   GX, GY, GZ; //gyroscope floats
 
 uint8_t Gateway_ID = 1;
-
-// uint8_t RTU_ID = 2;
-uint8_t RTU_ID = 8;
-
+uint8_t RTU_ID = 3;
 uint8_t Packet_No = 1;
 
 #define LED_PIN 13
@@ -82,12 +73,13 @@ bool blinkState = false;
 
 const int MPU_addr = 0x68;
 
-uint8_t data[50]; //203 bytes
+uint8_t data[63]; //203 bytes
+// uint8_t data[7]; //203 bytes
 uint8_t buf[20]; //Promini
 
-String Gateway_Command1 = String("REQ_RTU08_1");
-//
-// String Gateway_Command1 = String("REQ_RTU08_1");
+String Gateway_Command1 = String("REQ_RTU03");
+String Gateway_Command2 = String("REQ_HEALTH_03");
+
 
 String tempString = "-0.12";
 
@@ -100,21 +92,27 @@ char temp[10];
 
 //#define VBATPIN A9
 #define VBATPIN A0 //(Promini)
-float measuredvbat;
+long measuredvbat;
+//float measuredvbat;
 
-const int MPU = 0x68; //I2C address of the MPU-6050
+#define DHTPIN 5
+#include "DHT.h"
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+DHT dht(DHTPIN, DHTTYPE);
 
-//function to convert accelerometer values into pitch and roll
-void getAngle(int Ax, int Ay, int Az)
-{
-  double x = Ax;
-  double y = Ay;
-  double z = Az;
-  pitch = atan(x / sqrt((y * y) + (z * z))); //pitch calculation
-  roll = atan(y / sqrt((x * x) + (z * z))); //roll calculation</p><p>    //converting radians into degrees
-  pitch = pitch * (180.0 / 3.14);
-  roll = roll * (180.0 / 3.14) ;
-}
+
+#include <OneWire.h>
+#include <DallasTemperature.h>  
+// Data wire is plugged into pin 2 on the Arduino
+#define ONE_WIRE_BUS 5
+// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
+OneWire oneWire(ONE_WIRE_BUS);
+// Pass our oneWire reference to Dallas Temperature. 
+DallasTemperature sensors(&oneWire);
+
+#define disp 7
+long distance ;
+long duration;
 
 void setup()
 {
@@ -131,57 +129,25 @@ void setup()
   //  while (!Serial);
   Serial.begin(9600);
   delay(100);
+  Serial.println(F("DHTxx test!"));
 
+  dht.begin();
   // initialize device
-  Serial.println("Initializing Gyro");
-  accelgyro.initialize();
-
-  // verify connection
-  Serial.println("Testing Gyro connections...");
-  Serial.println(accelgyro.testConnection() ? "Gyro connection successful" : "Gyro connection failed");
-
-  //Dilakukan di satu kali, parameter offset dihitung di IPC
-  Serial.println("Calibration ACCELERO...");
-  ///////////////////////////////////// Calibration Offset MPU6050 ////////////////////////////////////
-  for (i = 0; i < numberOfTests; i++) {
-    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-    AXoff += ax;
-    AYoff += ay;
-    AZoff += az;
-    GXoff += gx;
-    GYoff += gy;
-    GZoff += gz;
-
-    delay(25);
-  }
-
-  AXoff = AXoff / numberOfTests;
-  AYoff = AYoff / numberOfTests;
-  AZoff = AZoff / numberOfTests;
-  GXoff = GXoff / numberOfTests;
-  GYoff = GYoff / numberOfTests;
-  GZoff = GZoff / numberOfTests;
+  pinMode(disp, INPUT);
   ////////////////////////////////////////////////////////////////////////////////////////
 
   // configure Arduino LED pin for output
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-
-  Serial.println("RTU08 Ready");
-  // Serial.println("RTU08 Ready");
-
+  Serial.println("RTU03 Ready");
+  
+  sensors.begin();
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
   digitalWrite(RFM95_RST, HIGH);
   delay(10);
-
-  Wire.begin();                                      //begin the wire communication
-  Wire.beginTransmission(MPU);                 //begin, send the slave adress (in this case 68)
-  Wire.write(0x6B);                                  //make the reset (place a 0 into the 6B register)
-  Wire.write(0);
-  Wire.endTransmission(true);                        //end the transmission
 
   if (!manager.init())
     Serial.println("init failed");
@@ -210,47 +176,25 @@ union cracked_float_t {
 cracked_float_t result;
 void loop()
 {
-  Wire.beginTransmission(MPU);
-  Wire.write(0x3B);
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU, 14, true); //get six bytes accelerometer data
-
-  AcXcal = -950;
-  AcYcal = -300;
-  AcZcal = 0;    //Temperature correction
-  tcal = -1600;   //Gyro correction
-  GyXcal = 480;
-  GyYcal = 170;
-  GyZcal = 210;   //read accelerometer data
-  AcX = Wire.read() << 8 | Wire.read(); // 0x3B (ACCEL_XOUT_H) 0x3C (ACCEL_XOUT_L)
-  AcY = Wire.read() << 8 | Wire.read(); // 0x3D (ACCEL_YOUT_H) 0x3E (ACCEL_YOUT_L)
-  AcZ = Wire.read() << 8 | Wire.read(); // 0x3F (ACCEL_ZOUT_H) 0x40 (ACCEL_ZOUT_L)
-
-  //read temperature data
-  Tmp = Wire.read() << 8 | Wire.read(); // 0x41 (TEMP_OUT_H) 0x42 (TEMP_OUT_L)
-
-  //read gyroscope data
-  GyX = Wire.read() << 8 | Wire.read(); // 0x43 (GYRO_XOUT_H) 0x44 (GYRO_XOUT_L)
-  GyY = Wire.read() << 8 | Wire.read(); // 0x45 (GYRO_YOUT_H) 0x46 (GYRO_YOUT_L)
-  GyZ = Wire.read() << 8 | Wire.read(); // 0x47 (GYRO_ZOUT_H) 0x48 (GYRO_ZOUT_L) </p><p>    //temperature calculation
-  tx = Tmp + tcal;
-  t = tx / 340 + 36.53; //equation for temperature in degrees C from datasheet
-  tf = (t * 9 / 5) + 32; //fahrenheit</p><p>    //get pitch/roll
-  getAngle(AcX, AcY, AcZ);
-
 
   if (manager.available())
   {
-
-
-    //    Serial.print("AngleX= ");
-    //    Serial.println(x);
-    // Wait for a message addressed to us from the client
     uint8_t len = sizeof(buf);
     uint8_t from;
     if (manager.recvfromAck(buf, &len, &from))
     {
-      Serial.println((char*)buf);
+      // duration = pulseIn(disp, HIGH);
+      // distance = duration;
+      // long h = dht.readHumidity();
+      // Read temperature as Celsius (the default)
+      // long t = dht.readTemperature();
+      
+      sensors.requestTemperatures();  
+      long t = sensors.getTempCByIndex(0);
+      // if (isnan(h) || isnan(t)) {
+      //   Serial.println(F("Failed to read from DHT sensor!"));
+      //   return;
+      // }
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
         j = 0;
@@ -266,23 +210,25 @@ void loop()
         measuredvbat *= 2; // we divided by 2, so multiply back
         measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
         measuredvbat /= 1024; // convert to voltage
-
         //Measure 50 ax and 50 ay
         for (i = 0; i < 10; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-
-          //          Serial.print("roll = ");
-          //          Serial.print(roll);
-
           //for RTU01
-          result = {xa};
-          uint16_t loWord = result.w[0];
-          uint16_t hiWord = result.w[1];
 
-          data[j] = highByte(xax);
+          //          Serial.println(h);
+          //          Serial.println(t);
+          data[j] = highByte(t);
           j++;
-          data[j] = lowByte(xax);
+          data[j] = lowByte(t);
           j++;
+          // data[j] = highByte(distance);
+          // j++;
+          // data[j] = lowByte(distance);
+          // j++;
+          // data[j] = highByte(h);
+          // j++;
+          // data[j] = lowByte(h);
+          // j++;
         }
 
         //verifiation data[] content
@@ -298,7 +244,90 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
-    } delay (100); //delay (2000);
-  }
+      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+      if (Gateway_Command2 == (char*)buf) {
+        j = 0;
+        /////////////////////////////////// Set Header ///////////////////////////////////////
+        data[j] = Gateway_ID;
+        j++;
+        data[j] = RTU_ID;
+        j++;
+        data[j] = Packet_No;
+        j++;
+        /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+        measuredvbat = analogRead(VBATPIN);
+        measuredvbat *= 2; // we divided by 2, so multiply back
+        measuredvbat *= 3; // Multiply by 3.3V, our reference voltage
+        measuredvbat /= 1024; // convert to voltage
 
+        long rssiResult = driver.lastRssi();
+        //Measure 50 ax and 50 ay
+        //        result = {measuredvbat};
+        //        uint16_t loWord = result.w[0];
+        //        uint16_t hiWord = result.w[1];
+        //        data[j] = highByte(hiWord);
+        //        j++;
+        //        data[j] = lowByte(loWord);
+        //        j++;
+        data[j] = highByte(measuredvbat);
+        j++;
+        data[j] = lowByte(measuredvbat);
+        j++;
+        data[j] = highByte(rssiResult);
+        j++;
+        data[j] = lowByte(rssiResult);
+        j++;
+
+
+        //verifiation data[] content
+        for (i = 0; i < j; i++) {
+          Serial.write(data[i]);
+        }
+
+        //Serial.println();
+        //Serial.println(j);
+        // Send a reply data to the Server
+        if (!manager.sendtoWait(data, sizeof(data), from)) {
+          //if (!manager.sendtoWait(data, j, from)){
+          Serial.println("sendtoWait failed");
+        }
+      }
+    }
+  }
+  //  delay (500);
+}
+
+///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////
+//print date and time to Serial
+//void printDateTime(time_t t)
+//{
+//    printDate(t);
+//    Serial << ' ';
+//    printTime(t);
+//}
+//
+////print time to Serial
+//void printTime(time_t t)
+//{
+//    printI00(hour(t), ':');
+//    printI00(minute(t), ':');
+//    printI00(second(t), ' ');
+//}
+//
+////print date to Serial
+//void printDate(time_t t)
+//{
+//    printI00(day(t), 0);
+//    Serial << monthShortStr(month(t)) << _DEC(year(t));
+//}
+
+//Print an integer in "00" format (with leading zero),
+//followed by a delimiter character to Serial.
+//Input value assumed to be between 0 and 99.
+void printI00(int val, char delim)
+{
+  if (val < 10) Serial << '0';
+  Serial << _DEC(val);
+  if (delim > 0) Serial << delim;
+  return;
 }

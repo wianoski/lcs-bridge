@@ -255,7 +255,7 @@ void loop()
           //if (!manager.sendtoWait(data, j, from)){
           Serial.println("sendtoWait failed");
         }
-      }delay(100);
+      }//delay(200);
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command2 == (char*)buf) {
         j = 0;

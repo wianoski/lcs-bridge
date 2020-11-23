@@ -78,7 +78,7 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 
-  Serial.println("con01,04112,gw02,RTU_02,6000,02,03,ready");
+  Serial.println("con01,04112,gw02,RTU_02,10000,02,03,ready");
 }
 
 void loop()
@@ -111,7 +111,7 @@ void loop()
 void request_RTU01() {
   //  Serial.println("Masuk request");
   /////////////////////////////////// Request gyro1 ///////////////////////////////////////
-  if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS))
+  if (manager.sendtoWait(data1, sizeof(data5), CLIENT_ADDRESS))
 
     //    Serial.println("Masuk kirim 1");
   {
@@ -121,7 +121,8 @@ void request_RTU01() {
 
     //Serial.println();
     //Serial.println(len);
-
+    
+//    delay(1000);
     if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
     {
       //Serial.print("RTU01_0x");
@@ -137,13 +138,13 @@ void request_RTU01() {
     }
     else
     {
-      Serial.println("RTU03 no reply");
+      Serial.println("RTU02 no reply");
     }
   }
 }
 void request_RTU03() {
   /////////////////////////////////// Request temp ///////////////////////////////////////
-  if (manager.sendtoWait(data1, sizeof(data1), CLIENT_ADDRESS))
+  if (manager.sendtoWait(data5, sizeof(data1), CLIENT_ADDRESS))
   {
     // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);
@@ -167,7 +168,7 @@ void request_RTU03() {
     }
     else
     {
-      Serial.println("RTU02 no reply");
+      Serial.println("RTU03 no reply");
     }
   }
   else {

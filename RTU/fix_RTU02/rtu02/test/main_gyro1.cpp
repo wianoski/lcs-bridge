@@ -243,7 +243,7 @@ void loop()
           pitch = atan2(-xa , sqrt(ya * ya + za * za)) * 180.0 / PI;
 
 //          Serial.print("roll = ");
-//          Serial.print(roll);
+         Serial.print(roll);
           
           //for RTU01
           result = {roll};

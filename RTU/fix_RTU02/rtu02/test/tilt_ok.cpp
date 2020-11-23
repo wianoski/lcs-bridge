@@ -7,13 +7,6 @@ int AcXcal,AcYcal,AcZcal,GyXcal,GyYcal,GyZcal,tcal; //calibration variables
 float t,tx,tf,pitch,roll;
 
 
-void getDegS(int Dx, int Dy, int Dz){
-    double x = Dx;
-    double y = Dy;
-    double z = Dz;
-    float picch = atan(x/sqrt((y*y) + (z*z)));
-    float roll = atan(y/sqrt((x*x) + (z*z)));
-}
 //function to convert accelerometer values into pitch and roll
 void getAngle(int Ax,int Ay,int Az) 
 {

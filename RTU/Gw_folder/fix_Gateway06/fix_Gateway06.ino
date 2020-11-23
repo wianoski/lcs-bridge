@@ -33,7 +33,7 @@ uint8_t data4[] = "REQ_RTU04_4";
 uint8_t data5[] = "REQ_HEALTH_04";
 
 // Dont put this on the stack:
-uint8_t buf[203];
+uint8_t buf[200];
 
 String command_health = "";
 String command_PC = "";
