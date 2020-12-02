@@ -155,7 +155,7 @@ void loop()
   //  y = x;
   //  x = 0;
   // delay(100);
-  reading = (scale.read()*0.0001)*-1;
+  reading = (scale.read() * 0.0001) * -1;
   if (manager.available())
   {
     // Wait for a message addressed to us from the client
@@ -183,15 +183,17 @@ void loop()
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
+
+          reading = (scale.read() * 0.0001) * -1;
           hasil = {reading};
-//          Serial.println(reading);
+          //          Serial.println(reading);
           uint16_t loWord = hasil.w[0];
           uint16_t hiWord = hasil.w[1];
-//          Serial.print(hiWord,HEX);
-//          Serial.println(loWord,HEX);
-          
+          //          Serial.print(hiWord,HEX);
+          //          Serial.println(loWord,HEX);
+
           data[j] = highByte(hiWord);
-          j++; 
+          j++;
           data[j] = hiWord;
           j++;
           data[j] = highByte(loWord);
@@ -205,9 +207,9 @@ void loop()
         }
 
         //verifiation data[] content
-//        for (i = 0; i < j; i++) {
-//          Serial.write(data[i]);
-//        }
+        //        for (i = 0; i < j; i++) {
+        //          Serial.write(data[i]);
+        //        }
 
         //Serial.println();
         //Serial.println(j);
@@ -229,14 +231,16 @@ void loop()
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
           //for RTU01
+
+          reading = (scale.read() * 0.0001) * -1;
           hasil = {reading};
-//          Serial.println(reading);
+          //          Serial.println(reading);
           uint16_t loWord = hasil.w[0];
           uint16_t hiWord = hasil.w[1];
-//          Serial.print(hiWord,HEX);
-//          Serial.println(loWord,HEX);
+          //          Serial.print(hiWord,HEX);
+          //          Serial.println(loWord,HEX);
           data[j] = highByte(hiWord);
-          j++; 
+          j++;
           data[j] = hiWord;
           j++;
           data[j] = highByte(loWord);
@@ -250,9 +254,9 @@ void loop()
         }
 
         //verifiation data[] content
-//        for (i = 0; i < j; i++) {
-//          Serial.write(data[i]);
-//        }
+        //        for (i = 0; i < j; i++) {
+        //          Serial.write(data[i]);
+        //        }
 
         //Serial.println();
         //Serial.println(j);
