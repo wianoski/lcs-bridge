@@ -28,16 +28,16 @@ def OpenFile():
                     timestamp = int(rawData.pop(0))
                     for index in range(len(rawData)):
                         if int(index) % 2 == 0:
-                            X.append((float(rawData[index])*0.35)+0)
+                            X.append((float(rawData[index])*0.02)+0)
                         else:
-                            Y.append((float(rawData[index])*0.25)+0)
+                            Y.append((float(rawData[index])*0.02)+0)
                             timestamps.append(
                                 datetime.fromtimestamp(timestamp/1000.0))
                             timestamp += 20
                 df = DataFrame({
                     'Time': timestamps,
-                    'Vertikal': X,
-                    'Lintang': Y
+                    'Vertikal': Y,
+                    'Lintang': X
                 })
 
                 df.plot(x='Time', subplots=True, layout=(2, 1), sharey=True)
