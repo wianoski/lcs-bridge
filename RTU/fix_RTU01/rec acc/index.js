@@ -8,7 +8,6 @@ let log_type_1 = 'save-LOG_.csv';
 log_type_1 = log_type_1.split('.').join('-' + Date.now() + '.');
 
 port.pipe(parser)
-console.log('Two seconds later, showing sleep in a loop...');
 
 // Sleep in loop
 // for (let i = 0; i < 200; i++) {
@@ -22,5 +21,4 @@ parser.on('data', (data) =>{
 // console.log(i);
 // }
 
-
-var logger = fs.createWriteStream('E:\\Werk\\gitProj\\bigone\\RTU\\fix_RTU01\\rec acc\\type_2\\' + log_type_1)
+var logger = fs.createWriteStream('E:\\Werk\\gitProj\\bigone\\RTU\\fix_RTU01\\rec acc\\strain\\' + log_type_1)
