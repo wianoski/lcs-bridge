@@ -40,12 +40,6 @@ String command_PC = "";
 int number_of_reading_data = 0;
 int i;
 
-String conId = "con01";
-String freqId = "0415";
-String gwId = "gw06";
-String rtuId = "06";
-String stat = "ready";
-
 void setup()
 {
   pinMode(RFM95_RST, OUTPUT);
@@ -81,7 +75,7 @@ void setup()
   //  driver.setCADTimeout(10000);
 
 //  Serial.println(conId,freqId,gwId,rtuId,stat);
-  Serial.println("con01,04110,gw06,RTU_04,1000,06 ,ready");
+  Serial.println("con02,04110,gw06,RTU_04,1000,06 ,ready");
 }
 
 void loop()

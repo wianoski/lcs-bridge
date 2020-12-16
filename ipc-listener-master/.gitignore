@@ -1,0 +1,4 @@
+/node_modules
+*.jpeg
+/sensorData
+test.js

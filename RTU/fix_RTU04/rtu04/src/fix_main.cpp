@@ -155,8 +155,7 @@ void loop()
   //  y = x;
   //  x = 0;
   // delay(100);
-    reading = (scale.read() * 0.001) * -1;
-  //  Serial.println(reading);
+  reading = (scale.read() * 0.01) * -1;
   if (manager.available())
   {
     // Wait for a message addressed to us from the client
@@ -183,8 +182,7 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get  Data ///////////////////////////////////////
-          //for RTU01
-
+          //for RTU01a
 
 //          reading = (scale.read() * 0.01) * -1;
           hasil = {reading};
@@ -235,7 +233,6 @@ void loop()
           //for RTU01
 
 //          reading = (scale.read() * 0.01) * -1;
-
           hasil = {reading};
           //          Serial.println(reading);
           uint16_t loWord = hasil.w[0];
