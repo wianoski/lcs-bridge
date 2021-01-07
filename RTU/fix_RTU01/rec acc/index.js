@@ -1,9 +1,9 @@
 const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
-// const port = new SerialPort('COM14', {
-//     baudRate: 9600
-// });
-const port = new SerialPort('COM14');
+const port = new SerialPort('COM3', {
+    baudRate: 57600
+});
+// const port = new SerialPort('COM14');
 const parser = new Readline();
 const fs = require('fs');
 const { setInterval } = require('timers');
@@ -13,17 +13,17 @@ log_type_1 = log_type_1.split('.').join('-' + Date.now() + '.');
 
 port.pipe(parser)
 
-// //-------------sesi koneksi ke arduino--------
-// port.on('open', () => {
-//     let timeOut = 3000;
-//     setInterval(() => {
-//         // body
-//         port.write('REQ_RTU04,1\r\n', (err) => {
-//             if (err)
-//                 console.log(err);
-//         })
-//     }, 1000)
-// }); //-----------Sesi selesai--------------------
+//-------------sesi koneksi ke arduino--------
+port.on('open', () => {
+    let timeOut = 1000;
+    setInterval(() => {
+        // body
+        port.write('REQ_RTU04,1\r\n', (err) => {
+            if (err)
+                console.log(err);
+        })
+    }, timeOut)
+}); //-----------Sesi selesai--------------------
 
 parser.on('data', (data) => {
 
