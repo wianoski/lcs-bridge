@@ -91,8 +91,22 @@ void loop()
       number_of_reading_data = command_PC.toInt();
       for (i = 0; i < number_of_reading_data; i++) {
         request_RTU01();
+//                request_RTU03();
+//                delay(1500);
+//                request_rtuSial();
+      }
+      delay(1000);
+      for (i = 0; i < number_of_reading_data; i++) {
+        //        request_RTU01();
         request_RTU03();
-        delay(1500);
+        //        delay(1500);
+        //        request_rtuSial();
+      }
+      delay(1000);
+      for (i = 0; i < number_of_reading_data; i++) {
+        //        request_RTU01();
+        //        request_RTU03();
+        //        delay(1500);
         request_rtuSial();
       }
     } else if (command_PC == "REQ_RTU_HEALTH02") {
@@ -111,7 +125,7 @@ void loop()
 void request_RTU01() {
   //  Serial.println("Masuk request");
   /////////////////////////////////// Request gyro1 ///////////////////////////////////////
-  if (manager.sendtoWait(data1, sizeof(data5), CLIENT_ADDRESS))
+  if (manager.sendtoWait(data1, sizeof(data1), CLIENT_ADDRESS))
 
     //    Serial.println("Masuk kirim 1");
   {
@@ -121,8 +135,8 @@ void request_RTU01() {
 
     //Serial.println();
     //Serial.println(len);
-    
-//    delay(1000);
+
+    //    delay(1000);
     if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
     {
       //Serial.print("RTU01_0x");
@@ -144,7 +158,7 @@ void request_RTU01() {
 }
 void request_RTU03() {
   /////////////////////////////////// Request temp ///////////////////////////////////////
-  if (manager.sendtoWait(data5, sizeof(data1), CLIENT_ADDRESS))
+  if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS))
   {
     // Now wait for a reply from the RTU01
     uint8_t len = sizeof(buf);

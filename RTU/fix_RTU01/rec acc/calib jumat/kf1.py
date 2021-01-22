@@ -2,7 +2,11 @@ from pykalman import KalmanFilter
 import numpy as np
 import matplotlib.pyplot as plt
 import copy
+import pandas as pd
 
+df = pd.read_csv('14122020.csv')
+# df = pd.read_csv('dummy.csv')
+value = df['us']
 outlier_thresh = 0.95
 
 # Treat y as position, and that y-dot is
@@ -18,7 +22,11 @@ outlier_thresh = 0.95
 observation_matrix = np.asarray([[1, 0]])
 
 # observations:
-t = [1,10,22,35,40,51,59,72,85,90,100,120,210,322,435,540,651,759,872,985,1090,1200]
+# t = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+t = df['num']
+# print(t)
+# print(value)
+
 
 # dt betweeen observations:
 dt = [np.mean(np.diff(t))] + list(np.diff(t))
@@ -26,7 +34,8 @@ transition_matrices = np.asarray([[[1, each_dt],[0, 1]]
                                     for each_dt in dt])
 
 # observations
-y = np.transpose(np.asarray([[139.85,142.62,149.21,143.32,149.95,143.71,138.79,137.69,136.39,137.58,137.51,143.5,144.73,142.4,142.16,141.53,139.47,140.9,144.72,149.08,140.1,147.27]]))
+# y = np.transpose(np.asarray([[-123.98,-121.61,-115.2,-120.53,-126.91,-120.72,-117.19,-136.22,-130.3,-123.82,-116.11,-115.11,-120.42,-125.57,-117.95,-129.23,-114.98,-121.22,-123.25,-129.54]]))
+y = np.transpose(value)
 
 y = np.ma.array(y)
 
@@ -65,6 +74,6 @@ plt.plot(t, y, 'go-', label="Observations")
 plt.plot(t, smoothed_state_means[:,0], 'b--', label="Value Estimate" )
 plt.legend(loc="upper left")
 plt.xlabel("Time (s)")
-plt.ylabel("Value (unit)")
+plt.ylabel("Value (uS)")
 
 plt.show()

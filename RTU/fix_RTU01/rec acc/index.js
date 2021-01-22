@@ -1,6 +1,6 @@
 const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
-const port = new SerialPort('COM3', {
+const port = new SerialPort('COM14', {
     baudRate: 57600
 });
 // const port = new SerialPort('COM14');
@@ -18,7 +18,7 @@ port.on('open', () => {
     let timeOut = 1000;
     setInterval(() => {
         // body
-        port.write('REQ_RTU04,1\r\n', (err) => {
+        port.write('REQ_RTU01,1\r\n', (err) => {
             if (err)
                 console.log(err);
         })
@@ -32,4 +32,4 @@ parser.on('data', (data) => {
     logger.write(combine)
 });
 
-var logger = fs.createWriteStream('E:\\Werk\\gitProj\\bigone\\RTU\\fix_RTU01\\rec acc\\strain\\' + log_type_1)
+var logger = fs.createWriteStream('E:\\Werk\\gitProj\\bigone\\RTU\\fix_RTU01\\rec acc\\acc\\' + log_type_1)

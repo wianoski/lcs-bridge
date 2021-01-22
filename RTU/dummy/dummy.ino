@@ -4,7 +4,6 @@
 // RTU01   : COM6
 // Accelero: +/- 2g
 // 500MHz
-
 #include <Streaming.h>
 //#include <Time.h>
 //#include <TimeLib.h>
@@ -33,24 +32,10 @@
 #define RFM95_INT 2
 
 // Change to 434.0 or other frequency, must match RX's freq!
-// #define RF95_FREQ 411.0
+#define RF95_FREQ 412.0
 
-//----------Change Me!!----------
-#define RF95_FREQ 411.0
-
-#define CLIENT_ADDRESS 11
-#define SERVER_ADDRESS 1
-
-uint8_t Gateway_ID = 1;
-uint8_t RTU_ID = 1;
-uint8_t Packet_No2 = 2;
-uint8_t Packet_No = 1;
-
-String Gateway_Command1 = String("REQ_RTU01_1");
-String Gateway_Command2 = String("REQ_RTU01_2");
-String Gateway_Command3 = String("REQ_HEALTH_05");
-//----------Change Me!!----------
-
+#define CLIENT_ADDRESS 12
+#define SERVER_ADDRESS 2
 
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
@@ -68,18 +53,33 @@ MPU6050 accelgyro;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
+int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
+
+int minVal = 265;
+int maxVal = 402;
+
 float   AXoff, AYoff, AZoff; //accelerometer offset values
 float   GXoff, GYoff, GZoff; //gyroscope offset values
 
 float   AX, AY, AZ; //acceleration floats
 float   GX, GY, GZ; //gyroscope floats
 
+uint8_t Gateway_ID = 1;
+uint8_t RTU_ID = 8;
+uint8_t Packet_No = 1;
 
 #define LED_PIN 13
 bool blinkState = false;
 
-uint8_t data[203]; //203 bytes
+const int MPU_addr = 0x68;
+
+uint8_t data[63]; //203 bytes
+// uint8_t data[7]; //203 bytes
 uint8_t buf[20]; //Promini
+
+//String Gateway_Command1 = String("REQ_RTU03_1");
+String Gateway_Command1 = String("REQ_RTU08_1");
+String Gateway_Command2 = String("REQ_HEALTH_03");
 
 
 String tempString = "-0.12";
@@ -93,8 +93,27 @@ char temp[10];
 
 //#define VBATPIN A9
 #define VBATPIN A0 //(Promini)
-float measuredvbat;
-float rssiResult;
+long measuredvbat;
+//float measuredvbat;
+
+#define DHTPIN 5
+#include "DHT.h"
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+DHT dht(DHTPIN, DHTTYPE);
+
+
+#include <OneWire.h>
+#include <DallasTemperature.h>  
+// Data wire is plugged into pin 2 on the Arduino
+#define ONE_WIRE_BUS 5
+// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
+OneWire oneWire(ONE_WIRE_BUS);
+// Pass our oneWire reference to Dallas Temperature. 
+DallasTemperature sensors(&oneWire);
+
+#define disp 7
+long distance ;
+long duration;
 
 void setup()
 {
@@ -111,44 +130,20 @@ void setup()
   //  while (!Serial);
   Serial.begin(9600);
   delay(100);
+  Serial.println(F("DHTxx test!"));
 
+  dht.begin();
   // initialize device
-  Serial.println("Initializing ACCELERO");
-  accelgyro.initialize();
-
-  // verify connection
-  Serial.println("Testing ACCELERO connections...");
-  Serial.println(accelgyro.testConnection() ? "ACCELERO connection failed" : "ACCELERO connection successful");
-
-  //Dilakukan di satu kali, parameter offset dihitung di IPC
-  Serial.println("Calibration ACCELERO...");
-  ///////////////////////////////////// Calibration Offset MPU6050 ////////////////////////////////////
-  for (i = 0; i < numberOfTests; i++) {
-    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-    AXoff += ax;
-    AYoff += ay;
-    AZoff += az;
-    GXoff += gx;
-    GYoff += gy;
-    GZoff += gz;
-
-    delay(25);
-  }
-
-  AXoff = AXoff / numberOfTests;
-  AYoff = AYoff / numberOfTests;
-  AZoff = AZoff / numberOfTests;
-  GXoff = GXoff / numberOfTests;
-  GYoff = GYoff / numberOfTests;
-  GZoff = GZoff / numberOfTests;
+  pinMode(disp, INPUT);
   ////////////////////////////////////////////////////////////////////////////////////////
 
   // configure Arduino LED pin for output
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("RTU01 Ready");
-
+  Serial.println("RTU02 Ready");
+  
+  sensors.begin();
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
@@ -179,25 +174,28 @@ union cracked_float_t {
   word w[sizeof(float) / sizeof(word)];
   byte b[sizeof(float)];
 };
-cracked_float_t cx;
-cracked_float_t cy;
-cracked_float_t cz;
-
-cracked_float_t batt;
-cracked_float_t resRssi;
-
+cracked_float_t result;
 void loop()
 {
 
-  //  Serial.println(AX);
-  //  Serial.println(AY);
-  //  delay(100);
   if (manager.available())
   {
-    // Wait for a message addressed to us from the client
     uint8_t len = sizeof(buf);
     uint8_t from;
-    if (manager.recvfromAck(buf, &len, &from)) {
+    if (manager.recvfromAck(buf, &len, &from))
+    {
+      // duration = pulseIn(disp, HIGH);
+      // distance = duration;
+      // long h = dht.readHumidity();
+      // Read temperature as Celsius (the default)
+      // long t = dht.readTemperature();
+      
+      sensors.requestTemperatures();  
+      long t = sensors.getTempCByIndex(0);
+      // if (isnan(h) || isnan(t)) {
+      //   Serial.println(F("Failed to read from DHT sensor!"));
+      //   return;
+      // }
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
       if (Gateway_Command1 == (char*)buf) {
         j = 0;
@@ -208,45 +206,32 @@ void loop()
         j++;
         data[j] = Packet_No;
         j++;
-
         /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
         measuredvbat = analogRead(VBATPIN);
         measuredvbat *= 2; // we divided by 2, so multiply back
         measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
         measuredvbat /= 1024; // convert to voltage
-        
         //Measure 50 ax and 50 ay
-        for (i = 0; i < 55; i++) {
+        for (i = 0; i < 10; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
           //for RTU01
-          accelgyro.getAcceleration(&ax, &ay, &az);
-          AX = ((float)ax - AXoff) / 16384.00;
-          //if sensor pcb placed on table:
-          // AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
-          //for RTU01
-           AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-           AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
 
-          cx = {AX};
-          cy = {AY};
-          cz = {AZ};
-          uint16_t loWord = cx.w[0];
-          uint16_t hiWord = cx.w[1];
-          uint16_t loWrd = cy.w[0];
-          uint16_t hiWrd = cy.w[1];
-          uint16_t liRd = cz.w[0];
-          uint16_t hiRd = cz.w[1];
-
-          
-          //          Serial.println(AX);
-          data[j] = highByte(hiWord);
+          //          Serial.println(h);
+          //          Serial.println(t);
+          int rans;
+          rans = random(23,27);
+          data[j] = highByte(rans);
           j++;
-          data[j] = lowByte(loWord);
+          data[j] = lowByte(rans);
           j++;
-          data[j] = highByte(hiRd);
-          j++;
-          data[j] = lowByte(liRd);
-          j++;
+          // data[j] = highByte(distance);
+          // j++;
+          // data[j] = lowByte(distance);
+          // j++;
+          // data[j] = highByte(h);
+          // j++;
+          // data[j] = lowByte(h);
+          // j++;
         }
 
         //verifiation data[] content
@@ -266,98 +251,36 @@ void loop()
       if (Gateway_Command2 == (char*)buf) {
         j = 0;
         /////////////////////////////////// Set Header ///////////////////////////////////////
-//        data[j] = Gateway_ID;
-//        j++;
-//        data[j] = RTU_ID;
-//        j++;
-//        data[j] = Packet_No2;
-//        j++;
-        //Measure 50 ax and 50 ay
-        for (i = 0; i < 55; i++) {
-          /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU01
-          accelgyro.getAcceleration(&ax, &ay, &az);
-          AX = ((float)ax - AXoff) / 16384.00;
-
-          //if sensor pcb placed on table:
-          AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
-
-          //if sensor pcb placed on enclosure
-          //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
-           AZ = ((float)az -  AZoff) / 16384.00; //remove 1G before dividing
-
-          cx = {AX};
-          cy = {AY};
-          cz = {AZ};
-          uint16_t loWord = cx.w[0];
-          uint16_t hiWord = cx.w[1];
-          uint16_t loWrd = cy.w[0];
-          uint16_t hiWrd = cy.w[1];
-          uint16_t liRd = cz.w[0];
-          uint16_t hiRd = cz.w[1];
-
-          
-          //          Serial.println(AX);
-          data[j] = highByte(hiWord);
-          j++;
-          data[j] = lowByte(loWord);
-          j++;
-          data[j] = highByte(hiRd);
-          j++;
-          data[j] = lowByte(liRd);
-          j++;
-        }
-
-        //verifiation data[] content
-        for (i = 0; i < j; i++) {
-          Serial.write(data[i]);
-        }
-
-        //Serial.println();
-        //Serial.println(j);
-        // Send a reply data to the Server
-        if (!manager.sendtoWait(data, sizeof(data), from)) {
-          //if (!manager.sendtoWait(data, j, from)){
-          Serial.println("sendtoWait failed");
-        }
-      }
-      /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
-      if (Gateway_Command3 == (char*)buf) {
-        j = 0;
-        /////////////////////////////////// Set Header ///////////////////////////////////////
-//        data[j] = Gateway_ID;
-//        j++;
-//        data[j] = RTU_ID;
-//        j++;
-//        data[j] = Packet_No2;
-//        j++;
-        //Measure 50 ax and 50 ay
-        for (i = 0; i < 2; i++) {
-          /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
+        data[j] = Gateway_ID;
+        j++;
+        data[j] = RTU_ID;
+        j++;
+        data[j] = Packet_No;
+        j++;
+        /////////////////////////////////// Sending Check Battery ///////////////////////////////////////
         measuredvbat = analogRead(VBATPIN);
-        // long battV = analogRead(VBATPIN);
         measuredvbat *= 2; // we divided by 2, so multiply back
-        measuredvbat *= 3.3; // Multiply by 3.3V, our reference voltage
+        measuredvbat *= 3; // Multiply by 3.3V, our reference voltage
         measuredvbat /= 1024; // convert to voltage
-        rssiResult = driver.lastRssi();
-        // long rsiRes = driver.lastRssi();
-        
-          batt = {measuredvbat};
-          // resRssi = {rssiResult};
-          uint16_t loWord = batt.w[0];
-          uint16_t hiWord = batt.w[1];
-          // uint16_t loWrd = resRssi.w[0];
-          // uint16_t hiWrd = resRssi.w[1];
 
-          // data[j] = highByte(measuredvbat);
-          // j++;
-          // data[j] = lowByte(measuredvbat);
-          // j++;
-          // data[j] = highByte(hiWrd);
-          // j++;
-          // data[j] = lowByte(loWrd);
-          // j++;
-        }
+        long rssiResult = driver.lastRssi();
+        //Measure 50 ax and 50 ay
+        //        result = {measuredvbat};
+        //        uint16_t loWord = result.w[0];
+        //        uint16_t hiWord = result.w[1];
+        //        data[j] = highByte(hiWord);
+        //        j++;
+        //        data[j] = lowByte(loWord);
+        //        j++;
+        data[j] = highByte(measuredvbat);
+        j++;
+        data[j] = lowByte(measuredvbat);
+        j++;
+        data[j] = highByte(rssiResult);
+        j++;
+        data[j] = lowByte(rssiResult);
+        j++;
+
 
         //verifiation data[] content
         for (i = 0; i < j; i++) {
@@ -372,9 +295,9 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
-
     }
   }
+  //  delay (500);
 }
 
 ///////////////////////////////////////////////////// RTC Functions //////////////////////////////////////////////////
