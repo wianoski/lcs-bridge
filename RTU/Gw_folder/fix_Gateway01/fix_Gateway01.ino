@@ -30,7 +30,7 @@ uint8_t data3[] = "REQ_RTU01_3";
 uint8_t data4[] = "REQ_RTU01_4";
 
 
-uint8_t data5[] = "REQ_HEALTH_01";
+uint8_t data5[] = "REQ_HEALTH_05";
 
 // Dont put this on the stack:
 uint8_t buf[203];
@@ -163,6 +163,66 @@ void request_RTU01() {
   else {
     Serial.println("sendtoWait failed");
   }
+//   /////////////////////////////////// Request Packet3 ///////////////////////////////////////
+//  if (manager.sendtoWait(data3, sizeof(data3), CLIENT_ADDRESS)) {
+//    // Now wait for a reply from the RTU01
+//    uint8_t len = sizeof(buf);
+//    uint8_t from;
+//
+//    //Serial.println();
+//    //Serial.println(len);
+//
+//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+//    {
+//      //Serial.print("RTU01_0x");
+//      //Serial.print(from, HEX);
+//      //Serial.print((char*)buf);
+//      for (i = 0; i < len; i++) {
+//        char temps[4];
+//        sprintf(temps, "%02x ", buf[i]);
+//        Serial.print(temps);
+//        //        Serial.write(buf[i]);
+//      }
+////      Serial.println();
+//    }
+//    else
+//    {
+//      Serial.println("RTU01 no reply");
+//    }
+//  }
+//  else {
+//    Serial.println("sendtoWait failed");
+//  }
+//   /////////////////////////////////// Request Packet4 ///////////////////////////////////////
+//  if (manager.sendtoWait(data4, sizeof(data4), CLIENT_ADDRESS)) {
+//    // Now wait for a reply from the RTU01
+//    uint8_t len = sizeof(buf);
+//    uint8_t from;
+//
+//    //Serial.println();
+//    //Serial.println(len);
+//
+//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+//    {
+//      //Serial.print("RTU01_0x");
+//      //Serial.print(from, HEX);
+//      //Serial.print((char*)buf);
+//      for (i = 0; i < len; i++) {
+//        char temps[4];
+//        sprintf(temps, "%02x ", buf[i]);
+//        Serial.print(temps);
+//        //        Serial.write(buf[i]);
+//      }
+//      Serial.println();
+//    }
+//    else
+//    {
+//      Serial.println("RTU01 no reply");
+//    }
+//  }
+//  else {
+//    Serial.println("sendtoWait failed");
+//  }
 }
 
 void request_health() {

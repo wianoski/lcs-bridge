@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 // 08/07/2020
-// RTU01   : COM6
+// RTU05   : COM6
 // Accelero: +/- 2g
 // 500MHz
 
@@ -36,19 +36,21 @@
 // #define RF95_FREQ 411.0
 
 //----------Change Me!!----------
-#define RF95_FREQ 411.0
+#define RF95_FREQ 413.0
 
-#define CLIENT_ADDRESS 11
-#define SERVER_ADDRESS 1
+#define CLIENT_ADDRESS 15
+#define SERVER_ADDRESS 5
 
 uint8_t Gateway_ID = 1;
-uint8_t RTU_ID = 1;
+uint8_t RTU_ID = 5;
 uint8_t Packet_No2 = 2;
 uint8_t Packet_No = 1;
 
-String Gateway_Command1 = String("REQ_RTU01_1");
-String Gateway_Command2 = String("REQ_RTU01_2");
-String Gateway_Command3 = String("REQ_HEALTH_05");
+String Gateway_Command1 = String("REQ_RTU05_1");
+String Gateway_Command2 = String("REQ_RTU05_2");
+String Gateway_Command3 = String("REQ_RTU05_3");
+String Gateway_Command4 = String("REQ_RTU05_4");
+String Gateway_Command5 = String("REQ_HEALTH_05");
 //----------Change Me!!----------
 
 
@@ -147,7 +149,7 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("RTU01 Ready");
+  Serial.println("RTU05 Ready");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -218,18 +220,20 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU01
+          //for RTU05
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
           //if sensor pcb placed on table:
           // AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
-          //for RTU01
+          //for RTU05
            AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
            AZ = ((float)az - AZoff) / 16384.00; //remove 1G before dividing
-
-          cx = {AX};
+          
+          float hehe1 = 0.12;
+          float hehe2 = -0.23;
+          cx = {hehe1};
           cy = {AY};
-          cz = {AZ};
+          cz = {hehe2};
           uint16_t loWord = cx.w[0];
           uint16_t hiWord = cx.w[1];
           uint16_t loWrd = cy.w[0];
@@ -275,7 +279,7 @@ void loop()
         //Measure 50 ax and 50 ay
         for (i = 0; i < 55; i++) {
           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
-          //for RTU01
+          //for RTU05
           accelgyro.getAcceleration(&ax, &ay, &az);
           AX = ((float)ax - AXoff) / 16384.00;
 
@@ -286,9 +290,11 @@ void loop()
           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
            AZ = ((float)az -  AZoff) / 16384.00; //remove 1G before dividing
 
-          cx = {AX};
+          float hehe1 = 0.12;
+          float hehe2 = -0.23;
+          cx = {hehe1};
           cy = {AY};
-          cz = {AZ};
+          cz = {hehe2};
           uint16_t loWord = cx.w[0];
           uint16_t hiWord = cx.w[1];
           uint16_t loWrd = cy.w[0];
@@ -321,8 +327,126 @@ void loop()
           Serial.println("sendtoWait failed");
         }
       }
+//       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+//       if (Gateway_Command3 == (char*)buf) {
+//         j = 0;
+//         /////////////////////////////////// Set Header ///////////////////////////////////////
+// //        data[j] = Gateway_ID;
+// //        j++;
+// //        data[j] = RTU_ID;
+// //        j++;
+// //        data[j] = Packet_No2;
+// //        j++;
+//         //Measure 50 ax and 50 ay
+//         for (i = 0; i < 55; i++) {
+//           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
+//           //for RTU05
+//           accelgyro.getAcceleration(&ax, &ay, &az);
+//           AX = ((float)ax - AXoff) / 16384.00;
+
+//           //if sensor pcb placed on table:
+//           AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+
+//           //if sensor pcb placed on enclosure
+//           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+//            AZ = ((float)az -  AZoff) / 16384.00; //remove 1G before dividing
+
+//           cx = {AX};
+//           cy = {AY};
+//           cz = {AZ};
+//           uint16_t loWord = cx.w[0];
+//           uint16_t hiWord = cx.w[1];
+//           uint16_t loWrd = cy.w[0];
+//           uint16_t hiWrd = cy.w[1];
+//           uint16_t liRd = cz.w[0];
+//           uint16_t hiRd = cz.w[1];
+
+          
+//           //          Serial.println(AX);
+//           data[j] = highByte(hiWord);
+//           j++;
+//           data[j] = lowByte(loWord);
+//           j++;
+//           data[j] = highByte(hiRd);
+//           j++;
+//           data[j] = lowByte(liRd);
+//           j++;
+//         }
+
+//         //verifiation data[] content
+//         for (i = 0; i < j; i++) {
+//           Serial.write(data[i]);
+//         }
+
+//         //Serial.println();
+//         //Serial.println(j);
+//         // Send a reply data to the Server
+//         if (!manager.sendtoWait(data, sizeof(data), from)) {
+//           //if (!manager.sendtoWait(data, j, from)){
+//           Serial.println("sendtoWait failed");
+//         }
+//       }
+//       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
+//       if (Gateway_Command4 == (char*)buf) {
+//         j = 0;
+//         /////////////////////////////////// Set Header ///////////////////////////////////////
+// //        data[j] = Gateway_ID;
+// //        j++;
+// //        data[j] = RTU_ID;
+// //        j++;
+// //        data[j] = Packet_No2;
+// //        j++;
+//         //Measure 50 ax and 50 ay
+//         for (i = 0; i < 55; i++) {
+//           /////////////////////////////////// Get Gyro Data ///////////////////////////////////////
+//           //for RTU05
+//           accelgyro.getAcceleration(&ax, &ay, &az);
+//           AX = ((float)ax - AXoff) / 16384.00;
+
+//           //if sensor pcb placed on table:
+//           AY = ((float)ay - AYoff) / 16384.00; //16384 is just 32768/2 to get our 1G value
+
+//           //if sensor pcb placed on enclosure
+//           //  AY = ((float)ay - (AYoff - 16384)) / 16384.00; //remove 1G before dividing//16384 is just 32768/2 to get our 1G value
+//            AZ = ((float)az -  AZoff) / 16384.00; //remove 1G before dividing
+
+//           cx = {AX};
+//           cy = {AY};
+//           cz = {AZ};
+//           uint16_t loWord = cx.w[0];
+//           uint16_t hiWord = cx.w[1];
+//           uint16_t loWrd = cy.w[0];
+//           uint16_t hiWrd = cy.w[1];
+//           uint16_t liRd = cz.w[0];
+//           uint16_t hiRd = cz.w[1];
+
+          
+//           //          Serial.println(AX);
+//           data[j] = highByte(hiWord);
+//           j++;
+//           data[j] = lowByte(loWord);
+//           j++;
+//           data[j] = highByte(hiRd);
+//           j++;
+//           data[j] = lowByte(liRd);
+//           j++;
+//         }
+
+//         //verifiation data[] content
+//         for (i = 0; i < j; i++) {
+//           Serial.write(data[i]);
+//         }
+
+//         //Serial.println();
+//         //Serial.println(j);
+//         // Send a reply data to the Server
+//         if (!manager.sendtoWait(data, sizeof(data), from)) {
+//           //if (!manager.sendtoWait(data, j, from)){
+//           Serial.println("sendtoWait failed");
+//         }
+//       }
       /////////////////////////////////// Sending Packet1 ///////////////////////////////////////
-      if (Gateway_Command3 == (char*)buf) {
+      if (Gateway_Command5 == (char*)buf) {
         j = 0;
         /////////////////////////////////// Set Header ///////////////////////////////////////
 //        data[j] = Gateway_ID;
@@ -342,21 +466,21 @@ void loop()
         rssiResult = driver.lastRssi();
         // long rsiRes = driver.lastRssi();
         
-          batt = {measuredvbat};
-          // resRssi = {rssiResult};
-          uint16_t loWord = batt.w[0];
-          uint16_t hiWord = batt.w[1];
-          // uint16_t loWrd = resRssi.w[0];
-          // uint16_t hiWrd = resRssi.w[1];
+          // batt = {measuredvbat};
+          resRssi = {rssiResult};
+          // uint16_t loWord = batt.w[0];
+          // uint16_t hiWord = batt.w[1];
+          uint16_t loWrd = resRssi.w[0];
+          uint16_t hiWrd = resRssi.w[1];
 
           // data[j] = highByte(measuredvbat);
           // j++;
           // data[j] = lowByte(measuredvbat);
           // j++;
-          // data[j] = highByte(hiWrd);
-          // j++;
-          // data[j] = lowByte(loWrd);
-          // j++;
+          data[j] = highByte(hiWrd);
+          j++;
+          data[j] = lowByte(loWrd);
+          j++;
         }
 
         //verifiation data[] content

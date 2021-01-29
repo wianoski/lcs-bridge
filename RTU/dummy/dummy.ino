@@ -65,7 +65,7 @@ float   AX, AY, AZ; //acceleration floats
 float   GX, GY, GZ; //gyroscope floats
 
 uint8_t Gateway_ID = 1;
-uint8_t RTU_ID = 8;
+uint8_t RTU_ID = 3;
 uint8_t Packet_No = 1;
 
 #define LED_PIN 13
@@ -77,8 +77,8 @@ uint8_t data[63]; //203 bytes
 // uint8_t data[7]; //203 bytes
 uint8_t buf[20]; //Promini
 
+String Gateway_Command1 = String("REQ_RTU03_1");
 //String Gateway_Command1 = String("REQ_RTU03_1");
-String Gateway_Command1 = String("REQ_RTU08_1");
 String Gateway_Command2 = String("REQ_HEALTH_03");
 
 
@@ -141,7 +141,7 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
 
-  Serial.println("RTU02 Ready");
+  Serial.println("RTU03 Ready");
   
   sensors.begin();
   // manual reset

@@ -1,5 +1,5 @@
 // 08/07/2020
-// Server07: COM4
+// Server05: COM4
 // 500MHz
 
 #include <RHReliableDatagram.h>
@@ -11,8 +11,8 @@
 #define RFM95_INT 2
 
 //#define CLIENT_ADDRESS 255      //broadcast
-#define CLIENT_ADDRESS 17
-#define SERVER_ADDRESS 7
+#define CLIENT_ADDRESS 16
+#define SERVER_ADDRESS 6
 
 // Singleton instance of the radio driver
 RH_RF95 driver(RFM95_CS, RFM95_INT);
@@ -24,13 +24,13 @@ RHReliableDatagram manager(driver, SERVER_ADDRESS);
 String inputString              = "";     // a string to hold incoming data
 boolean stringComplete          = false;  // whether the string is complete
 
-uint8_t data1[] = "REQ_RTU07_1";
-uint8_t data2[] = "REQ_RTU07_2";
-// uint8_t data3[] = "REQ_RTU07_3";
-// uint8_t data4[] = "REQ_RTU07_4";
+uint8_t data1[] = "REQ_RTU06_1";
+uint8_t data2[] = "REQ_RTU06_2";
+uint8_t data3[] = "REQ_RTU06_3";
+uint8_t data4[] = "REQ_RTU06_4";
 
 
-uint8_t data5[] = "REQ_HEALTH_07";
+uint8_t data5[] = "REQ_HEALTH_05";
 
 // Dont put this on the stack:
 uint8_t buf[203];
@@ -39,12 +39,6 @@ String command_health = "";
 String command_PC = "";
 int number_of_reading_data = 0;
 int i;
-
-// String conId = "con01";
-// String freqId = "0415";
-// String gwId = "gw07";
-// String rtuId = "07";
-// String stat = "ready";
 
 void setup()
 {
@@ -80,8 +74,7 @@ void setup()
   // the CAD timeout to non-zero:
   //  driver.setCADTimeout(10000);
 
-  //  Serial.println(conId,freqId,gwId,rtuId,stat);
-  Serial.println("con01,04115,gw05,RTU_07,1000,01,ready");
+  Serial.println("con01,04114,gw04,RTU_06,1000,01,ready");
 }
 
 void loop()
@@ -89,13 +82,13 @@ void loop()
   if (stringComplete) {
     inputString = remove_string_CRLF(inputString);
     command_PC = getValue(inputString, ',', 0);
-    if (command_PC == "REQ_RTU07") {
+    if (command_PC == "REQ_RTU06") {
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
       for (i = 0; i < number_of_reading_data; i++) {
-        request_RTU07();
+        request_RTU06();
       }
-    } else if (command_PC == "REQ_RTU_HEALTH07") {
+    }else if (command_PC == "REQ_RTU_HEALTH01") {
       /* code */
       command_PC = getValue(inputString, ',', 1);
       number_of_reading_data = command_PC.toInt();
@@ -103,16 +96,16 @@ void loop()
         request_health();
       }
     }
-
+    
     stringComplete = false;
     inputString = "";
   }
 }
 
-void request_RTU07() {
+void request_RTU06() {
   /////////////////////////////////// Request Packet1 ///////////////////////////////////////
   if (manager.sendtoWait(data1, sizeof(data1), CLIENT_ADDRESS)) {
-    // Now wait for a reply from the RTU07
+    // Now wait for a reply from the RTU06
     uint8_t len = sizeof(buf);
     uint8_t from;
 
@@ -121,7 +114,7 @@ void request_RTU07() {
 
     if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
     {
-      //Serial.print("RTU07_0x");
+      //Serial.print("RTU06_0x");
       //Serial.print(from, HEX);
       //Serial.print((char*)buf);
       for (i = 0; i < len; i++) {
@@ -134,50 +127,15 @@ void request_RTU07() {
     }
     else
     {
-      Serial.println("RTU07 no reply");
+      Serial.println("RTU06 no reply");
     }
   }
   else {
     Serial.println("sendtoWait failed");
   }
   /////////////////////////////////// Request Packet2 ///////////////////////////////////////
-    if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS)) {
-      // Now wait for a reply from the RTU07
-      uint8_t len = sizeof(buf);
-      uint8_t from;
-  
-      //Serial.println();
-      //Serial.println(len);
-  
-      if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
-      {
-        //Serial.print("RTU07_0x");
-        //Serial.print(from, HEX);
-        //Serial.print((char*)buf);
-        for (i = 0; i < len; i++) {
-          char temps[4];
-          sprintf(temps, "%02x ", buf[i]);
-          Serial.print(temps);
-          //        Serial.write(buf[i]);
-        }
-        Serial.println();
-      }
-      else
-      {
-        Serial.println("RTU07 no reply");
-      }
-    }
-    else {
-      Serial.println("sendtoWait failed");
-    }
-}
-
-void request_health() {
-  //  Serial.println("yourein");
-  /////////////////////////////////// Request Packet1 ///////////////////////////////////////
-  if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS))
-  {
-    // Now wait for a reply from the RTU07
+  if (manager.sendtoWait(data2, sizeof(data2), CLIENT_ADDRESS)) {
+    // Now wait for a reply from the RTU06
     uint8_t len = sizeof(buf);
     uint8_t from;
 
@@ -186,7 +144,7 @@ void request_health() {
 
     if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
     {
-      //Serial.print("RTU07_0x");
+      //Serial.print("RTU06_0x");
       //Serial.print(from, HEX);
       //Serial.print((char*)buf);
       for (i = 0; i < len; i++) {
@@ -199,7 +157,102 @@ void request_health() {
     }
     else
     {
-      Serial.println("RTU07 no reply");
+      Serial.println("RTU06 no reply");
+    }
+  }
+  else {
+    Serial.println("sendtoWait failed");
+  }
+//   /////////////////////////////////// Request Packet3 ///////////////////////////////////////
+//  if (manager.sendtoWait(data3, sizeof(data3), CLIENT_ADDRESS)) {
+//    // Now wait for a reply from the RTU06
+//    uint8_t len = sizeof(buf);
+//    uint8_t from;
+//
+//    //Serial.println();
+//    //Serial.println(len);
+//
+//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+//    {
+//      //Serial.print("RTU06_0x");
+//      //Serial.print(from, HEX);
+//      //Serial.print((char*)buf);
+//      for (i = 0; i < len; i++) {
+//        char temps[4];
+//        sprintf(temps, "%02x ", buf[i]);
+//        Serial.print(temps);
+//        //        Serial.write(buf[i]);
+//      }
+////      Serial.println();
+//    }
+//    else
+//    {
+//      Serial.println("RTU06 no reply");
+//    }
+//  }
+//  else {
+//    Serial.println("sendtoWait failed");
+//  }
+//   /////////////////////////////////// Request Packet4 ///////////////////////////////////////
+//  if (manager.sendtoWait(data4, sizeof(data4), CLIENT_ADDRESS)) {
+//    // Now wait for a reply from the RTU06
+//    uint8_t len = sizeof(buf);
+//    uint8_t from;
+//
+//    //Serial.println();
+//    //Serial.println(len);
+//
+//    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+//    {
+//      //Serial.print("RTU06_0x");
+//      //Serial.print(from, HEX);
+//      //Serial.print((char*)buf);
+//      for (i = 0; i < len; i++) {
+//        char temps[4];
+//        sprintf(temps, "%02x ", buf[i]);
+//        Serial.print(temps);
+//        //        Serial.write(buf[i]);
+//      }
+//      Serial.println();
+//    }
+//    else
+//    {
+//      Serial.println("RTU06 no reply");
+//    }
+//  }
+//  else {
+//    Serial.println("sendtoWait failed");
+//  }
+}
+
+void request_health() {
+  //  Serial.println("yourein");
+  /////////////////////////////////// Request Packet1 ///////////////////////////////////////
+  if (manager.sendtoWait(data5, sizeof(data5), CLIENT_ADDRESS))
+  {
+    // Now wait for a reply from the RTU06
+    uint8_t len = sizeof(buf);
+    uint8_t from;
+
+    //Serial.println();
+    //Serial.println(len);
+
+    if (manager.recvfromAckTimeout(buf, &len, 2000, &from))
+    {
+      //Serial.print("RTU06_0x");
+      //Serial.print(from, HEX);
+      //Serial.print((char*)buf);
+      for (i = 0; i < len; i++) {
+        char temps[4];
+        sprintf(temps, "%02x ", buf[i]);
+        Serial.print(temps);
+        //        Serial.write(buf[i]);
+      }
+      Serial.println();
+    }
+    else
+    {
+      Serial.println("RTU06 no reply");
     }
   }
   else {
