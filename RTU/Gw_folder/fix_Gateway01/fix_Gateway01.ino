@@ -118,9 +118,13 @@ void request_RTU01() {
       //Serial.print(from, HEX);
       //Serial.print((char*)buf);
       for (i = 0; i < len; i++) {
-        char temps[4];
-        sprintf(temps, "%02x ", buf[i]);
-        Serial.print(temps);
+        for(z = 0; z < 2; z++){
+           buf[i] = z;
+          //pecah jadi per 2byte
+        }
+//         char temps[4];
+//         sprintf(temps, "%02x ", buf[i]);
+//         Serial.print(temps);
         //        Serial.write(buf[i]);
       }
       //      Serial.println();
